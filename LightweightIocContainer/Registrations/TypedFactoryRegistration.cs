@@ -102,7 +102,7 @@ namespace LightweightIocContainer.Registrations
 
                 if (args.Any())
                 {
-                    generator.Emit(OpCodes.Ldc_I4_S, args.Length + 1);
+                    generator.Emit(OpCodes.Ldc_I4_S, args.Length);
                     generator.Emit(OpCodes.Newarr, typeof(object));
 
                     for (int i = 0; i < args.Length; i++)
