@@ -115,7 +115,8 @@ namespace LightweightIocContainer.Registrations
                 }
                 else
                 {
-                    generator.Emit(OpCodes.Ldc_I4_0);
+                    MethodInfo emptyArray = typeof(Array).GetMethod(nameof(Array.Empty))?.MakeGenericMethod(typeof(object));
+                    generator.EmitCall(OpCodes.Call, emptyArray, null);
                 }
 
                 generator.EmitCall(OpCodes.Callvirt, typeof(IInjectorContainer).GetMethod(nameof(IInjectorContainer.Resolve), new[] { typeof(object), typeof(object)}), null);
