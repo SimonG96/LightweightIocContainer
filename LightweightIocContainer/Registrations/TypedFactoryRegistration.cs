@@ -100,6 +100,9 @@ namespace LightweightIocContainer.Registrations
                 generator.Emit(OpCodes.Ldfld, containerFieldBuilder);
                 generator.Emit(OpCodes.Ldtoken, createMethod.ReturnType);
 
+                MethodInfo getTypeFromHandle = typeof(Type).GetMethod(nameof(Type.GetTypeFromHandle));
+                generator.EmitCall(OpCodes.Call, getTypeFromHandle, null);
+
                 if (args.Any())
                 {
                     generator.Emit(OpCodes.Ldc_I4_S, args.Length);
@@ -119,7 +122,8 @@ namespace LightweightIocContainer.Registrations
                     generator.EmitCall(OpCodes.Call, emptyArray, null);
                 }
 
-                generator.EmitCall(OpCodes.Callvirt, typeof(IInjectorContainer).GetMethod(nameof(IInjectorContainer.Resolve), new[] { typeof(object), typeof(object)}), null);
+                generator.EmitCall(OpCodes.Callvirt, typeof(IInjectorContainer).GetMethod(nameof(IInjectorContainer.Resolve), new[] { typeof(Type), typeof(object[])}), null);
+                generator.Emit(OpCodes.Castclass, createMethod.ReturnType);
                 generator.Emit(OpCodes.Ret);
             }
 

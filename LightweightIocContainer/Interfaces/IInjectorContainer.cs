@@ -46,6 +46,6 @@ namespace LightweightIocContainer.Interfaces
         /// <param name="type">The given type</param>
         /// <param name="arguments">The constructor arguments</param>
         /// <returns>An instance of the given type</returns>
-        object Resolve(object type, object arguments);
+        object Resolve(Type type, object[] arguments);
     }
 }
