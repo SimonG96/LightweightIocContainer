@@ -80,8 +80,8 @@ namespace LightweightIocContainer
         /// <exception cref="InternalResolveException">Could not find function <see cref="ResolveInternal{T}"/></exception>
         public object Resolve(Type type, object[] arguments) //somehow the order of the arguments is different in the application compared to the unit test
         {
-            var resolveMethod = typeof(IocContainer).GetMethod(nameof(ResolveInternal), BindingFlags.NonPublic | BindingFlags.Instance);
-            var genericResolveMethod = resolveMethod?.MakeGenericMethod(type);
+            MethodInfo resolveMethod = typeof(IocContainer).GetMethod(nameof(ResolveInternal), BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo genericResolveMethod = resolveMethod?.MakeGenericMethod(type);
 
             if (genericResolveMethod == null)
                 throw new InternalResolveException($"Could not find function {nameof(ResolveInternal)}");
@@ -106,11 +106,11 @@ namespace LightweightIocContainer
             if (registration is IDefaultRegistration<T> defaultRegistration)
             {
                 if (defaultRegistration.Lifestyle == Lifestyle.Singleton)
-                    return GetOrCreateSingletonInstance<T>(defaultRegistration, arguments);
+                    return GetOrCreateSingletonInstance(defaultRegistration, arguments);
                 else if (defaultRegistration is IMultitonRegistration<T> multitonRegistration && defaultRegistration.Lifestyle == Lifestyle.Multiton)
-                    return GetOrCreateMultitonInstance<T>(multitonRegistration, arguments);
+                    return GetOrCreateMultitonInstance(multitonRegistration, arguments);
 
-                return CreateInstance<T>(defaultRegistration, arguments);
+                return CreateInstance(defaultRegistration, arguments);
             }
             else if (registration is ITypedFactoryRegistration<T> typedFactoryRegistration)
             {
@@ -135,7 +135,7 @@ namespace LightweightIocContainer
                 return (T) instance;
 
             //if it doesn't already exist create a new instance and add it to the list
-            T newInstance = CreateInstance<T>(registration, arguments);
+            T newInstance = CreateInstance(registration, arguments);
             _singletons.Add((typeof(T), newInstance));
 
             return newInstance;
@@ -167,14 +167,14 @@ namespace LightweightIocContainer
                 if (instance != (null, null))
                     return (T) instance.instance;
 
-                T createdInstance = CreateInstance<T>(registration, arguments);
+                T createdInstance = CreateInstance(registration, arguments);
                 instances.Add((scopeArgument, createdInstance));
 
                 return createdInstance;
             }
 
-            T newInstance = CreateInstance<T>(registration, arguments);
-            _multitons.Add((typeof(T), registration.Scope, new List<(object, object)>() {(scopeArgument, newInstance)}));
+            T newInstance = CreateInstance(registration, arguments);
+            _multitons.Add((typeof(T), registration.Scope, new List<(object, object)> {(scopeArgument, newInstance)}));
 
             return newInstance;
         }
@@ -204,7 +204,7 @@ namespace LightweightIocContainer
         private object[] ResolveConstructorArguments(Type type, object[] arguments)
         {
             //find best ctor
-            var sortedCtors = type.GetConstructors().OrderByDescending(c => c.GetParameters().Length);
+            IOrderedEnumerable<ConstructorInfo> sortedCtors = type.GetConstructors().OrderByDescending(c => c.GetParameters().Length);
             foreach (var ctor in sortedCtors)
             {
                 try
@@ -212,7 +212,7 @@ namespace LightweightIocContainer
                     List<object> argumentsList = arguments?.ToList();
                     List<object> ctorParams = new List<object>();
 
-                    var parameters = ctor.GetParameters();
+                    ParameterInfo[] parameters = ctor.GetParameters();
                     foreach (var parameter in parameters)
                     {
                         object fittingArgument = null;

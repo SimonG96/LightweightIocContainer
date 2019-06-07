@@ -3,6 +3,7 @@
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -50,7 +51,7 @@ namespace LightweightIocContainer.Registrations
         /// <exception cref="InvalidFactoryRegistrationException">Factory registration is invalid</exception>
         private void CreateFactory(IIocContainer container)
         {
-            var createMethods = InterfaceType.GetMethods().Where(m => m.ReturnType != typeof(void)).ToList();
+            List<MethodInfo> createMethods = InterfaceType.GetMethods().Where(m => m.ReturnType != typeof(void)).ToList();
             if (!createMethods.Any())
                 throw new InvalidFactoryRegistrationException($"Factory {Name} has no create methods.");
 
@@ -70,7 +71,7 @@ namespace LightweightIocContainer.Registrations
 
             //add ctor
             ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, new[] {typeof(IIocContainer)});
-            var constructorGenerator = constructorBuilder.GetILGenerator();
+            ILGenerator constructorGenerator = constructorBuilder.GetILGenerator();
             constructorGenerator.Emit(OpCodes.Ldarg_0);
             constructorGenerator.Emit(OpCodes.Ldarg_1);
             constructorGenerator.Emit(OpCodes.Stfld, containerFieldBuilder); //set `_container` field
@@ -84,13 +85,13 @@ namespace LightweightIocContainer.Registrations
                 //    return IIocContainer.Resolve(`createMethod.ReturnType`, params);
                 //}
 
-                var args = createMethod.GetParameters();
+                ParameterInfo[] args = createMethod.GetParameters();
 
                 MethodBuilder methodBuilder = typeBuilder.DefineMethod(createMethod.Name, MethodAttributes.Public | MethodAttributes.Virtual, 
                     createMethod.ReturnType, (from arg in args select arg.ParameterType).ToArray());
                 typeBuilder.DefineMethodOverride(methodBuilder, createMethod);
 
-                var generator = methodBuilder.GetILGenerator();
+                ILGenerator generator = methodBuilder.GetILGenerator();
 
                 generator.Emit(OpCodes.Ldarg_0);
                 generator.Emit(OpCodes.Ldfld, containerFieldBuilder);
