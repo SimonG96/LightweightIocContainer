@@ -3,6 +3,7 @@
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System;
+using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces.Registrations;
 
 namespace LightweightIocContainer.Interfaces
@@ -23,6 +24,7 @@ namespace LightweightIocContainer.Interfaces
         /// Add the <see cref="IRegistrationBase"/> to the the <see cref="IIocContainer"/>
         /// </summary>
         /// <param name="registration">The given <see cref="IRegistrationBase"/></param>
+        /// <exception cref="MultipleRegistrationException">The Type is already registered in this <see cref="IIocContainer"/></exception>
         void Register(IRegistrationBase registration);
 
         /// <summary>
@@ -46,6 +48,7 @@ namespace LightweightIocContainer.Interfaces
         /// <param name="type">The given type</param>
         /// <param name="arguments">The constructor arguments</param>
         /// <returns>An instance of the given type</returns>
+        /// <exception cref="InternalResolveException">Could not find function <see cref="IocContainer.ResolveInternal{T}"/></exception>
         object Resolve(Type type, object[] arguments);
     }
 }

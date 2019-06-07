@@ -10,7 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Exceptions\" />
     <Folder Include="Factories\" />
     <Folder Include="Interfaces\Factories\" />
     <Folder Include="Interfaces\Registrations\" />

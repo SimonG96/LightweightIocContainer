@@ -39,8 +39,13 @@ namespace LightweightIocContainer
         /// Add the <see cref="IRegistrationBase"/> to the the <see cref="IocContainer"/>
         /// </summary>
         /// <param name="registration">The given <see cref="IRegistrationBase"/></param>
+        /// <exception cref="MultipleRegistrationException">The Type is already registered in this <see cref="IocContainer"/></exception>
         public void Register(IRegistrationBase registration)
         {
+            //if type is already registered
+            if (_registrations.Any(r => r.InterfaceType == registration.InterfaceType))
+                throw new MultipleRegistrationException(registration.InterfaceType);
+
             _registrations.Add(registration);
         }
 
