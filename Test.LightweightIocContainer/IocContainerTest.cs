@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
@@ -18,6 +19,7 @@ namespace Test.LightweightIocContainer
 
         }
 
+        [UsedImplicitly]
         public interface ITestFactory
         {
             ITest Create();
@@ -35,6 +37,7 @@ namespace Test.LightweightIocContainer
 
         }
 
+        [UsedImplicitly]
         private class TestConstructor : ITest
         {
             public TestConstructor(string name, Test test)
@@ -87,7 +90,7 @@ namespace Test.LightweightIocContainer
             IIocContainer iocContainer = new IocContainer();
 
             iocContainer.Register(RegistrationFactory.Register<ITest, Test>());
-            var exception = Assert.Throws<MultipleRegistrationException>(() => iocContainer.Register(RegistrationFactory.Register<ITest, TestConstructor>()));
+            MultipleRegistrationException exception = Assert.Throws<MultipleRegistrationException>(() => iocContainer.Register(RegistrationFactory.Register<ITest, TestConstructor>()));
             Assert.AreEqual(typeof(ITest), exception.Type);
         }
 
@@ -104,7 +107,7 @@ namespace Test.LightweightIocContainer
         {
             IIocContainer iocContainer = new IocContainer();
 
-            var exception = Assert.Throws<TypeNotRegisteredException>(() => iocContainer.Resolve<ITest>());
+            TypeNotRegisteredException exception = Assert.Throws<TypeNotRegisteredException>(() => iocContainer.Resolve<ITest>());
             Assert.AreEqual(typeof(ITest), exception.Type);
         }
 
@@ -189,7 +192,7 @@ namespace Test.LightweightIocContainer
             IIocContainer iocContainer = new IocContainer();
             iocContainer.Register(RegistrationFactory.Register<ITest, Test, MultitonScope>());
 
-            var exception = Assert.Throws<MultitonResolveException>(() => iocContainer.Resolve<ITest>());
+            MultitonResolveException exception = Assert.Throws<MultitonResolveException>(() => iocContainer.Resolve<ITest>());
             Assert.AreEqual(typeof(ITest), exception.Type);
         }
 
@@ -199,7 +202,7 @@ namespace Test.LightweightIocContainer
             IIocContainer iocContainer = new IocContainer();
             iocContainer.Register(RegistrationFactory.Register<ITest, Test, MultitonScope>());
 
-            var exception = Assert.Throws<MultitonResolveException>(() => iocContainer.Resolve<ITest>(new object()));
+            MultitonResolveException exception = Assert.Throws<MultitonResolveException>(() => iocContainer.Resolve<ITest>(new object()));
             Assert.AreEqual(typeof(ITest), exception.Type);
         }
 

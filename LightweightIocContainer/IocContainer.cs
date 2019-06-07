@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Registrations;
@@ -201,6 +202,7 @@ namespace LightweightIocContainer
         /// <param name="type">The type that will be created</param>
         /// <param name="arguments">The existing arguments</param>
         /// <returns>An array of all needed constructor arguments to create <param name="type"></param></returns>
+        [CanBeNull]
         private object[] ResolveConstructorArguments(Type type, object[] arguments)
         {
             //find best ctor
