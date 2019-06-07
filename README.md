@@ -11,7 +11,7 @@ A lightweight IOC Container that is powerful enough to do all the things you nee
   1. Instantiating Container:
   
       ```c#
-      InjectorContainer container = new InjectorContainer();
+      IocContainer container = new IocContainer();
       ```
 
   2. more...
