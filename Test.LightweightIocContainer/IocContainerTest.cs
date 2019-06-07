@@ -92,7 +92,7 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
-        public void RegisterFactoryWithoutCreate()
+        public void TestRegisterFactoryWithoutCreate()
         {
             IIocContainer iocContainer = new IocContainer();
 
