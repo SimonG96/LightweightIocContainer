@@ -8,6 +8,7 @@
     <RepositoryUrl>https://github.com/SimonG96/LightweightIocContainer</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/SimonG96/LightweightIocContainer/blob/master/LICENSE</PackageLicenseUrl>
     <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
