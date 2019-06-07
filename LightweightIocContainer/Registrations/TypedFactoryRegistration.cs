@@ -20,16 +20,12 @@ namespace LightweightIocContainer.Registrations
     /// <typeparam name="TFactory">The type of the abstract typed factory</typeparam>
     public class TypedFactoryRegistration<TFactory> : ITypedFactoryRegistration<TFactory>
     {
-        private readonly IIocContainer _container;
-
         public TypedFactoryRegistration(Type factoryType, IIocContainer container)
         {
-            _container = container;
-
             InterfaceType = factoryType;
             Name = $"{InterfaceType.Name}";
 
-            CreateFactory();
+            CreateFactory(container);
         }
 
         /// <summary>
@@ -52,7 +48,7 @@ namespace LightweightIocContainer.Registrations
         /// Creates the factory from the given abstract factory type
         /// </summary>
         /// <exception cref="InvalidFactoryRegistrationException">Factory registration is invalid</exception>
-        private void CreateFactory()
+        private void CreateFactory(IIocContainer container)
         {
             var createMethods = InterfaceType.GetMethods().Where(m => m.ReturnType != typeof(void)).ToList();
             if (!createMethods.Any())
@@ -127,7 +123,7 @@ namespace LightweightIocContainer.Registrations
                 generator.Emit(OpCodes.Ret);
             }
 
-            Factory.Factory = (TFactory) Activator.CreateInstance(typeBuilder.CreateTypeInfo().AsType(), _container);
+            Factory.Factory = (TFactory) Activator.CreateInstance(typeBuilder.CreateTypeInfo().AsType(), container);
         }
     }
 }
