@@ -8,7 +8,7 @@ using LightweightIocContainer.Interfaces;
 namespace LightweightIocContainer.Exceptions
 {
     /// <summary>
-    /// An internal Error happened while the <see cref="IInjectorContainer"/> tried to resolve an instance
+    /// An internal Error happened while the <see cref="IIocContainer"/> tried to resolve an instance
     /// </summary>
     public class InternalResolveException : Exception
     {

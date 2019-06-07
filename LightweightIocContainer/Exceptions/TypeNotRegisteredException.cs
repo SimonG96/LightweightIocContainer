@@ -8,12 +8,12 @@ using LightweightIocContainer.Interfaces;
 namespace LightweightIocContainer.Exceptions
 {
     /// <summary>
-    /// The Type is not registered in this <see cref="IInjectorContainer"/>
+    /// The Type is not registered in this <see cref="IIocContainer"/>
     /// </summary>
     public class TypeNotRegisteredException : Exception
     {
         public TypeNotRegisteredException(Type type)
-            : base($"Type {type.Name} is not registered in this InjectorContainer.")
+            : base($"Type {type.Name} is not registered in this IocContainer.")
         {
             Type = type;
         }

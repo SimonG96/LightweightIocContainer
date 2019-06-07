@@ -24,7 +24,7 @@ namespace LightweightIocContainer.Interfaces.Registrations
 
         /// <summary>
         /// This action is invoked when an instance of this type is created.
-        /// <para>Can be set in the <see cref="IInjectorInstaller"/> by calling <see cref="OnCreate"/></para>
+        /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="OnCreate"/></para>
         /// </summary>
         Action<TInterface> OnCreateAction { get; }
 

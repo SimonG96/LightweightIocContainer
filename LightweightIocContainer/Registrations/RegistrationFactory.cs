@@ -8,7 +8,7 @@ using LightweightIocContainer.Interfaces.Registrations;
 namespace LightweightIocContainer.Registrations
 {
     /// <summary>
-    /// A factory to register interfaces and factories in an <see cref="IInjectorInstaller"/> and create the needed <see cref="IRegistrationBase"/>s
+    /// A factory to register interfaces and factories in an <see cref="IIocInstaller"/> and create the needed <see cref="IRegistrationBase"/>s
     /// </summary>
     public static class RegistrationFactory
     {
@@ -28,9 +28,9 @@ namespace LightweightIocContainer.Registrations
         /// Register an Interface as an abstract typed factory and create a <see cref="ITypedFactoryRegistration{TFactory}"/>
         /// </summary>
         /// <typeparam name="TFactory">The abstract typed factory to register</typeparam>
-        /// <param name="container">The current <see cref="IInjectorContainer"/></param>
+        /// <param name="container">The current <see cref="IIocContainer"/></param>
         /// <returns>A new created <see cref="ITypedFactoryRegistration{TFactory}"/> with the given parameters</returns>
-        public static ITypedFactoryRegistration<TFactory> RegisterFactory<TFactory>(IInjectorContainer container) //TODO: Find a nicer way to inject the container into `TypedFactoryRegistration`
+        public static ITypedFactoryRegistration<TFactory> RegisterFactory<TFactory>(IIocContainer container) //TODO: Find a nicer way to inject the container into `TypedFactoryRegistration`
         {
             return new TypedFactoryRegistration<TFactory>(typeof(TFactory), container);
         }

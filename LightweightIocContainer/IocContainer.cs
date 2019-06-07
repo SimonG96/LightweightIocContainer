@@ -15,17 +15,17 @@ namespace LightweightIocContainer
     /// <summary>
     /// The main container that carries all the <see cref="IRegistrationBase"/>s and can resolve all the types you'll ever want
     /// </summary>
-    public class InjectorContainer : IInjectorContainer
+    public class IocContainer : IIocContainer
     {
         private readonly List<IRegistrationBase> _registrations = new List<IRegistrationBase>();
         private readonly List<(Type type, object instance)> _singletons = new List<(Type, object)>(); //TODO: Think about the usage of ConditionalWeakTable<>
 
         /// <summary>
-        /// Install the given installers for the current <see cref="InjectorContainer"/>
+        /// Install the given installers for the current <see cref="IocContainer"/>
         /// </summary>
-        /// <param name="installers">The given <see cref="IInjectorInstaller"/>s</param>
-        /// <returns>An instance of the current <see cref="InjectorContainer"/></returns>
-        public IInjectorContainer Install(params IInjectorInstaller[] installers)
+        /// <param name="installers">The given <see cref="IIocInstaller"/>s</param>
+        /// <returns>An instance of the current <see cref="IocContainer"/></returns>
+        public IIocContainer Install(params IIocInstaller[] installers)
         {
             foreach (var installer in installers)
             {
@@ -36,7 +36,7 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
-        /// Add the <see cref="IRegistrationBase"/> to the the <see cref="InjectorContainer"/>
+        /// Add the <see cref="IRegistrationBase"/> to the the <see cref="IocContainer"/>
         /// </summary>
         /// <param name="registration">The given <see cref="IRegistrationBase"/></param>
         public void Register(IRegistrationBase registration)
@@ -74,7 +74,7 @@ namespace LightweightIocContainer
         /// <exception cref="InternalResolveException">Could not find function <see cref="ResolveInternal{T}"/></exception>
         public object Resolve(Type type, object[] arguments) //somehow the order of the arguments is different in the application compared to the unit test
         {
-            var resolveMethod = typeof(InjectorContainer).GetMethod(nameof(ResolveInternal), BindingFlags.NonPublic | BindingFlags.Instance);
+            var resolveMethod = typeof(IocContainer).GetMethod(nameof(ResolveInternal), BindingFlags.NonPublic | BindingFlags.Instance);
             var genericResolveMethod = resolveMethod?.MakeGenericMethod(type);
 
             if (genericResolveMethod == null)
@@ -89,7 +89,7 @@ namespace LightweightIocContainer
         /// <typeparam name="T">The registered type</typeparam>
         /// <param name="arguments">The constructor arguments</param>
         /// <returns>An instance of the given registered type</returns>
-        /// <exception cref="TypeNotRegisteredException">The given type is not registered in this <see cref="InjectorContainer"/></exception>
+        /// <exception cref="TypeNotRegisteredException">The given type is not registered in this <see cref="IocContainer"/></exception>
         /// <exception cref="UnknownRegistrationException">The registration for the given type has an unknown type</exception>
         private T ResolveInternal<T>(params object[] arguments)
         {

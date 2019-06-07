@@ -20,9 +20,9 @@ namespace LightweightIocContainer.Registrations
     /// <typeparam name="TFactory">The type of the abstract typed factory</typeparam>
     public class TypedFactoryRegistration<TFactory> : ITypedFactoryRegistration<TFactory>
     {
-        private readonly IInjectorContainer _container;
+        private readonly IIocContainer _container;
 
-        public TypedFactoryRegistration(Type factoryType, IInjectorContainer container)
+        public TypedFactoryRegistration(Type factoryType, IIocContainer container)
         {
             _container = container;
 
@@ -69,11 +69,11 @@ namespace LightweightIocContainer.Registrations
             
             typeBuilder.AddInterfaceImplementation(InterfaceType);
 
-            //add `private readonly IInjectorContainer _container` field
-            FieldBuilder containerFieldBuilder = typeBuilder.DefineField("_container", typeof(IInjectorContainer), FieldAttributes.Private | FieldAttributes.InitOnly);
+            //add `private readonly IIocContainer _container` field
+            FieldBuilder containerFieldBuilder = typeBuilder.DefineField("_container", typeof(IIocContainer), FieldAttributes.Private | FieldAttributes.InitOnly);
 
             //add ctor
-            ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, new[] {typeof(IInjectorContainer)});
+            ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, new[] {typeof(IIocContainer)});
             var constructorGenerator = constructorBuilder.GetILGenerator();
             constructorGenerator.Emit(OpCodes.Ldarg_0);
             constructorGenerator.Emit(OpCodes.Ldarg_1);
@@ -85,7 +85,7 @@ namespace LightweightIocContainer.Registrations
                 //create a method that looks like this
                 //public `createMethod.ReturnType` Create(`createMethod.GetParameters()`)
                 //{
-                //    return IInjectorContainer.Resolve(`createMethod.ReturnType`, params);
+                //    return IIocContainer.Resolve(`createMethod.ReturnType`, params);
                 //}
 
                 var args = createMethod.GetParameters();
@@ -122,7 +122,7 @@ namespace LightweightIocContainer.Registrations
                     generator.EmitCall(OpCodes.Call, emptyArray, null);
                 }
 
-                generator.EmitCall(OpCodes.Callvirt, typeof(IInjectorContainer).GetMethod(nameof(IInjectorContainer.Resolve), new[] { typeof(Type), typeof(object[])}), null);
+                generator.EmitCall(OpCodes.Callvirt, typeof(IIocContainer).GetMethod(nameof(IIocContainer.Resolve), new[] { typeof(Type), typeof(object[])}), null);
                 generator.Emit(OpCodes.Castclass, createMethod.ReturnType);
                 generator.Emit(OpCodes.Ret);
             }

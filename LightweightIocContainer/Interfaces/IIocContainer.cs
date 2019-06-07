@@ -10,17 +10,17 @@ namespace LightweightIocContainer.Interfaces
     /// <summary>
     /// The main container that carries all the <see cref="IRegistrationBase"/>s and can resolve all the types you'll ever want
     /// </summary>
-    public interface IInjectorContainer : IDisposable
+    public interface IIocContainer : IDisposable
     {
         /// <summary>
-        /// Install the given installers for the current <see cref="IInjectorContainer"/>
+        /// Install the given installers for the current <see cref="IIocContainer"/>
         /// </summary>
-        /// <param name="installers">The given <see cref="IInjectorInstaller"/>s</param>
-        /// <returns>An instance of the current <see cref="IInjectorContainer"/></returns>
-        IInjectorContainer Install(params IInjectorInstaller[] installers);
+        /// <param name="installers">The given <see cref="IIocInstaller"/>s</param>
+        /// <returns>An instance of the current <see cref="IIocContainer"/></returns>
+        IIocContainer Install(params IIocInstaller[] installers);
 
         /// <summary>
-        /// Add the <see cref="IRegistrationBase"/> to the the <see cref="IInjectorContainer"/>
+        /// Add the <see cref="IRegistrationBase"/> to the the <see cref="IIocContainer"/>
         /// </summary>
         /// <param name="registration">The given <see cref="IRegistrationBase"/></param>
         void Register(IRegistrationBase registration);
