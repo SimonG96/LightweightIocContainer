@@ -19,6 +19,7 @@ namespace LightweightIocContainer
     {
         private readonly List<IRegistrationBase> _registrations = new List<IRegistrationBase>();
         private readonly List<(Type type, object instance)> _singletons = new List<(Type, object)>(); //TODO: Think about the usage of ConditionalWeakTable<>
+        private readonly List<(Type type, Type scope, List<(object scopeInstance, object instance)> instances)> _multitons = new List<(Type, Type, List<(object, object)>)>();
 
         /// <summary>
         /// Install the given installers for the current <see cref="IocContainer"/>
@@ -106,6 +107,8 @@ namespace LightweightIocContainer
             {
                 if (defaultRegistration.Lifestyle == Lifestyle.Singleton)
                     return GetOrCreateSingletonInstance<T>(defaultRegistration, arguments);
+                else if (defaultRegistration is IMultitonRegistration<T> multitonRegistration && defaultRegistration.Lifestyle == Lifestyle.Multiton)
+                    return GetOrCreateMultitonInstance<T>(multitonRegistration, arguments);
 
                 return CreateInstance<T>(defaultRegistration, arguments);
             }
@@ -122,7 +125,7 @@ namespace LightweightIocContainer
         /// </summary>
         /// <typeparam name="T">The given type</typeparam>
         /// <param name="registration">The registration of the given type</param>
-        /// <param name="arguments">The constructor arguments</param>
+        /// <param name="arguments">The arguments to resolve</param>
         /// <returns>An existing or newly created singleton instance of the given type</returns>
         private T GetOrCreateSingletonInstance<T>(IDefaultRegistration<T> registration, params object[] arguments)
         {
@@ -134,6 +137,44 @@ namespace LightweightIocContainer
             //if it doesn't already exist create a new instance and add it to the list
             T newInstance = CreateInstance<T>(registration, arguments);
             _singletons.Add((typeof(T), newInstance));
+
+            return newInstance;
+        }
+
+        /// <summary>
+        /// Gets or creates a multiton instance of a given type
+        /// </summary>
+        /// <typeparam name="T">The given type</typeparam>
+        /// <param name="registration">The registration of the given type</param>
+        /// <param name="arguments">The arguments to resolve</param>
+        /// <returns>An existing or newly created multiton instance of the given type</returns>
+        /// <exception cref="MultitonResolveException">No arguments given</exception>
+        /// <exception cref="MultitonResolveException">Scope argument not given</exception>
+        private T GetOrCreateMultitonInstance<T>(IMultitonRegistration<T> registration, params object[] arguments)
+        {
+            if (arguments == null || !arguments.Any())
+                throw new MultitonResolveException("Can not resolve multiton without arguments.", typeof(T));
+
+            object scopeArgument = arguments[0];
+            if (scopeArgument.GetType() != registration.Scope)
+                throw new MultitonResolveException($"Can not resolve multiton without the first argument being the scope (should be of type {registration.Scope}).", typeof(T));
+
+            //if a multiton for the given scope exists return it
+            var instances = _multitons.FirstOrDefault(m => m.type == typeof(T) && m.scope == registration.Scope).instances;
+            if (instances != null && instances.Any())
+            {
+                var instance = instances.FirstOrDefault(i => i.scopeInstance.Equals(scopeArgument));
+                if (instance != (null, null))
+                    return (T) instance.instance;
+
+                T createdInstance = CreateInstance<T>(registration, arguments);
+                instances.Add((scopeArgument, createdInstance));
+
+                return createdInstance;
+            }
+
+            T newInstance = CreateInstance<T>(registration, arguments);
+            _multitons.Add((typeof(T), registration.Scope, new List<(object, object)>() {(scopeArgument, newInstance)}));
 
             return newInstance;
         }
@@ -206,6 +247,7 @@ namespace LightweightIocContainer
         {
             _registrations.Clear();
             _singletons.Clear();
+            _multitons.Clear();
         }
     }
 }

@@ -19,8 +19,11 @@ namespace LightweightIocContainer
         /// <summary>
         /// One instance is created that gets returned every time an instance is resolved
         /// </summary>
-        Singleton
+        Singleton,
 
-        //TODO: Add Lifestyle.Multiton
+        /// <summary>
+        /// A new instance gets created if the given scope has no created instance yet. Otherwise the already created instance is used.
+        /// </summary>
+        Multiton
     }
 }

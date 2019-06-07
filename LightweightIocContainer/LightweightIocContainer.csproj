@@ -7,13 +7,12 @@
     <Description>A lightweight IOC Container</Description>
     <RepositoryUrl>https://github.com/SimonG96/LightweightIocContainer</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/SimonG96/LightweightIocContainer/blob/master/LICENSE</PackageLicenseUrl>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Factories\" />
     <Folder Include="Interfaces\Factories\" />
-    <Folder Include="Interfaces\Registrations\" />
-    <Folder Include="Registrations\" />
   </ItemGroup>
 
   <ItemGroup>

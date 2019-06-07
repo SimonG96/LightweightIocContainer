@@ -25,6 +25,18 @@ namespace LightweightIocContainer.Registrations
         }
 
         /// <summary>
+        /// Register an Interface with a Type that implements it as a multiton and create a <see cref="IMultitonRegistration{TInterface}"/>
+        /// </summary>
+        /// <typeparam name="TInterface">The Interface to register</typeparam>
+        /// <typeparam name="TImplementation">The Type that implements the <see cref="TInterface"/></typeparam>
+        /// <typeparam name="TScope">The Type of the multiton scope</typeparam>
+        /// <returns>A new created <see cref="IMultitonRegistration{TInterface}"/> with the given parameters</returns>
+        public static IMultitonRegistration<TInterface> Register<TInterface, TImplementation, TScope>() where TImplementation : TInterface
+        {
+            return new MultitonRegistration<TInterface>(typeof(TInterface), typeof(TImplementation), typeof(TScope));
+        }
+
+        /// <summary>
         /// Register an Interface as an abstract typed factory and create a <see cref="ITypedFactoryRegistration{TFactory}"/>
         /// </summary>
         /// <typeparam name="TFactory">The abstract typed factory to register</typeparam>
