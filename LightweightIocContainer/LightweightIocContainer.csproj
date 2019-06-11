@@ -9,6 +9,7 @@
     <PackageLicenseUrl>https://github.com/SimonG96/LightweightIocContainer/blob/master/LICENSE</PackageLicenseUrl>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/SimonG96/LightweightIocContainer</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
