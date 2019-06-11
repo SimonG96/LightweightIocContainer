@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>SimonG</Authors>
     <Copyright>Copyright(c) 2019 SimonG. All Rights Reserved.</Copyright>
-    <Description>A lightweight IOC Container</Description>
+    <Description>A lightweight IOC Container that is powerful enough to do all the things you need it to do.</Description>
     <RepositoryUrl>https://github.com/SimonG96/LightweightIocContainer</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/SimonG96/LightweightIocContainer/blob/master/LICENSE</PackageLicenseUrl>
     <LangVersion>latest</LangVersion>
@@ -20,6 +20,13 @@
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2019.1.1" />
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\README.md">
+      <Pack>true</Pack>
+      <PackagePath>\</PackagePath>
+    </Content>
   </ItemGroup>
 
 </Project>
