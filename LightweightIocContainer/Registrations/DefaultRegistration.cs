@@ -4,6 +4,7 @@
 
 using System;
 using LightweightIocContainer.Interfaces;
+using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
 
 namespace LightweightIocContainer.Registrations

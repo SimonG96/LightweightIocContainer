@@ -4,7 +4,7 @@
 
 using LightweightIocContainer.Interfaces.Registrations;
 
-namespace LightweightIocContainer.Interfaces
+namespace LightweightIocContainer.Interfaces.Installers
 {
     /// <summary>
     /// The base class for <see cref="IIocContainer"/> installers

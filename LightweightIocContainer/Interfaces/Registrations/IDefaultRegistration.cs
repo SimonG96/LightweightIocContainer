@@ -3,6 +3,7 @@
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System;
+using LightweightIocContainer.Interfaces.Installers;
 
 namespace LightweightIocContainer.Interfaces.Registrations
 {

@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
+using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Registrations;
 using Moq;
 using NUnit.Framework;

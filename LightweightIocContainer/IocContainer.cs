@@ -9,6 +9,7 @@ using System.Reflection;
 using JetBrains.Annotations;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
+using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
 
 namespace LightweightIocContainer
