@@ -10,6 +10,9 @@ using LightweightIocContainer.Interfaces.Installers;
 
 namespace LightweightIocContainer.Installers
 {
+    /// <summary>
+    /// An <see cref="IIocInstaller"/> that installs all <see cref="IIocInstaller"/>s for its given <see cref="Assembly"/>
+    /// </summary>
     public class AssemblyInstaller : IAssemblyInstaller
     {
         public AssemblyInstaller(Assembly assembly)
@@ -26,8 +29,15 @@ namespace LightweightIocContainer.Installers
             }
         }
 
+        /// <summary>
+        /// The <see cref="IIocInstaller"/>s of the Assembly that this <see cref="AssemblyInstaller"/> is installing
+        /// </summary>
         public List<IIocInstaller> Installers { get; }
 
+        /// <summary>
+        /// Install the found <see cref="IIocInstaller"/>s in the given <see cref="IIocContainer"/>
+        /// </summary>
+        /// <param name="container">The current <see cref="IIocContainer"/></param>
         public void Install(IIocContainer container)
         {
             foreach (var installer in Installers)
