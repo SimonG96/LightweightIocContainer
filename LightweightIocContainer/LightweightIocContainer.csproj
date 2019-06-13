@@ -21,6 +21,14 @@
     <DocumentationFile>D:\workspace\Testprojekte\LightweightIocContainer\LightweightIocContainer\LightweightIocContainer.xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
+    <DocumentationFile>D:\workspace\Testprojekte\LightweightIocContainer\LightweightIocContainer\LightweightIocContainer.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45|AnyCPU'">
+    <DocumentationFile>D:\workspace\Testprojekte\LightweightIocContainer\LightweightIocContainer\LightweightIocContainer.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Folder Include="Factories\" />
     <Folder Include="Interfaces\Factories\" />
