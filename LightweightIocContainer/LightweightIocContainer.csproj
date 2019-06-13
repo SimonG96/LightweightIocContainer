@@ -10,7 +10,7 @@
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/SimonG96/LightweightIocContainer</PackageProjectUrl>
-    <Version>1.1.0-beta2</Version>
+    <Version>1.1.0-beta3</Version>
   </PropertyGroup>
 
   <ItemGroup>
