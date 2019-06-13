@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
     <Authors>SimonG</Authors>
     <Copyright>Copyright(c) 2019 SimonG. All Rights Reserved.</Copyright>
     <Description>A lightweight IOC Container that is powerful enough to do all the things you need it to do.</Description>
@@ -10,6 +10,7 @@
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/SimonG96/LightweightIocContainer</PackageProjectUrl>
+    <Version>1.1.0-beta2</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +21,7 @@
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2019.1.1" />
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>

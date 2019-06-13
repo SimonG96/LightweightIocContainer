@@ -115,8 +115,13 @@ namespace LightweightIocContainer.Registrations
                 }
                 else
                 {
+#if NET45
+                    generator.Emit(OpCodes.Ldc_I4_0);
+                    generator.Emit(OpCodes.Newarr, typeof(object));
+#elif NETSTANDARD
                     MethodInfo emptyArray = typeof(Array).GetMethod(nameof(Array.Empty))?.MakeGenericMethod(typeof(object));
                     generator.EmitCall(OpCodes.Call, emptyArray, null);
+#endif
                 }
 
                 generator.EmitCall(OpCodes.Callvirt, typeof(IIocContainer).GetMethod(nameof(IIocContainer.Resolve), new[] { typeof(Type), typeof(object[])}), null);
