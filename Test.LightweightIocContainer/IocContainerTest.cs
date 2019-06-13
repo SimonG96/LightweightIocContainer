@@ -86,6 +86,15 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
+        public void TestRegister()
+        {
+            IIocContainer iocContainer = new IocContainer();
+
+            Assert.DoesNotThrow(() => iocContainer.Register(RegistrationFactory.Register(typeof(ITest), typeof(Test))));
+            Assert.DoesNotThrow(() => iocContainer.Register(RegistrationFactory.RegisterFactory(typeof(ITestFactory), iocContainer)));
+        }
+
+        [Test]
         public void TestRegisterMultiple()
         {
             IIocContainer iocContainer = new IocContainer();
