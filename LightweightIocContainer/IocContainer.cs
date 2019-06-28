@@ -158,7 +158,7 @@ namespace LightweightIocContainer
                 throw new MultitonResolveException("Can not resolve multiton without arguments.", typeof(T));
 
             object scopeArgument = arguments[0];
-            if (scopeArgument.GetType() != registration.Scope)
+            if (scopeArgument.GetType() != registration.Scope && !registration.Scope.IsInstanceOfType(scopeArgument))
                 throw new MultitonResolveException($"Can not resolve multiton without the first argument being the scope (should be of type {registration.Scope}).", typeof(T));
 
             //if a multiton for the given scope exists return it
@@ -245,7 +245,22 @@ namespace LightweightIocContainer
             
             return null;
         }
-        
+
+        /// <summary>
+        /// Clear the multiton instances of the given type from the registered multitons list
+        /// </summary>
+        /// <typeparam name="T">The Type to clear the multiton instances</typeparam>
+        public void ClearMultitonInstances<T>()
+        {
+            var multitonInstance = _multitons.FirstOrDefault(m => m.type == typeof(T));
+
+            //it is allowed to clear a non existing multiton instance (don't throw an exception)
+            if (multitonInstance == default)
+                return;
+
+            _multitons.Remove(multitonInstance);
+        }
+
         public void Dispose()
         {
             _registrations.Clear();

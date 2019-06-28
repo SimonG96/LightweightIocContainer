@@ -51,5 +51,11 @@ namespace LightweightIocContainer.Interfaces
         /// <returns>An instance of the given type</returns>
         /// <exception cref="InternalResolveException">Could not find function <see cref="IocContainer.ResolveInternal{T}"/></exception>
         object Resolve(Type type, object[] arguments);
+
+        /// <summary>
+        /// Clear the multiton instances of the given type from the registered multitons list
+        /// </summary>
+        /// <typeparam name="T">The Type to clear the multiton instances</typeparam>
+        void ClearMultitonInstances<T>();
     }
 }

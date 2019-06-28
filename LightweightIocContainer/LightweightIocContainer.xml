@@ -4,6 +4,16 @@
         <name>LightweightIocContainer</name>
     </assembly>
     <members>
+        <member name="T:LightweightIocContainer.Exceptions.IllegalAbstractMethodCreationException">
+            <summary>
+            The creation of the abstract method is illegal in its current state
+            </summary>
+        </member>
+        <member name="P:LightweightIocContainer.Exceptions.IllegalAbstractMethodCreationException.Method">
+            <summary>
+            The Method whose creation is illegal
+            </summary>
+        </member>
         <member name="T:LightweightIocContainer.Exceptions.InternalResolveException">
             <summary>
             An internal Error happened while the <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/> tried to resolve an instance
@@ -152,6 +162,12 @@
             <param name="arguments">The constructor arguments</param>
             <returns>An instance of the given type</returns>
             <exception cref="T:LightweightIocContainer.Exceptions.InternalResolveException">Could not find function <see cref="M:LightweightIocContainer.IocContainer.ResolveInternal``1(System.Object[])"/></exception>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.ClearMultitonInstances``1">
+            <summary>
+            Clear the multiton instances of the given type from the registered multitons list
+            </summary>
+            <typeparam name="T">The Type to clear the multiton instances</typeparam>
         </member>
         <member name="T:LightweightIocContainer.Interfaces.Installers.IAssemblyInstaller">
             <summary>
@@ -330,6 +346,12 @@
             <param name="arguments">The existing arguments</param>
             <returns>An array of all needed constructor arguments to create <param name="type"></param></returns>
         </member>
+        <member name="M:LightweightIocContainer.IocContainer.ClearMultitonInstances``1">
+            <summary>
+            Clear the multiton instances of the given type from the registered multitons list
+            </summary>
+            <typeparam name="T">The Type to clear the multiton instances</typeparam>
+        </member>
         <member name="T:LightweightIocContainer.Lifestyle">
             <summary>
             The Lifestyles that can be used for a <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/>
@@ -483,6 +505,7 @@
             Creates the factory from the given abstract factory type
             </summary>
             <exception cref="T:LightweightIocContainer.Exceptions.InvalidFactoryRegistrationException">Factory registration is invalid</exception>
+            <exception cref="T:LightweightIocContainer.Exceptions.IllegalAbstractMethodCreationException">Creation of abstract methods are illegal in their current state</exception>
         </member>
     </members>
 </doc>

@@ -26,11 +26,20 @@ namespace Test.LightweightIocContainer
             ITest Create();
             ITest Create(string name);
             ITest Create(MultitonScope scope);
+
+            void ClearMultitonInstance<T>();
         }
 
         private interface ITestFactoryNoCreate
         {
             
+        }
+
+        private interface ITestFactoryNonGenericClear
+        {
+            ITest Create();
+
+            void ClearMultitonInstance();
         }
 
         private class Test : ITest
@@ -110,6 +119,14 @@ namespace Test.LightweightIocContainer
             IIocContainer iocContainer = new IocContainer();
 
             Assert.Throws<InvalidFactoryRegistrationException>(() => iocContainer.Register(RegistrationFactory.RegisterFactory<ITestFactoryNoCreate>(iocContainer)));
+        }
+
+        [Test]
+        public void TestRegisterFactoryClearMultitonsNonGeneric()
+        {
+            IIocContainer iocContainer = new IocContainer();
+
+            Assert.Throws<IllegalAbstractMethodCreationException>(() => iocContainer.Register(RegistrationFactory.RegisterFactory<ITestFactoryNonGenericClear>(iocContainer)));
         }
 
         [Test]
@@ -286,6 +303,36 @@ namespace Test.LightweightIocContainer
             Assert.AreSame(resolvedTest1, resolvedTest2);
             Assert.AreNotSame(resolvedTest1, resolvedTest3);
             Assert.AreNotSame(resolvedTest2, resolvedTest3);
+        }
+
+        [Test]
+        public void TestResolveMultitonFromFactoryClearInstances()
+        {
+            IIocContainer iocContainer = new IocContainer();
+            iocContainer.Register(RegistrationFactory.Register<ITest, Test, MultitonScope>());
+            iocContainer.Register(RegistrationFactory.RegisterFactory<ITestFactory>(iocContainer));
+
+            MultitonScope scope1 = new MultitonScope();
+            MultitonScope scope2 = new MultitonScope();
+
+            ITestFactory testFactory = iocContainer.Resolve<ITestFactory>();
+
+            ITest resolvedTest1 = testFactory.Create(scope1);
+            ITest resolvedTest2 = testFactory.Create(scope1);
+            ITest resolvedTest3 = testFactory.Create(scope2);
+
+            Assert.AreSame(resolvedTest1, resolvedTest2);
+            Assert.AreNotSame(resolvedTest1, resolvedTest3);
+            Assert.AreNotSame(resolvedTest2, resolvedTest3);
+
+            testFactory.ClearMultitonInstance<ITest>();
+
+            ITest resolvedTest4 = testFactory.Create(scope1);
+            ITest resolvedTest5 = testFactory.Create(scope2);
+
+            Assert.AreNotSame(resolvedTest1, resolvedTest4);
+            Assert.AreNotSame(resolvedTest2, resolvedTest4);
+            Assert.AreNotSame(resolvedTest3, resolvedTest5);
         }
     }
 }
