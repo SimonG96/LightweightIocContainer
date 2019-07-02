@@ -281,7 +281,7 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
-        /// The <see cref="Dispose"/> method
+        /// The <see cref="IDisposable.Dispose"/> method
         /// </summary>
         public void Dispose()
         {
@@ -295,7 +295,7 @@ namespace LightweightIocContainer
         /// </summary>
         private class InternalResolvePlaceholder
         {
-            
+
         }
     }
 }

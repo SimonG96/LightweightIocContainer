@@ -439,7 +439,7 @@
         </member>
         <member name="M:LightweightIocContainer.IocContainer.Dispose">
             <summary>
-            The <see cref="M:LightweightIocContainer.IocContainer.Dispose"/> method
+            The <see cref="M:System.IDisposable.Dispose"/> method
             </summary>
         </member>
         <member name="T:LightweightIocContainer.IocContainer.InternalResolvePlaceholder">
