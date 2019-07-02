@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Exceptions;
@@ -26,6 +27,7 @@ namespace Test.LightweightIocContainer
             ITest Create();
             ITest Create(string name);
             ITest Create(MultitonScope scope);
+            ITest Create(bool someBool, string name = null);
 
             void ClearMultitonInstance<T>();
         }
@@ -51,6 +53,11 @@ namespace Test.LightweightIocContainer
         private class TestConstructor : ITest
         {
             public TestConstructor(string name, Test test)
+            {
+
+            }
+
+            public TestConstructor(bool someBool, Test test, string name)
             {
 
             }
@@ -285,6 +292,20 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
+        public void TestResolveFromFactoryWithDefaultParamCreate()
+        {
+            IIocContainer iocContainer = new IocContainer();
+            iocContainer.Register(RegistrationFactory.Register<ITest, TestConstructor>());
+            iocContainer.Register(RegistrationFactory.Register<Test, Test>()); //this registration is abnormal and should only be used in unit tests
+            iocContainer.Register(RegistrationFactory.RegisterFactory<ITestFactory>(iocContainer));
+
+            ITestFactory testFactory = iocContainer.Resolve<ITestFactory>();
+            ITest createdTest = testFactory.Create(true);
+
+            Assert.IsInstanceOf<TestConstructor>(createdTest);
+        }
+
+        [Test]
         public void TestResolveMultitonFromFactory()
         {
             IIocContainer iocContainer = new IocContainer();
@@ -309,6 +330,7 @@ namespace Test.LightweightIocContainer
         public void TestResolveMultitonFromFactoryClearInstances()
         {
             IIocContainer iocContainer = new IocContainer();
+
             iocContainer.Register(RegistrationFactory.Register<ITest, Test, MultitonScope>());
             iocContainer.Register(RegistrationFactory.RegisterFactory<ITestFactory>(iocContainer));
 

@@ -80,7 +80,7 @@ namespace LightweightIocContainer
         /// <param name="arguments">The constructor arguments</param>
         /// <returns>An instance of the given type</returns>
         /// <exception cref="InternalResolveException">Could not find function <see cref="ResolveInternal{T}"/></exception>
-        public object Resolve(Type type, object[] arguments) //somehow the order of the arguments is different in the application compared to the unit test
+        public object Resolve(Type type, object[] arguments)
         {
             MethodInfo resolveMethod = typeof(IocContainer).GetMethod(nameof(ResolveInternal), BindingFlags.NonPublic | BindingFlags.Instance);
             MethodInfo genericResolveMethod = resolveMethod?.MakeGenericMethod(type);
@@ -218,18 +218,37 @@ namespace LightweightIocContainer
                     ParameterInfo[] parameters = ctor.GetParameters();
                     foreach (var parameter in parameters)
                     {
-                        object fittingArgument = null;
+                        object fittingArgument = new InternalResolvePlaceholder();
                         if (argumentsList != null)
                         {
-                            fittingArgument = argumentsList.FirstOrDefault(a => a?.GetType() == parameter.ParameterType);
-                            if (fittingArgument != null)
+                            fittingArgument = argumentsList.FirstOrGiven<object, InternalResolvePlaceholder>(a => a?.GetType() == parameter.ParameterType);
+                            if (!(fittingArgument is InternalResolvePlaceholder))
                             {
                                 int index = argumentsList.IndexOf(fittingArgument);
-                                argumentsList[index] = null;
+                                argumentsList[index] = new InternalResolvePlaceholder();
+                            }
+                            else //fittingArgument is InternalResolvePlaceholder
+                            {
+                                try
+                                {
+                                    fittingArgument = Resolve(parameter.ParameterType, null);
+                                }
+                                catch (Exception)
+                                {
+                                    fittingArgument = argumentsList.FirstOrGiven<object, InternalResolvePlaceholder>(a => parameter.ParameterType.GetDefault() == a);
+
+                                    if (!(fittingArgument is InternalResolvePlaceholder))
+                                    {
+                                        int index = argumentsList.IndexOf(fittingArgument);
+                                        argumentsList[index] = new InternalResolvePlaceholder();
+                                    }
+                                }
                             }
                         }
 
-                        if (fittingArgument == null)
+                        if (fittingArgument is InternalResolvePlaceholder && parameter.HasDefaultValue)
+                            ctorParams.Add(parameter.DefaultValue);
+                        else if (fittingArgument is InternalResolvePlaceholder)
                             ctorParams.Add(Resolve(parameter.ParameterType, null));
                         else
                             ctorParams.Add(fittingArgument);
@@ -266,6 +285,14 @@ namespace LightweightIocContainer
             _registrations.Clear();
             _singletons.Clear();
             _multitons.Clear();
+        }
+
+        /// <summary>
+        /// An internal placeholder that is used during the resolving process
+        /// </summary>
+        private class InternalResolvePlaceholder
+        {
+            
         }
     }
 }

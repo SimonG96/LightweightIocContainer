@@ -4,6 +4,35 @@
         <name>LightweightIocContainer</name>
     </assembly>
     <members>
+        <member name="M:LightweightIocContainer.EnumerableExtension.FirstOrGiven``2(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Returns the first element of a <see cref="T:System.Collections.Generic.IEnumerable`1"/>, or a new instance of a given <see cref="T:System.Type"/> if the <see cref="T:System.Collections.Generic.IEnumerable`1"/> contains no elements
+            </summary>
+            <typeparam name="TSource">The source <see cref="T:System.Type"/> of the <see cref="T:System.Collections.Generic.IEnumerable`1"/></typeparam>
+            <typeparam name="TGiven">The given <see cref="T:System.Type"/> to return if the <see cref="T:System.Collections.Generic.IEnumerable`1"/> contains no elements</typeparam>
+            <param name="source">The given <see cref="T:System.Collections.Generic.IEnumerable`1"/></param>
+            <returns>The first element of the <see cref="T:System.Collections.Generic.IEnumerable`1"/>, or a new instance of a given <see cref="T:System.Type"/> if the <see cref="T:System.Collections.Generic.IEnumerable`1"/> contains no elements</returns>
+        </member>
+        <member name="M:LightweightIocContainer.EnumerableExtension.FirstOrGiven``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+            Returns the first element of a <see cref="T:System.Collections.Generic.IEnumerable`1"/> that satisfies a condition, or a new instance of a given <see cref="T:System.Type"/> if no such element is found
+            </summary>
+            <typeparam name="TSource">The source <see cref="T:System.Type"/> of the <see cref="T:System.Collections.Generic.IEnumerable`1"/></typeparam>
+            <typeparam name="TGiven">The given <see cref="T:System.Type"/> to return if the <see cref="T:System.Collections.Generic.IEnumerable`1"/> contains no element that satisfies the given condition</typeparam>
+            <param name="source">The given <see cref="T:System.Collections.Generic.IEnumerable`1"/></param>
+            <param name="predicate">A function to test each element for a condition</param>
+            <returns>The first element of the <see cref="T:System.Collections.Generic.IEnumerable`1"/> that satisfies a condition, or a new instance of the given <see cref="T:System.Type"/> if no such element is found</returns>
+        </member>
+        <member name="M:LightweightIocContainer.EnumerableExtension.TryGetFirst``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+            Tries to get the first element of the given <see cref="T:System.Collections.Generic.IEnumerable`1"/> or creates a new element of a given <see cref="T:System.Type"/> when no element is found
+            </summary>
+            <typeparam name="TSource">The source <see cref="T:System.Type"/> of the <see cref="T:System.Collections.Generic.IEnumerable`1"/></typeparam>
+            <typeparam name="TGiven">The given <see cref="T:System.Type"/> to create a new element when no fitting element is found</typeparam>
+            <param name="source">The given <see cref="T:System.Collections.Generic.IEnumerable`1"/></param>
+            <param name="predicate">A function to test each element for a condition</param>
+            <returns>The first element of the <see cref="T:System.Collections.Generic.IEnumerable`1"/> or a new instance of the given <see cref="T:System.Type"/> when no element is found</returns>
+        </member>
         <member name="T:LightweightIocContainer.Exceptions.IllegalAbstractMethodCreationException">
             <summary>
             The creation of the abstract method is illegal in its current state
@@ -352,6 +381,11 @@
             </summary>
             <typeparam name="T">The Type to clear the multiton instances</typeparam>
         </member>
+        <member name="T:LightweightIocContainer.IocContainer.InternalResolvePlaceholder">
+            <summary>
+            An internal placeholder that is used during the resolving process
+            </summary>
+        </member>
         <member name="T:LightweightIocContainer.Lifestyle">
             <summary>
             The Lifestyles that can be used for a <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/>
@@ -506,6 +540,13 @@
             </summary>
             <exception cref="T:LightweightIocContainer.Exceptions.InvalidFactoryRegistrationException">Factory registration is invalid</exception>
             <exception cref="T:LightweightIocContainer.Exceptions.IllegalAbstractMethodCreationException">Creation of abstract methods are illegal in their current state</exception>
+        </member>
+        <member name="M:LightweightIocContainer.TypeExtension.GetDefault(System.Type)">
+            <summary>
+            Returns the default value for a given <see cref="T:System.Type"/>
+            </summary>
+            <param name="type">The given <see cref="T:System.Type"/></param>
+            <returns>The default value for the given <see cref="T:System.Type"/></returns>
         </member>
     </members>
 </doc>
