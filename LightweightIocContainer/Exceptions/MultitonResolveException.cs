@@ -11,6 +11,11 @@ namespace LightweightIocContainer.Exceptions
     /// </summary>
     public class MultitonResolveException : InternalResolveException
     {
+        /// <summary>
+        /// An error happened while trying to resolve a multiton
+        /// </summary>
+        /// <param name="message">The exception message</param>
+        /// <param name="type">The <see cref="System.Type"/> of the multiton that's responsible for the exception</param>
         public MultitonResolveException(string message, Type type)
             : base(message)
         {
@@ -18,7 +23,7 @@ namespace LightweightIocContainer.Exceptions
         }
 
         /// <summary>
-        /// The type of the multiton that's responsible for the exception
+        /// The <see cref="System.Type"/> of the multiton that's responsible for the exception
         /// </summary>
         public Type Type { get; }
     }

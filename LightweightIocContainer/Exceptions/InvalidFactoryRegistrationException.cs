@@ -9,6 +9,10 @@ namespace LightweightIocContainer.Exceptions
     /// </summary>
     public class InvalidFactoryRegistrationException : InvalidRegistrationException
     {
+        /// <summary>
+        /// The registration of a Factory is not valid
+        /// </summary>
+        /// <param name="message">The exception message</param>
         public InvalidFactoryRegistrationException(string message)
             : base(message)
         {

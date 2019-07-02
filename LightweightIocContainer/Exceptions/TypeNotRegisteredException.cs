@@ -8,10 +8,14 @@ using LightweightIocContainer.Interfaces;
 namespace LightweightIocContainer.Exceptions
 {
     /// <summary>
-    /// The Type is not registered in this <see cref="IIocContainer"/>
+    /// The <see cref="System.Type"/> is not registered in this <see cref="IIocContainer"/>
     /// </summary>
     public class TypeNotRegisteredException : Exception
     {
+        /// <summary>
+        /// The <see cref="System.Type"/> is not registered in this <see cref="IIocContainer"/>
+        /// </summary>
+        /// <param name="type">The unregistered <see cref="System.Type"/></param>
         public TypeNotRegisteredException(Type type)
             : base($"Type {type.Name} is not registered in this IocContainer.")
         {
@@ -19,7 +23,7 @@ namespace LightweightIocContainer.Exceptions
         }
 
         /// <summary>
-        /// The unregistered Type
+        /// The unregistered <see cref="System.Type"/>
         /// </summary>
         public Type Type { get; }
     }

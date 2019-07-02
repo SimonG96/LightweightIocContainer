@@ -13,7 +13,7 @@ namespace LightweightIocContainer.Interfaces.Registrations
     public interface IMultitonRegistration<TInterface> : IDefaultRegistration<TInterface>
     {
         /// <summary>
-        /// The type of the multiton scope
+        /// The <see cref="Type"/> of the multiton scope
         /// </summary>
         Type Scope { get; }
     }

@@ -17,7 +17,7 @@ namespace LightweightIocContainer.Interfaces.Registrations
         string Name { get; }
 
         /// <summary>
-        /// The Type of the Interface that is registered with this <see cref="IRegistrationBase"/>
+        /// The <see cref="Type"/> of the Interface that is registered with this <see cref="IRegistrationBase"/>
         /// </summary>
         Type InterfaceType { get; }
     }

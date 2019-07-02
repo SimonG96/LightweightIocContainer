@@ -42,7 +42,7 @@ namespace LightweightIocContainer
         /// Add the <see cref="IRegistrationBase"/> to the the <see cref="IocContainer"/>
         /// </summary>
         /// <param name="registration">The given <see cref="IRegistrationBase"/></param>
-        /// <exception cref="MultipleRegistrationException">The Type is already registered in this <see cref="IocContainer"/></exception>
+        /// <exception cref="MultipleRegistrationException">The <see cref="Type"/> is already registered in this <see cref="IocContainer"/></exception>
         public void Register(IRegistrationBase registration)
         {
             //if type is already registered
@@ -53,32 +53,32 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
-        /// Gets an instance of the given type
+        /// Gets an instance of the given <see cref="Type"/>
         /// </summary>
-        /// <typeparam name="T">The given type</typeparam>
-        /// <returns>An instance of the given type</returns>
+        /// <typeparam name="T">The given <see cref="Type"/></typeparam>
+        /// <returns>An instance of the given <see cref="Type"/></returns>
         public T Resolve<T>()
         {
             return ResolveInternal<T>(null);
         }
 
         /// <summary>
-        /// Gets an instance of the given type
+        /// Gets an instance of the given <see cref="Type"/>
         /// </summary>
-        /// <typeparam name="T">The given type</typeparam>
+        /// <typeparam name="T">The given <see cref="Type"/></typeparam>
         /// <param name="arguments">The constructor arguments</param>
-        /// <returns>An instance of the given type</returns>
+        /// <returns>An instance of the given <see cref="Type"/></returns>
         public T Resolve<T>(params object[] arguments)
         {
             return ResolveInternal<T>(arguments);
         }
 
         /// <summary>
-        /// Gets an instance of the given type
+        /// Gets an instance of the given <see cref="Type"/>
         /// </summary>
-        /// <param name="type">The given type</param>
+        /// <param name="type">The given <see cref="Type"/></param>
         /// <param name="arguments">The constructor arguments</param>
-        /// <returns>An instance of the given type</returns>
+        /// <returns>An instance of the given <see cref="Type"/></returns>
         /// <exception cref="InternalResolveException">Could not find function <see cref="ResolveInternal{T}"/></exception>
         public object Resolve(Type type, object[] arguments)
         {
@@ -92,13 +92,13 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
-        /// Gets an instance of a given registered type
+        /// Gets an instance of a given registered <see cref="Type"/>
         /// </summary>
-        /// <typeparam name="T">The registered type</typeparam>
+        /// <typeparam name="T">The registered <see cref="Type"/></typeparam>
         /// <param name="arguments">The constructor arguments</param>
-        /// <returns>An instance of the given registered type</returns>
-        /// <exception cref="TypeNotRegisteredException">The given type is not registered in this <see cref="IocContainer"/></exception>
-        /// <exception cref="UnknownRegistrationException">The registration for the given type has an unknown type</exception>
+        /// <returns>An instance of the given registered <see cref="Type"/></returns>
+        /// <exception cref="TypeNotRegisteredException">The given <see cref="Type"/> is not registered in this <see cref="IocContainer"/></exception>
+        /// <exception cref="UnknownRegistrationException">The registration for the given <see cref="Type"/> has an unknown <see cref="Type"/></exception>
         private T ResolveInternal<T>(params object[] arguments)
         {
             IRegistrationBase registration = _registrations.FirstOrDefault(r => r.InterfaceType == typeof(T));
@@ -123,12 +123,12 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
-        /// Gets or creates a singleton instance of a given type
+        /// Gets or creates a singleton instance of a given <see cref="Type"/>
         /// </summary>
-        /// <typeparam name="T">The given type</typeparam>
-        /// <param name="registration">The registration of the given type</param>
+        /// <typeparam name="T">The given <see cref="Type"/></typeparam>
+        /// <param name="registration">The registration of the given <see cref="Type"/></param>
         /// <param name="arguments">The arguments to resolve</param>
-        /// <returns>An existing or newly created singleton instance of the given type</returns>
+        /// <returns>An existing or newly created singleton instance of the given <see cref="Type"/></returns>
         private T GetOrCreateSingletonInstance<T>(IDefaultRegistration<T> registration, params object[] arguments)
         {
             //if a singleton instance exists return it
@@ -144,12 +144,12 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
-        /// Gets or creates a multiton instance of a given type
+        /// Gets or creates a multiton instance of a given <see cref="Type"/>
         /// </summary>
-        /// <typeparam name="T">The given type</typeparam>
-        /// <param name="registration">The registration of the given type</param>
+        /// <typeparam name="T">The given <see cref="Type"/></typeparam>
+        /// <param name="registration">The registration of the given <see cref="Type"/></param>
         /// <param name="arguments">The arguments to resolve</param>
-        /// <returns>An existing or newly created multiton instance of the given type</returns>
+        /// <returns>An existing or newly created multiton instance of the given <see cref="Type"/></returns>
         /// <exception cref="MultitonResolveException">No arguments given</exception>
         /// <exception cref="MultitonResolveException">Scope argument not given</exception>
         private T GetOrCreateMultitonInstance<T>(IMultitonRegistration<T> registration, params object[] arguments)
@@ -182,12 +182,12 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
-        /// Creates an instance of a given type
+        /// Creates an instance of a given <see cref="Type"/>
         /// </summary>
-        /// <typeparam name="T">The given type</typeparam>
-        /// <param name="registration">The registration of the given type</param>
+        /// <typeparam name="T">The given <see cref="Type"/></typeparam>
+        /// <param name="registration">The registration of the given <see cref="Type"/></param>
         /// <param name="arguments">The constructor arguments</param>
-        /// <returns>A newly created instance of the given type</returns>
+        /// <returns>A newly created instance of the given <see cref="Type"/></returns>
         private T CreateInstance<T>(IDefaultRegistration<T> registration, params object[] arguments)
         {
             arguments = ResolveConstructorArguments(registration.ImplementationType, arguments);
@@ -200,9 +200,9 @@ namespace LightweightIocContainer
         /// <summary>
         /// Resolve the missing constructor arguments
         /// </summary>
-        /// <param name="type">The type that will be created</param>
+        /// <param name="type">The <see cref="Type"/> that will be created</param>
         /// <param name="arguments">The existing arguments</param>
-        /// <returns>An array of all needed constructor arguments to create <param name="type"></param></returns>
+        /// <returns>An array of all needed constructor arguments to create the <see cref="Type"/></returns>
         [CanBeNull]
         private object[] ResolveConstructorArguments(Type type, object[] arguments)
         {
@@ -266,9 +266,9 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
-        /// Clear the multiton instances of the given type from the registered multitons list
+        /// Clear the multiton instances of the given <see cref="Type"/> from the registered multitons list
         /// </summary>
-        /// <typeparam name="T">The Type to clear the multiton instances</typeparam>
+        /// <typeparam name="T">The <see cref="Type"/> to clear the multiton instances</typeparam>
         public void ClearMultitonInstances<T>()
         {
             var multitonInstance = _multitons.FirstOrDefault(m => m.type == typeof(T));
@@ -280,6 +280,9 @@ namespace LightweightIocContainer
             _multitons.Remove(multitonInstance);
         }
 
+        /// <summary>
+        /// The <see cref="Dispose"/> method
+        /// </summary>
         public void Dispose()
         {
             _registrations.Clear();

@@ -13,6 +13,12 @@ namespace LightweightIocContainer.Registrations
     /// <typeparam name="TInterface">The registered interface</typeparam>
     public class MultitonRegistration<TInterface> : DefaultRegistration<TInterface>, IMultitonRegistration<TInterface>
     {
+        /// <summary>
+        /// The registration that is used to register a multiton
+        /// </summary>
+        /// <param name="interfaceType">The <see cref="Type"/> of the Interface</param>
+        /// <param name="implementationType">The <see cref="Type"/> of the Implementation</param>
+        /// <param name="scope">The <see cref="Type"/> of the Multiton Scope</param>
         public MultitonRegistration(Type interfaceType, Type implementationType, Type scope)
             : base(interfaceType, implementationType, Lifestyle.Multiton)
         {
@@ -20,7 +26,7 @@ namespace LightweightIocContainer.Registrations
         }
 
         /// <summary>
-        /// The type of the multiton scope
+        /// The <see cref="Type"/> of the multiton scope
         /// </summary>
         public Type Scope { get; }
     }

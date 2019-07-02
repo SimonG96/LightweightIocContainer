@@ -13,7 +13,7 @@ namespace LightweightIocContainer.Interfaces.Installers
     public interface IAssemblyInstaller : IIocInstaller
     {
         /// <summary>
-        /// The <see cref="IIocInstaller"/>s of the Assembly that this <see cref="IAssemblyInstaller"/> is installing
+        /// The <see cref="IIocInstaller"/>s of the <see cref="Assembly"/> that this <see cref="IAssemblyInstaller"/> is installing
         /// </summary>
         List<IIocInstaller> Installers { get; }
     }

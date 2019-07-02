@@ -11,6 +11,10 @@ namespace LightweightIocContainer.Exceptions
     /// </summary>
     public class InvalidRegistrationException : Exception
     {
+        /// <summary>
+        /// The registration is not valid
+        /// </summary>
+        /// <param name="message">The exception message</param>
         public InvalidRegistrationException(string message)
             : base(message)
         {

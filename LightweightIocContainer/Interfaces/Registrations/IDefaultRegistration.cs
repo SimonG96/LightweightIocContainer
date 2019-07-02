@@ -8,13 +8,13 @@ using LightweightIocContainer.Interfaces.Installers;
 namespace LightweightIocContainer.Interfaces.Registrations
 {
     /// <summary>
-    /// The default registration that is used to register a Type for the Interface it implements
+    /// The default registration that is used to register a <see cref="Type"/> for the Interface it implements
     /// </summary>
     /// <typeparam name="TInterface">The registered Interface</typeparam>
     public interface IDefaultRegistration<TInterface> : IRegistrationBase
     {
         /// <summary>
-        /// The Type that implements the <see cref="IRegistrationBase.InterfaceType"/> that is registered with this <see cref="IDefaultRegistration{TInterface}"/>
+        /// The <see cref="Type"/> that implements the <see cref="IRegistrationBase.InterfaceType"/> that is registered with this <see cref="IDefaultRegistration{TInterface}"/>
         /// </summary>
         Type ImplementationType { get; }
 
@@ -24,15 +24,15 @@ namespace LightweightIocContainer.Interfaces.Registrations
         Lifestyle Lifestyle { get; }
 
         /// <summary>
-        /// This action is invoked when an instance of this type is created.
+        /// This <see cref="Action{T}"/> is invoked when an instance of this type is created.
         /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="OnCreate"/></para>
         /// </summary>
         Action<TInterface> OnCreateAction { get; }
 
         /// <summary>
-        /// Pass an action that will be invoked when an instance of this type is created
+        /// Pass an <see cref="Action{T}"/> that will be invoked when an instance of this type is created
         /// </summary>
-        /// <param name="action">The action</param>
+        /// <param name="action">The <see cref="Action{T}"/></param>
         /// <returns>The current instance of this <see cref="IDefaultRegistration{TInterface}"/></returns>
         IDefaultRegistration<TInterface> OnCreate(Action<TInterface> action);
     }

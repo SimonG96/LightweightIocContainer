@@ -12,6 +12,10 @@ namespace LightweightIocContainer.Exceptions
     /// </summary>
     public class UnknownRegistrationException : Exception
     {
+        /// <summary>
+        /// An unknown <see cref="IRegistrationBase"/> was used
+        /// </summary>
+        /// <param name="message">The exception message</param>
         public UnknownRegistrationException(string message)
             : base(message)
         {

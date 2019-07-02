@@ -12,6 +12,10 @@ namespace LightweightIocContainer.Exceptions
     /// </summary>
     public class InternalResolveException : Exception
     {
+        /// <summary>
+        /// An internal Error happened while the <see cref="IIocContainer"/> tried to resolve an instance
+        /// </summary>
+        /// <param name="message">The exception message</param>
         public InternalResolveException(string message)
             : base(message)
         {

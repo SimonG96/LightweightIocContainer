@@ -18,11 +18,16 @@ namespace LightweightIocContainer.Registrations
     /// <summary>
     /// The registration that is used to register an abstract typed factory
     /// </summary>
-    /// <typeparam name="TFactory">The type of the abstract typed factory</typeparam>
+    /// <typeparam name="TFactory">The <see cref="Type"/> of the abstract typed factory</typeparam>
     public class TypedFactoryRegistration<TFactory> : ITypedFactoryRegistration<TFactory>
     {
         private const string CLEAR_MULTITON_INSTANCE_METHOD_NAME = "ClearMultitonInstance";
 
+        /// <summary>
+        /// The registration that is used to register an abstract typed factory
+        /// </summary>
+        /// <param name="factoryType">The <see cref="Type"/> of the abstract typed factory</param>
+        /// <param name="container">The current instance of the <see cref="IIocContainer"/></param>
         public TypedFactoryRegistration(Type factoryType, IIocContainer container)
         {
             InterfaceType = factoryType;
@@ -37,7 +42,7 @@ namespace LightweightIocContainer.Registrations
         public string Name { get; }
 
         /// <summary>
-        /// The Type of the abstract typed factory that is registered with this <see cref="TypedFactoryRegistration{TFactory}"/>
+        /// The <see cref="Type"/> of the abstract typed factory that is registered with this <see cref="TypedFactoryRegistration{TFactory}"/>
         /// </summary>
         public Type InterfaceType { get; }
 
@@ -127,7 +132,7 @@ namespace LightweightIocContainer.Registrations
 #endif
                 }
 
-                generator.EmitCall(OpCodes.Callvirt, typeof(IIocContainer).GetMethod(nameof(IIocContainer.Resolve), new[] { typeof(Type), typeof(object[])}), null);
+                generator.EmitCall(OpCodes.Callvirt, typeof(IIocContainer).GetMethod(nameof(IIocContainer.Resolve), new[] {typeof(Type), typeof(object[])}), null);
                 generator.Emit(OpCodes.Castclass, createMethod.ReturnType);
                 generator.Emit(OpCodes.Ret);
             }

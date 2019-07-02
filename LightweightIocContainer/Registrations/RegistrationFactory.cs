@@ -18,7 +18,7 @@ namespace LightweightIocContainer.Registrations
         /// Register an Interface with a Type that implements it and create a <see cref="IDefaultRegistration{TInterface}"/>
         /// </summary>
         /// <typeparam name="TInterface">The Interface to register</typeparam>
-        /// <typeparam name="TImplementation">The Type that implements the <see cref="TInterface"/></typeparam>
+        /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
         /// <returns>A new created <see cref="IDefaultRegistration{TInterface}"/> with the given parameters</returns>
         public static IDefaultRegistration<TInterface> Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface
@@ -30,7 +30,7 @@ namespace LightweightIocContainer.Registrations
         /// Register an Interface with a Type that implements it as a multiton and create a <see cref="IMultitonRegistration{TInterface}"/>
         /// </summary>
         /// <typeparam name="TInterface">The Interface to register</typeparam>
-        /// <typeparam name="TImplementation">The Type that implements the <see cref="TInterface"/></typeparam>
+        /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <typeparam name="TScope">The Type of the multiton scope</typeparam>
         /// <returns>A new created <see cref="IMultitonRegistration{TInterface}"/> with the given parameters</returns>
         public static IMultitonRegistration<TInterface> Register<TInterface, TImplementation, TScope>() where TImplementation : TInterface
@@ -42,7 +42,7 @@ namespace LightweightIocContainer.Registrations
         /// Register an Interface with a Type that implements it and create a <see cref="IDefaultRegistration{TInterface}"/>
         /// </summary>
         /// <param name="tInterface">The Interface to register</param>
-        /// <param name="tImplementation">The Type that implements the <see cref="tInterface"/></param>
+        /// <param name="tImplementation">The Type that implements the interface</param>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
         /// <returns>A new created <see cref="IDefaultRegistration{TInterface}"/> with the given parameters</returns>
         public static IRegistrationBase Register(Type tInterface, Type tImplementation, Lifestyle lifestyle = Lifestyle.Transient)
@@ -55,7 +55,7 @@ namespace LightweightIocContainer.Registrations
         /// Register an Interface with a Type that implements it as a multiton and create a <see cref="IMultitonRegistration{TInterface}"/>
         /// </summary>
         /// <param name="tInterface">The Interface to register</param>
-        /// <param name="tImplementation">The Type that implements the <see cref="tInterface"/></param>
+        /// <param name="tImplementation">The Type that implements the interface</param>
         /// <param name="tScope">The Type of the multiton scope</param>
         /// <returns>A new created <see cref="IMultitonRegistration{TInterface}"/> with the given parameters</returns>
         public static IRegistrationBase Register(Type tInterface, Type tImplementation, Type tScope)
