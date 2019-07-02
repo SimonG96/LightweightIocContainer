@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Installers;
 using LightweightIocContainer.Interfaces;
@@ -18,6 +19,8 @@ namespace Test.LightweightIocContainer
     [TestFixture]
     public class AssemblyInstallerTest
     {
+        #region TestClasses
+
         private class TestInstaller : IIocInstaller
         {
             public void Install(IIocContainer container)
@@ -25,6 +28,14 @@ namespace Test.LightweightIocContainer
                 container.Register(new Mock<IRegistrationBase>().Object);
             }
         }
+
+        [UsedImplicitly]
+        public class AssemblyWrapper : Assembly
+        {
+
+        }
+
+        #endregion TestClasses
 
         [Test]
         public void TestInstall()
@@ -35,7 +46,7 @@ namespace Test.LightweightIocContainer
                 typeof(TestInstaller)
             };
 
-            Mock<Assembly> assemblyMock = new Mock<Assembly>();
+            Mock<AssemblyWrapper> assemblyMock = new Mock<AssemblyWrapper>();
             assemblyMock.Setup(a => a.GetTypes()).Returns(types.ToArray);
 
             Mock<IIocContainer> iocContainerMock = new Mock<IIocContainer>();
@@ -62,7 +73,7 @@ namespace Test.LightweightIocContainer
                 typeof(TestInstaller)
             };
 
-            Mock<Assembly> assemblyMock = new Mock<Assembly>();
+            Mock<AssemblyWrapper> assemblyMock = new Mock<AssemblyWrapper>();
             assemblyMock.Setup(a => a.GetTypes()).Returns(types.ToArray);
 
             IIocContainer iocContainer = new IocContainer();
