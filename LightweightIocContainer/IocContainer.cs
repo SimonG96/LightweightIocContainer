@@ -30,7 +30,7 @@ namespace LightweightIocContainer
         /// <returns>An instance of the current <see cref="IocContainer"/></returns>
         public IIocContainer Install(params IIocInstaller[] installers)
         {
-            foreach (var installer in installers)
+            foreach (IIocInstaller installer in installers)
             {
                 installer.Install(this);
             }
@@ -207,8 +207,8 @@ namespace LightweightIocContainer
         private object[] ResolveConstructorArguments(Type type, object[] arguments)
         {
             //find best ctor
-            IOrderedEnumerable<ConstructorInfo> sortedCtors = type.GetConstructors().OrderByDescending(c => c.GetParameters().Length);
-            foreach (var ctor in sortedCtors)
+            IOrderedEnumerable<ConstructorInfo> sortedConstructors = type.GetConstructors().OrderByDescending(c => c.GetParameters().Length);
+            foreach (ConstructorInfo ctor in sortedConstructors)
             {
                 try
                 {
@@ -216,7 +216,7 @@ namespace LightweightIocContainer
                     List<object> ctorParams = new List<object>();
 
                     ParameterInfo[] parameters = ctor.GetParameters();
-                    foreach (var parameter in parameters)
+                    foreach (ParameterInfo parameter in parameters)
                     {
                         object fittingArgument = new InternalResolvePlaceholder();
                         if (argumentsList != null)

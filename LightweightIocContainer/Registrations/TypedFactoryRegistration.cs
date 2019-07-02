@@ -85,7 +85,7 @@ namespace LightweightIocContainer.Registrations
             constructorGenerator.Emit(OpCodes.Stfld, containerFieldBuilder); //set `_container` field
             constructorGenerator.Emit(OpCodes.Ret);
 
-            foreach (var createMethod in createMethods)
+            foreach (MethodInfo createMethod in createMethods)
             {
                 //create a method that looks like this
                 //public `createMethod.ReturnType` Create(`createMethod.GetParameters()`)

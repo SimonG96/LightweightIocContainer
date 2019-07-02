@@ -44,7 +44,7 @@ namespace LightweightIocContainer.Installers
         /// <param name="container">The current <see cref="IIocContainer"/></param>
         public void Install(IIocContainer container)
         {
-            foreach (var installer in Installers)
+            foreach (IIocInstaller installer in Installers)
             {
                 installer.Install(container);
             }
