@@ -11,7 +11,7 @@ namespace LightweightIocContainer.Interfaces.Factories
     public interface ITypedFactory<TFactory>
     {
         /// <summary>
-        /// The implemented abstract typed factory/>
+        /// The implemented abstract typed factory
         /// </summary>
         TFactory Factory { get; set; }
     }
