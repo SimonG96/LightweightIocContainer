@@ -1,6 +1,6 @@
-﻿// // Author: Gockner, Simon
-// // Created: 2019-06-07
-// // Copyright(c) 2019 SimonG. All Rights Reserved.
+﻿// Author: Gockner, Simon
+// Created: 2019-06-07
+// Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System;
 using LightweightIocContainer.Interfaces.Registrations;
