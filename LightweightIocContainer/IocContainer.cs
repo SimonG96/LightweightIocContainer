@@ -221,7 +221,7 @@ namespace LightweightIocContainer
                         object fittingArgument = new InternalResolvePlaceholder();
                         if (argumentsList != null)
                         {
-                            fittingArgument = argumentsList.FirstOrGiven<object, InternalResolvePlaceholder>(a => a?.GetType() == parameter.ParameterType);
+                            fittingArgument = argumentsList.FirstOrGiven<object, InternalResolvePlaceholder>(a => a?.GetType() == parameter.ParameterType || parameter.ParameterType.IsInstanceOfType(a));
                             if (!(fittingArgument is InternalResolvePlaceholder))
                             {
                                 int index = argumentsList.IndexOf(fittingArgument);
