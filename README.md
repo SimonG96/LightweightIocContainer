@@ -5,6 +5,10 @@ A lightweight IOC Container that is powerful enough to do all the things you nee
 
 [![Build status](https://ci.appveyor.com/api/projects/status/lekwuyh91oqrt6oc?svg=true)](https://ci.appveyor.com/project/SimonG96/lightweightioccontainer)
 
+![Nuget](https://img.shields.io/nuget/dt/LightweightIocContainer.svg?label=NuGet%20Downloads&logo=NuGet)
+![Nuget](https://img.shields.io/nuget/v/LightweightIocContainer.svg?label=NuGet%20Version&logo=NuGet)
+![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/LightweightIocContainer.svg?label=NuGet%20Pre-Release&logo=NuGet)
+
 ## Get started with the Lightweight IOC Container
 
 ### How to install <!--TODO: Add links to wiki-->
