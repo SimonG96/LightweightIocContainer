@@ -11,16 +11,16 @@ A lightweight IOC Container that is powerful enough to do all the things you nee
 
 ## Get started with the Lightweight IOC Container
 
-### How to install <!--TODO: Add links to wiki-->
+### How to install
 
-The easiest way to install the Lightweight IOC Container is by using [NuGet](https://www.nuget.org/packages/LightweightIocContainer/).  
-You can either use the `PackageManager` in VisualStudio:
+The easiest way to [install](https://github.com/SimonG96/LightweightIocContainer/wiki/Install-Lightweight-IOC-Container) the Lightweight IOC Container is by using [NuGet](https://www.nuget.org/packages/LightweightIocContainer/).  
+You can either use the [`PackageManager`](https://github.com/SimonG96/LightweightIocContainer/wiki/Install-Lightweight-IOC-Container#packagemanager) in VisualStudio:
 
 ```PM
 PM> Install-Package LightweightIocContainer -Version 1.0.0
 ```
 
-or you can use the `.NET CLI`:
+or you can use the [`.NET CLI`](https://github.com/SimonG96/LightweightIocContainer/wiki/Install-Lightweight-IOC-Container#net-cli):
 
 ```.net
 > dotnet add package LightweightIocContainer --version 1.0.0
@@ -28,31 +28,31 @@ or you can use the `.NET CLI`:
 
 ### Example usage
 
-  1. Instantiate container:
+  1. [Instantiate `IocContainer`](https://github.com/SimonG96/LightweightIocContainer/wiki/Simple-Usage-of-Lightweight-IOC-Container#instantiate-container):
   
       ```c#
       IocContainer container = new IocContainer();
       ```
 
-  2. Install `IIocInstaller`s for the container:
+  2. Install [`IIocInstaller`s](https://github.com/SimonG96/LightweightIocContainer/wiki/IIocInstaller) for the container:
 
       ```c#
       container.Install(new Installer());
       ```
 
-  3. Resolve one instance from the container:
+  3. [Resolve](https://github.com/SimonG96/LightweightIocContainer/wiki/Simple-Usage-of-Lightweight-IOC-Container#resolving-instances) one instance from the container:
 
       ```c#
       IFooFactory fooFactory = container.Resolve<IFooFactory>();
       ```
 
-  4. Use this instance to create what your application needs:
+  4. Use this instance to [create](https://github.com/SimonG96/LightweightIocContainer/wiki/Advanced-Usage-of-Lightweight-IOC-Container#use-factories-to-resolve-instances) what your application needs:
 
       ```c#
       IFoo foo = fooFactory.Create();
       ```
 
-  5. When your application is finished, don't forget to dispose your `IocContainer`:
+  5. When your application is finished, don't forget to [dispose](https://github.com/SimonG96/LightweightIocContainer/wiki/Simple-Usage-of-Lightweight-IOC-Container#Disposing-Container) your `IocContainer`:
 
       ```c#
       container.Dispose();
