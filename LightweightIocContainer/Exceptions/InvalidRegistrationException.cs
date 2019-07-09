@@ -9,7 +9,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// The registration is not valid
     /// </summary>
-    public class InvalidRegistrationException : Exception
+    internal class InvalidRegistrationException : Exception
     {
         /// <summary>
         /// The registration is not valid

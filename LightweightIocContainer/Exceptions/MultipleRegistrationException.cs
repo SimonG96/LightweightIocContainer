@@ -10,7 +10,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// The <see cref="System.Type"/> is already registered in this <see cref="IIocContainer"/>
     /// </summary>
-    public class MultipleRegistrationException : Exception
+    internal class MultipleRegistrationException : Exception
     {
         /// <summary>
         /// The <see cref="System.Type"/> is already registered in this <see cref="IIocContainer"/>

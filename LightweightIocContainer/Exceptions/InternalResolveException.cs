@@ -10,7 +10,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// An internal Error happened while the <see cref="IIocContainer"/> tried to resolve an instance
     /// </summary>
-    public class InternalResolveException : Exception
+    internal class InternalResolveException : Exception
     {
         /// <summary>
         /// An internal Error happened while the <see cref="IIocContainer"/> tried to resolve an instance

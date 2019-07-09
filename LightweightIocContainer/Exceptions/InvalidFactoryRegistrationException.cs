@@ -7,7 +7,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// The registration of a Factory is not valid
     /// </summary>
-    public class InvalidFactoryRegistrationException : InvalidRegistrationException
+    internal class InvalidFactoryRegistrationException : InvalidRegistrationException
     {
         /// <summary>
         /// The registration of a Factory is not valid

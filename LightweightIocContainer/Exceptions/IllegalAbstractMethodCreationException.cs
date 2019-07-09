@@ -10,7 +10,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// The creation of the abstract method is illegal in its current state
     /// </summary>
-    public class IllegalAbstractMethodCreationException : Exception
+    internal class IllegalAbstractMethodCreationException : Exception
     {
         /// <summary>
         /// The creation of the abstract method is illegal in its current state

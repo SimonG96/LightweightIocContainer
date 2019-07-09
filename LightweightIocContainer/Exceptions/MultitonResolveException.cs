@@ -9,7 +9,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// An error happened while trying to resolve a multiton
     /// </summary>
-    public class MultitonResolveException : InternalResolveException
+    internal class MultitonResolveException : InternalResolveException
     {
         /// <summary>
         /// An error happened while trying to resolve a multiton

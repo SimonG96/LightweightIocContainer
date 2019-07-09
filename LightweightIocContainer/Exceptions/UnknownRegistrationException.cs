@@ -10,7 +10,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// An unknown <see cref="IRegistrationBase"/> was used
     /// </summary>
-    public class UnknownRegistrationException : Exception
+    internal class UnknownRegistrationException : Exception
     {
         /// <summary>
         /// An unknown <see cref="IRegistrationBase"/> was used
