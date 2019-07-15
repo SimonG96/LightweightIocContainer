@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
@@ -20,8 +21,8 @@ namespace LightweightIocContainer
     public class IocContainer : IIocContainer
     {
         private readonly List<IRegistrationBase> _registrations = new List<IRegistrationBase>();
-        private readonly List<(Type type, object instance)> _singletons = new List<(Type, object)>(); //TODO: Think about the usage of ConditionalWeakTable<>
-        private readonly List<(Type type, Type scope, List<(object scopeInstance, object instance)> instances)> _multitons = new List<(Type, Type, List<(object, object)>)>();
+        private readonly List<(Type type, object instance)> _singletons = new List<(Type, object)>();
+        private readonly List<(Type type, Type scope, ConditionalWeakTable<object, object> instances)> _multitons = new List<(Type, Type, ConditionalWeakTable<object, object>)>();
 
         /// <summary>
         /// Install the given installers for the current <see cref="IocContainer"/>
@@ -162,21 +163,24 @@ namespace LightweightIocContainer
                 throw new MultitonResolveException($"Can not resolve multiton without the first argument being the scope (should be of type {registration.Scope}).", typeof(T));
 
             //if a multiton for the given scope exists return it
-            var instances = _multitons.FirstOrDefault(m => m.type == typeof(T) && m.scope == registration.Scope).instances;
-            if (instances != null && instances.Any())
+            var instances = _multitons.FirstOrDefault(m => m.type == typeof(T) && m.scope == registration.Scope).instances; //get instances for the given type and scope
+            if (instances != null)
             {
-                var instance = instances.FirstOrDefault(i => i.scopeInstance.Equals(scopeArgument));
-                if (instance != (null, null))
-                    return (T) instance.instance;
+                if (instances.TryGetValue(scopeArgument, out object instance))
+                    return (T) instance;
 
                 T createdInstance = CreateInstance(registration, arguments);
-                instances.Add((scopeArgument, createdInstance));
+                instances.Add(scopeArgument, createdInstance);
 
                 return createdInstance;
             }
 
             T newInstance = CreateInstance(registration, arguments);
-            _multitons.Add((typeof(T), registration.Scope, new List<(object, object)> {(scopeArgument, newInstance)}));
+
+            ConditionalWeakTable<object, object> weakTable = new ConditionalWeakTable<object, object>();
+            weakTable.Add(scopeArgument, newInstance);
+            
+            _multitons.Add((typeof(T), registration.Scope, weakTable));
 
             return newInstance;
         }
