@@ -1,7 +1,6 @@
 # Lightweight IOC Container
 
 A lightweight IOC Container that is powerful enough to do all the things you need it to do.  
-*This project and its documentation are currently under development.*
 
 [![Build status](https://ci.appveyor.com/api/projects/status/lekwuyh91oqrt6oc?svg=true)](https://ci.appveyor.com/project/SimonG96/lightweightioccontainer)
 
