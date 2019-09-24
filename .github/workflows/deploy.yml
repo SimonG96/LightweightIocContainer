@@ -20,12 +20,12 @@ jobs:
     name: GitHub
     runs-on: windows-latest
     
-    steps:
-    - name: Deploy to GitHub Package Registry
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run:  
-        dotnet pack -c Release
-        nuget sources Add -Name "GithubPackageRegistry" -Source "https://nuget.pkg.github.com/OWNER/index.json" -UserName SimonG96 -Password GITHUB_TOKEN
-        cd bin\Release
-        dotnet nuget push LightweightIocContainer.*.nupkg -Source "GithubPackageRegistry"
+#    steps:
+#    - name: Deploy to GitHub Package Registry
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      run:  
+#        dotnet pack -c Release
+#        nuget sources Add -Name "GithubPackageRegistry" -Source "https://nuget.pkg.github.com/SimonG96/index.json" -UserName SimonG96 -Password GITHUB_TOKEN
+#        cd bin\Release
+#        dotnet nuget push LightweightIocContainer.*.nupkg -Source "GithubPackageRegistry"
