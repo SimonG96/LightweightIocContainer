@@ -3,6 +3,7 @@
 A lightweight IOC Container that is powerful enough to do all the things you need it to do.  
 
 [![Build status](https://ci.appveyor.com/api/projects/status/lekwuyh91oqrt6oc?svg=true)](https://ci.appveyor.com/project/SimonG96/lightweightioccontainer)
+[![GitHub Actions](https://github.com/SimonG96/LightweightIocContainer/workflows/CI/badge.svg)](https://github.com/SimonG96/LightweightIocContainer/actions)
 
 [![Nuget](https://img.shields.io/nuget/dt/LightweightIocContainer.svg?label=NuGet%20Downloads&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer/)
 [![Nuget](https://img.shields.io/nuget/v/LightweightIocContainer.svg?label=NuGet%20Version&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer/)
