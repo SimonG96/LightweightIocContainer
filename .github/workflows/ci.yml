@@ -19,6 +19,8 @@ jobs:
     runs-on: windows-latest
     
     steps:
+    - name: Checkout
+      uses: actions/checkout@v1
     - name: Run tests
-      run: dotnet test --no-build Test.LightweightIocContainer\Test.LightweightIocContainer.csproj
+      run: dotnet test
     
