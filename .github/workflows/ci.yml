@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-  - name: Build
+    name: Build
     runs-on: windows-latest    
     
     steps:
@@ -14,7 +14,7 @@ jobs:
       run: dotnet build
   
   test:
-  - name: Test
+    name: Test
     needs: build
     runs-on: windows-latest
     
