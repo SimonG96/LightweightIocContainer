@@ -2,19 +2,19 @@ name: Deploy
 
 on: [release]
 
-#jobs:
-#  nuget:
-#    name: NuGet
-#    runs-on: windows-latest
+jobs:
+  nuget:
+    name: NuGet
+    runs-on: windows-latest
     
-#    steps:
-#    - name: Deploy to NuGet Gallery
-#      env:
-#        NUGET_KEY: ${{ secrets.NUGET_KEY }}
-#      run:  
-#        dotnet pack -c Release
-#        cd bin\Release
-#        dotnet nuget push LightweightIocContainer.*.nupkg -k NUGET_KEY -s https://api.nuget.org/v3/index.json
+    steps:
+    - name: Deploy to NuGet Gallery
+      env:
+        NUGET_KEY: ${{ secrets.NUGET_KEY }}
+      run:  
+        dotnet pack -c Release
+        cd bin\Release
+        dotnet nuget push LightweightIocContainer.*.nupkg -k NUGET_KEY -s https://api.nuget.org/v3/index.json
 
 #  github:
 #    name: GitHub
