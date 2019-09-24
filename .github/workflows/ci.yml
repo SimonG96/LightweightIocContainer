@@ -20,5 +20,5 @@ jobs:
     
     steps:
     - name: Run tests
-      run: dotnet test --no-build Test.LightweightIocContainer
+      run: dotnet test Test.LightweightIocContainer
     
