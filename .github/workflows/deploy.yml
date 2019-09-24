@@ -1,6 +1,6 @@
 name: Deploy
 
-on: release  
+on: [release]
 
 jobs:
   nuget:
