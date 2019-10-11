@@ -117,6 +117,7 @@ namespace Test.LightweightIocContainer
         public void TestRegister()
         {
             Assert.DoesNotThrow(() => _iocContainer.Register(RegistrationFactory.Register(typeof(ITest), typeof(Test))));
+            Assert.DoesNotThrow(() => _iocContainer.Register(RegistrationFactory.Register(typeof(Test))));
             Assert.DoesNotThrow(() => _iocContainer.Register(RegistrationFactory.RegisterFactory(typeof(ITestFactory), _iocContainer)));
         }
 
@@ -126,6 +127,13 @@ namespace Test.LightweightIocContainer
             _iocContainer.Register(RegistrationFactory.Register<ITest, Test>());
             MultipleRegistrationException exception = Assert.Throws<MultipleRegistrationException>(() => _iocContainer.Register(RegistrationFactory.Register<ITest, TestConstructor>()));
             Assert.AreEqual(typeof(ITest), exception.Type);
+        }
+
+        [Test]
+        public void TestRegisterInterfaceWithoutImplementation()
+        {
+            Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Register(RegistrationFactory.Register<ITest>()));
+            Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Register(RegistrationFactory.Register(typeof(ITest))));
         }
 
         [Test]
@@ -153,6 +161,16 @@ namespace Test.LightweightIocContainer
             _iocContainer.Register(RegistrationFactory.Register<ITest, Test>());
 
             ITest resolvedTest = _iocContainer.Resolve<ITest>();
+
+            Assert.IsInstanceOf<Test>(resolvedTest);
+        }
+
+        [Test]
+        public void TestResolveWithoutInterface()
+        {
+            _iocContainer.Register(RegistrationFactory.Register<Test>());
+
+            Test resolvedTest = _iocContainer.Resolve<Test>();
 
             Assert.IsInstanceOf<Test>(resolvedTest);
         }
@@ -363,6 +381,9 @@ namespace Test.LightweightIocContainer
 
             _iocContainer.Register(RegistrationFactory.Register<ITest, Test>());
             Assert.True(_iocContainer.IsTypeRegistered<ITest>());
+
+            _iocContainer.Register(RegistrationFactory.Register<Test>());
+            Assert.True(_iocContainer.IsTypeRegistered<Test>());
         }
     }
 }

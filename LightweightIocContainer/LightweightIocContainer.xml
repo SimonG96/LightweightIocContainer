@@ -561,6 +561,14 @@
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
             <returns>A new created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/> with the given parameters</returns>
         </member>
+        <member name="M:LightweightIocContainer.Registrations.RegistrationFactory.Register``1(LightweightIocContainer.Lifestyle)">
+            <summary>
+            Register a <see cref="T:System.Type"/> without an interface and create a <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/>
+            </summary>
+            <typeparam name="TImplementation">The <see cref="T:System.Type"/> to register</typeparam>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+            <returns>A new created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/> with the given parameters</returns>
+        </member>
         <member name="M:LightweightIocContainer.Registrations.RegistrationFactory.Register``3">
             <summary>
             Register an Interface with a Type that implements it as a multiton and create a <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultitonRegistration`1"/>
@@ -576,6 +584,14 @@
             </summary>
             <param name="tInterface">The Interface to register</param>
             <param name="tImplementation">The Type that implements the interface</param>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+            <returns>A new created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/> with the given parameters</returns>
+        </member>
+        <member name="M:LightweightIocContainer.Registrations.RegistrationFactory.Register(System.Type,LightweightIocContainer.Lifestyle)">
+            <summary>
+            Register a <see cref="T:System.Type"/> without an interface and create a <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/>
+            </summary>
+            <param name="tImplementation">The <see cref="T:System.Type"/> to register</param>
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
             <returns>A new created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/> with the given parameters</returns>
         </member>

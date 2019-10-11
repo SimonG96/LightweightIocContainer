@@ -3,6 +3,7 @@
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System;
+using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
@@ -24,6 +25,20 @@ namespace LightweightIocContainer.Registrations
         public static IDefaultRegistration<TInterface> Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface
         {
             return new DefaultRegistration<TInterface>(typeof(TInterface), typeof(TImplementation), lifestyle);
+        }
+
+        /// <summary>
+        /// Register a <see cref="Type"/> without an interface and create a <see cref="IDefaultRegistration{TInterface}"/>
+        /// </summary>
+        /// <typeparam name="TImplementation">The <see cref="Type"/> to register</typeparam>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
+        /// <returns>A new created <see cref="IDefaultRegistration{TInterface}"/> with the given parameters</returns>
+        public static IDefaultRegistration<TImplementation> Register<TImplementation>(Lifestyle lifestyle = Lifestyle.Transient)
+        {
+            if (typeof(TImplementation).IsInterface)
+                throw new InvalidRegistrationException("Can't register an interface without its implementation type.");
+
+            return Register<TImplementation, TImplementation>(lifestyle);
         }
 
         /// <summary>
@@ -49,6 +64,20 @@ namespace LightweightIocContainer.Registrations
         {
             Type defaultRegistrationType = typeof(DefaultRegistration<>).MakeGenericType(tInterface);
             return (IRegistrationBase)Activator.CreateInstance(defaultRegistrationType, tInterface, tImplementation, lifestyle);
+        }
+
+        /// <summary>
+        /// Register a <see cref="Type"/> without an interface and create a <see cref="IDefaultRegistration{TInterface}"/>
+        /// </summary>
+        /// <param name="tImplementation">The <see cref="Type"/> to register</param>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
+        /// <returns>A new created <see cref="IDefaultRegistration{TInterface}"/> with the given parameters</returns>
+        public static IRegistrationBase Register(Type tImplementation, Lifestyle lifestyle = Lifestyle.Transient)
+        {
+            if (tImplementation.IsInterface)
+                throw new InvalidRegistrationException("Can't register an interface without its implementation type.");
+
+            return Register(tImplementation, tImplementation, lifestyle);
         }
 
         /// <summary>
