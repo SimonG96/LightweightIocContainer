@@ -254,6 +254,13 @@
             </summary>
             <typeparam name="T">The <see cref="T:System.Type"/> to clear the multiton instances</typeparam>
         </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.IsTypeRegistered``1">
+            <summary>
+            Is the given <see cref="T:System.Type"/> registered with this <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/>
+            </summary>
+            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
+            <returns>True if the given <see cref="T:System.Type"/> is registered with this <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/>, false if not</returns>
+        </member>
         <member name="T:LightweightIocContainer.Interfaces.Installers.IAssemblyInstaller">
             <summary>
             An <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> that installs all <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/>s for its given <see cref="T:System.Reflection.Assembly"/>
@@ -436,6 +443,13 @@
             Clear the multiton instances of the given <see cref="T:System.Type"/> from the registered multitons list
             </summary>
             <typeparam name="T">The <see cref="T:System.Type"/> to clear the multiton instances</typeparam>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.IsTypeRegistered``1">
+            <summary>
+            Is the given <see cref="T:System.Type"/> registered with this <see cref="T:LightweightIocContainer.IocContainer"/>
+            </summary>
+            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
+            <returns>True if the given <see cref="T:System.Type"/> is registered with this <see cref="T:LightweightIocContainer.IocContainer"/>, false if not</returns>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.Dispose">
             <summary>

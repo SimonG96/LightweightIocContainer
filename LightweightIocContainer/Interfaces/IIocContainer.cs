@@ -57,5 +57,12 @@ namespace LightweightIocContainer.Interfaces
         /// </summary>
         /// <typeparam name="T">The <see cref="Type"/> to clear the multiton instances</typeparam>
         void ClearMultitonInstances<T>();
+
+        /// <summary>
+        /// Is the given <see cref="Type"/> registered with this <see cref="IIocContainer"/>
+        /// </summary>
+        /// <typeparam name="T">The given <see cref="Type"/></typeparam>
+        /// <returns>True if the given <see cref="Type"/> is registered with this <see cref="IIocContainer"/>, false if not</returns>
+        bool IsTypeRegistered<T>();
     }
 }

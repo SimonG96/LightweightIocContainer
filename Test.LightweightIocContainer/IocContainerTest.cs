@@ -355,5 +355,14 @@ namespace Test.LightweightIocContainer
             Assert.AreNotSame(resolvedTest2, resolvedTest4);
             Assert.AreNotSame(resolvedTest3, resolvedTest5);
         }
+
+        [Test]
+        public void TestIsTypeRegistered()
+        {
+            Assert.False(_iocContainer.IsTypeRegistered<ITest>());
+
+            _iocContainer.Register(RegistrationFactory.Register<ITest, Test>());
+            Assert.True(_iocContainer.IsTypeRegistered<ITest>());
+        }
     }
 }

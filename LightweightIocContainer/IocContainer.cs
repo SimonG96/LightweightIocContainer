@@ -285,6 +285,13 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
+        /// Is the given <see cref="Type"/> registered with this <see cref="IocContainer"/>
+        /// </summary>
+        /// <typeparam name="T">The given <see cref="Type"/></typeparam>
+        /// <returns>True if the given <see cref="Type"/> is registered with this <see cref="IocContainer"/>, false if not</returns>
+        public bool IsTypeRegistered<T>() => _registrations.Any(registration => registration.InterfaceType == typeof(T));
+
+        /// <summary>
         /// The <see cref="IDisposable.Dispose"/> method
         /// </summary>
         public void Dispose()
