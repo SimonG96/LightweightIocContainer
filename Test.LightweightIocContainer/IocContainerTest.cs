@@ -117,7 +117,23 @@ namespace Test.LightweightIocContainer
         public void TestRegister()
         {
             Assert.DoesNotThrow(() => _iocContainer.Register(RegistrationFactory.Register(typeof(ITest), typeof(Test))));
+        }
+
+        [Test]
+        public void TestRegisterTypeWithoutInterface()
+        {
             Assert.DoesNotThrow(() => _iocContainer.Register(RegistrationFactory.Register(typeof(Test))));
+        }
+
+        [Test]
+        public void TestRegisterMultiton()
+        {
+            Assert.DoesNotThrow(() => _iocContainer.Register(RegistrationFactory.Register(typeof(ITest), typeof(Test), typeof(MultitonScope))));
+        }
+
+        [Test]
+        public void TestRegisterFactory()
+        {
             Assert.DoesNotThrow(() => _iocContainer.Register(RegistrationFactory.RegisterFactory(typeof(ITestFactory), _iocContainer)));
         }
 
