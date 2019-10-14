@@ -12,6 +12,7 @@ using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
+using LightweightIocContainer.Registrations;
 
 namespace LightweightIocContainer
 {
@@ -20,9 +21,21 @@ namespace LightweightIocContainer
     /// </summary>
     public class IocContainer : IIocContainer
     {
+        private readonly RegistrationFactory _registrationFactory;
+
         private readonly List<IRegistrationBase> _registrations = new List<IRegistrationBase>();
         private readonly List<(Type type, object instance)> _singletons = new List<(Type, object)>();
         private readonly List<(Type type, Type scope, ConditionalWeakTable<object, object> instances)> _multitons = new List<(Type, Type, ConditionalWeakTable<object, object>)>();
+
+
+        /// <summary>
+        /// The constructor of the <see cref="IocContainer"/>
+        /// </summary>
+        public IocContainer()
+        {
+            _registrationFactory = new RegistrationFactory(this);
+        }
+
 
         /// <summary>
         /// Install the given installers for the current <see cref="IocContainer"/>
@@ -40,11 +53,93 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
+        /// Register an Interface with a Type that implements it/>
+        /// </summary>
+        /// <typeparam name="TInterface">The Interface to register</typeparam>
+        /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
+        public void Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface
+        {
+            Register(_registrationFactory.Register<TInterface, TImplementation>(lifestyle));
+        }
+
+        /// <summary>
+        /// Register a <see cref="Type"/> without an interface/>
+        /// </summary>
+        /// <typeparam name="TImplementation">The <see cref="Type"/> to register</typeparam>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
+        public void Register<TImplementation>(Lifestyle lifestyle = Lifestyle.Transient)
+        {
+            Register(_registrationFactory.Register<TImplementation>(lifestyle));
+        }
+
+        /// <summary>
+        /// Register an Interface with a Type that implements it as a multiton/>
+        /// </summary>
+        /// <typeparam name="TInterface">The Interface to register</typeparam>
+        /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
+        /// <typeparam name="TScope">The Type of the multiton scope</typeparam>
+        public void Register<TInterface, TImplementation, TScope>() where TImplementation : TInterface
+        {
+            Register(_registrationFactory.Register<TInterface, TImplementation, TScope>());
+        }
+
+        /// <summary>
+        /// Register an Interface with a Type that implements it/>
+        /// </summary>
+        /// <param name="tInterface">The Interface to register</param>
+        /// <param name="tImplementation">The Type that implements the interface</param>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
+        public void Register(Type tInterface, Type tImplementation, Lifestyle lifestyle = Lifestyle.Transient)
+        {
+            Register(_registrationFactory.Register(tInterface, tImplementation, lifestyle));
+        }
+
+        /// <summary>
+        /// Register a <see cref="Type"/> without an interface/>
+        /// </summary>
+        /// <param name="tImplementation">The <see cref="Type"/> to register</param>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
+        public void Register(Type tImplementation, Lifestyle lifestyle = Lifestyle.Transient)
+        {
+            Register(_registrationFactory.Register(tImplementation, lifestyle));
+        }
+
+        /// <summary>
+        /// Register an Interface with a Type that implements it as a multiton/>
+        /// </summary>
+        /// <param name="tInterface">The Interface to register</param>
+        /// <param name="tImplementation">The Type that implements the interface</param>
+        /// <param name="tScope">The Type of the multiton scope</param>
+        public void Register(Type tInterface, Type tImplementation, Type tScope)
+        {
+            Register(_registrationFactory.Register(tInterface, tImplementation, tScope));
+        }
+
+        /// <summary>
+        /// Register an Interface as an abstract typed factory/>
+        /// </summary>
+        /// <typeparam name="TFactory">The abstract typed factory to register</typeparam>
+        public void RegisterFactory<TFactory>()
+        {
+            Register(_registrationFactory.RegisterFactory<TFactory>());
+        }
+
+        /// <summary>
+        /// Register an Interface as an abstract typed factory/>
+        /// </summary>
+        /// <param name="tFactory">The abstract typed factory to register</param>
+        public void RegisterFactory(Type tFactory)
+        {
+            Register(_registrationFactory.RegisterFactory(tFactory));
+        }
+
+        /// <summary>
         /// Add the <see cref="IRegistrationBase"/> to the the <see cref="IocContainer"/>
         /// </summary>
         /// <param name="registration">The given <see cref="IRegistrationBase"/></param>
         /// <exception cref="MultipleRegistrationException">The <see cref="Type"/> is already registered in this <see cref="IocContainer"/></exception>
-        public void Register(IRegistrationBase registration)
+        private void Register(IRegistrationBase registration)
         {
             //if type is already registered
             if (_registrations.Any(r => r.InterfaceType == registration.InterfaceType))

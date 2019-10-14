@@ -25,7 +25,7 @@ namespace Test.LightweightIocContainer
         {
             public void Install(IIocContainer container)
             {
-                container.Register(new Mock<IRegistrationBase>().Object);
+                container.Register<Mock<IRegistrationBase>>();
             }
         }
 
@@ -54,7 +54,7 @@ namespace Test.LightweightIocContainer
             AssemblyInstaller assemblyInstaller = new AssemblyInstaller(assemblyMock.Object);
             assemblyInstaller.Install(iocContainerMock.Object);
 
-            iocContainerMock.Verify(ioc => ioc.Register(It.IsAny<IRegistrationBase>()), Times.Once);
+            iocContainerMock.Verify(ioc => ioc.Register<It.IsSubtype<Mock<IRegistrationBase>>>(It.IsAny<Lifestyle>()), Times.Once);
         }
 
         [Test]

@@ -3,8 +3,11 @@
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System;
+using LightweightIocContainer;
+using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Registrations;
 using LightweightIocContainer.Registrations;
+using Moq;
 using NUnit.Framework;
 
 namespace Test.LightweightIocContainer
@@ -33,7 +36,8 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestOnCreate()
         {
-            IDefaultRegistration<ITest> testRegistration = RegistrationFactory.Register<ITest, Test>().OnCreate(t => t.DoSomething());
+            RegistrationFactory registrationFactory = new RegistrationFactory(new Mock<IIocContainer>().Object);
+            IDefaultRegistration<ITest> testRegistration = registrationFactory.Register<ITest, Test>(Lifestyle.Transient).OnCreate(t => t.DoSomething());
 
             ITest test = new Test();
             

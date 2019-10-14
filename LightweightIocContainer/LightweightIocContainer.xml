@@ -217,12 +217,63 @@
             <param name="installers">The given <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/>s</param>
             <returns>An instance of the current <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/></returns>
         </member>
-        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register(LightweightIocContainer.Interfaces.Registrations.IRegistrationBase)">
+        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register``2(LightweightIocContainer.Lifestyle)">
             <summary>
-            Add the <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/> to the the <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/>
+            Register an Interface with a Type that implements it/>
             </summary>
-            <param name="registration">The given <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></param>
-            <exception cref="T:LightweightIocContainer.Exceptions.MultipleRegistrationException">The <see cref="T:System.Type"/> is already registered in this <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/></exception>
+            <typeparam name="TInterface">The Interface to register</typeparam>
+            <typeparam name="TImplementation">The Type that implements the interface</typeparam>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register``1(LightweightIocContainer.Lifestyle)">
+            <summary>
+            Register a <see cref="T:System.Type"/> without an interface/>
+            </summary>
+            <typeparam name="TImplementation">The <see cref="T:System.Type"/> to register</typeparam>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register``3">
+            <summary>
+            Register an Interface with a Type that implements it as a multiton/>
+            </summary>
+            <typeparam name="TInterface">The Interface to register</typeparam>
+            <typeparam name="TImplementation">The Type that implements the interface</typeparam>
+            <typeparam name="TScope">The Type of the multiton scope</typeparam>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register(System.Type,System.Type,LightweightIocContainer.Lifestyle)">
+            <summary>
+            Register an Interface with a Type that implements it/>
+            </summary>
+            <param name="tInterface">The Interface to register</param>
+            <param name="tImplementation">The Type that implements the interface</param>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register(System.Type,LightweightIocContainer.Lifestyle)">
+            <summary>
+            Register a <see cref="T:System.Type"/> without an interface/>
+            </summary>
+            <param name="tImplementation">The <see cref="T:System.Type"/> to register</param>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register(System.Type,System.Type,System.Type)">
+            <summary>
+            Register an Interface with a Type that implements it as a multiton/>
+            </summary>
+            <param name="tInterface">The Interface to register</param>
+            <param name="tImplementation">The Type that implements the interface</param>
+            <param name="tScope">The Type of the multiton scope</param>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.RegisterFactory``1">
+            <summary>
+            Register an Interface as an abstract typed factory/>
+            </summary>
+            <typeparam name="TFactory">The abstract typed factory to register</typeparam>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.RegisterFactory(System.Type)">
+            <summary>
+            Register an Interface as an abstract typed factory/>
+            </summary>
+            <param name="tFactory">The abstract typed factory to register</param>
         </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1">
             <summary>
@@ -353,12 +404,75 @@
             The main container that carries all the <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/>s and can resolve all the types you'll ever want
             </summary>
         </member>
+        <member name="M:LightweightIocContainer.IocContainer.#ctor">
+            <summary>
+            The constructor of the <see cref="T:LightweightIocContainer.IocContainer"/>
+            </summary>
+        </member>
         <member name="M:LightweightIocContainer.IocContainer.Install(LightweightIocContainer.Interfaces.Installers.IIocInstaller[])">
             <summary>
             Install the given installers for the current <see cref="T:LightweightIocContainer.IocContainer"/>
             </summary>
             <param name="installers">The given <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/>s</param>
             <returns>An instance of the current <see cref="T:LightweightIocContainer.IocContainer"/></returns>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.Register``2(LightweightIocContainer.Lifestyle)">
+            <summary>
+            Register an Interface with a Type that implements it/>
+            </summary>
+            <typeparam name="TInterface">The Interface to register</typeparam>
+            <typeparam name="TImplementation">The Type that implements the interface</typeparam>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.Register``1(LightweightIocContainer.Lifestyle)">
+            <summary>
+            Register a <see cref="T:System.Type"/> without an interface/>
+            </summary>
+            <typeparam name="TImplementation">The <see cref="T:System.Type"/> to register</typeparam>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.Register``3">
+            <summary>
+            Register an Interface with a Type that implements it as a multiton/>
+            </summary>
+            <typeparam name="TInterface">The Interface to register</typeparam>
+            <typeparam name="TImplementation">The Type that implements the interface</typeparam>
+            <typeparam name="TScope">The Type of the multiton scope</typeparam>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.Register(System.Type,System.Type,LightweightIocContainer.Lifestyle)">
+            <summary>
+            Register an Interface with a Type that implements it/>
+            </summary>
+            <param name="tInterface">The Interface to register</param>
+            <param name="tImplementation">The Type that implements the interface</param>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.Register(System.Type,LightweightIocContainer.Lifestyle)">
+            <summary>
+            Register a <see cref="T:System.Type"/> without an interface/>
+            </summary>
+            <param name="tImplementation">The <see cref="T:System.Type"/> to register</param>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.Register(System.Type,System.Type,System.Type)">
+            <summary>
+            Register an Interface with a Type that implements it as a multiton/>
+            </summary>
+            <param name="tInterface">The Interface to register</param>
+            <param name="tImplementation">The Type that implements the interface</param>
+            <param name="tScope">The Type of the multiton scope</param>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.RegisterFactory``1">
+            <summary>
+            Register an Interface as an abstract typed factory/>
+            </summary>
+            <typeparam name="TFactory">The abstract typed factory to register</typeparam>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.RegisterFactory(System.Type)">
+            <summary>
+            Register an Interface as an abstract typed factory/>
+            </summary>
+            <param name="tFactory">The abstract typed factory to register</param>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.Register(LightweightIocContainer.Interfaces.Registrations.IRegistrationBase)">
             <summary>
@@ -604,20 +718,18 @@
             <param name="tScope">The Type of the multiton scope</param>
             <returns>A new created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultitonRegistration`1"/> with the given parameters</returns>
         </member>
-        <member name="M:LightweightIocContainer.Registrations.RegistrationFactory.RegisterFactory``1(LightweightIocContainer.Interfaces.IIocContainer)">
+        <member name="M:LightweightIocContainer.Registrations.RegistrationFactory.RegisterFactory``1">
             <summary>
             Register an Interface as an abstract typed factory and create a <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedFactoryRegistration`1"/>
             </summary>
             <typeparam name="TFactory">The abstract typed factory to register</typeparam>
-            <param name="container">The current <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/></param>
             <returns>A new created <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedFactoryRegistration`1"/> with the given parameters</returns>
         </member>
-        <member name="M:LightweightIocContainer.Registrations.RegistrationFactory.RegisterFactory(System.Type,LightweightIocContainer.Interfaces.IIocContainer)">
+        <member name="M:LightweightIocContainer.Registrations.RegistrationFactory.RegisterFactory(System.Type)">
             <summary>
             Register an Interface as an abstract typed factory and create a <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedFactoryRegistration`1"/>
             </summary>
             <param name="tFactory">The abstract typed factory to register</param>
-            <param name="container">The current <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/></param>
             <returns>A new created <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedFactoryRegistration`1"/> with the given parameters</returns>
         </member>
         <member name="T:LightweightIocContainer.Registrations.TypedFactoryRegistration`1">
