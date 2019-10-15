@@ -58,9 +58,13 @@ namespace LightweightIocContainer
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        public void Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        public IDefaultRegistration<TInterface> Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface
         {
-            Register(_registrationFactory.Register<TInterface, TImplementation>(lifestyle));
+            IDefaultRegistration<TInterface> registration = _registrationFactory.Register<TInterface, TImplementation>(lifestyle);
+            Register(registration);
+
+            return registration;
         }
 
         /// <summary>
@@ -68,9 +72,13 @@ namespace LightweightIocContainer
         /// </summary>
         /// <typeparam name="TImplementation">The <see cref="Type"/> to register</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        public void Register<TImplementation>(Lifestyle lifestyle = Lifestyle.Transient)
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        public IDefaultRegistration<TImplementation> Register<TImplementation>(Lifestyle lifestyle = Lifestyle.Transient)
         {
-            Register(_registrationFactory.Register<TImplementation>(lifestyle));
+            IDefaultRegistration<TImplementation> registration = _registrationFactory.Register<TImplementation>(lifestyle);
+            Register(registration);
+
+            return registration;
         }
 
         /// <summary>
@@ -79,9 +87,13 @@ namespace LightweightIocContainer
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <typeparam name="TScope">The Type of the multiton scope</typeparam>
-        public void Register<TInterface, TImplementation, TScope>() where TImplementation : TInterface
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        public IMultitonRegistration<TInterface> Register<TInterface, TImplementation, TScope>() where TImplementation : TInterface
         {
-            Register(_registrationFactory.Register<TInterface, TImplementation, TScope>());
+            IMultitonRegistration<TInterface> registration = _registrationFactory.Register<TInterface, TImplementation, TScope>();
+            Register(registration);
+
+            return registration;
         }
 
         /// <summary>
@@ -90,9 +102,13 @@ namespace LightweightIocContainer
         /// <param name="tInterface">The Interface to register</param>
         /// <param name="tImplementation">The Type that implements the interface</param>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        public void Register(Type tInterface, Type tImplementation, Lifestyle lifestyle = Lifestyle.Transient)
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        public IRegistrationBase Register(Type tInterface, Type tImplementation, Lifestyle lifestyle = Lifestyle.Transient)
         {
-            Register(_registrationFactory.Register(tInterface, tImplementation, lifestyle));
+            IRegistrationBase registration = _registrationFactory.Register(tInterface, tImplementation, lifestyle);
+            Register(registration);
+
+            return registration;
         }
 
         /// <summary>
@@ -100,9 +116,13 @@ namespace LightweightIocContainer
         /// </summary>
         /// <param name="tImplementation">The <see cref="Type"/> to register</param>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        public void Register(Type tImplementation, Lifestyle lifestyle = Lifestyle.Transient)
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        public IRegistrationBase Register(Type tImplementation, Lifestyle lifestyle = Lifestyle.Transient)
         {
-            Register(_registrationFactory.Register(tImplementation, lifestyle));
+            IRegistrationBase registration = _registrationFactory.Register(tImplementation, lifestyle);
+            Register(registration);
+
+            return registration;
         }
 
         /// <summary>
@@ -111,27 +131,39 @@ namespace LightweightIocContainer
         /// <param name="tInterface">The Interface to register</param>
         /// <param name="tImplementation">The Type that implements the interface</param>
         /// <param name="tScope">The Type of the multiton scope</param>
-        public void Register(Type tInterface, Type tImplementation, Type tScope)
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        public IRegistrationBase Register(Type tInterface, Type tImplementation, Type tScope)
         {
-            Register(_registrationFactory.Register(tInterface, tImplementation, tScope));
+            IRegistrationBase registration = _registrationFactory.Register(tInterface, tImplementation, tScope);
+            Register(registration);
+
+            return registration;
         }
 
         /// <summary>
         /// Register an Interface as an abstract typed factory/>
         /// </summary>
         /// <typeparam name="TFactory">The abstract typed factory to register</typeparam>
-        public void RegisterFactory<TFactory>()
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        public ITypedFactoryRegistration<TFactory> RegisterFactory<TFactory>()
         {
-            Register(_registrationFactory.RegisterFactory<TFactory>());
+            ITypedFactoryRegistration<TFactory> registration = _registrationFactory.RegisterFactory<TFactory>();
+            Register(registration);
+
+            return registration;
         }
 
         /// <summary>
         /// Register an Interface as an abstract typed factory/>
         /// </summary>
         /// <param name="tFactory">The abstract typed factory to register</param>
-        public void RegisterFactory(Type tFactory)
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        public IRegistrationBase RegisterFactory(Type tFactory)
         {
-            Register(_registrationFactory.RegisterFactory(tFactory));
+            IRegistrationBase registration = _registrationFactory.RegisterFactory(tFactory);
+            Register(registration);
+
+            return registration;
         }
 
         /// <summary>
@@ -139,9 +171,13 @@ namespace LightweightIocContainer
         /// </summary>
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <param name="unitTestCallback">The <see cref="ResolveCallback{T}"/> for the callback</param>
-        public void RegisterUnitTestCallback<TInterface>(ResolveCallback<TInterface> unitTestCallback)
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        public IUnitTestCallbackRegistration<TInterface> RegisterUnitTestCallback<TInterface>(ResolveCallback<TInterface> unitTestCallback)
         {
-            Register(_registrationFactory.RegisterUnitTestCallback(unitTestCallback));
+            IUnitTestCallbackRegistration<TInterface> registration = _registrationFactory.RegisterUnitTestCallback(unitTestCallback);
+            Register(registration);
+
+            return registration;
         }
 
         /// <summary>

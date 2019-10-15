@@ -224,6 +224,7 @@
             <typeparam name="TInterface">The Interface to register</typeparam>
             <typeparam name="TImplementation">The Type that implements the interface</typeparam>
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register``1(LightweightIocContainer.Lifestyle)">
             <summary>
@@ -231,6 +232,7 @@
             </summary>
             <typeparam name="TImplementation">The <see cref="T:System.Type"/> to register</typeparam>
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register``3">
             <summary>
@@ -239,6 +241,7 @@
             <typeparam name="TInterface">The Interface to register</typeparam>
             <typeparam name="TImplementation">The Type that implements the interface</typeparam>
             <typeparam name="TScope">The Type of the multiton scope</typeparam>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register(System.Type,System.Type,LightweightIocContainer.Lifestyle)">
             <summary>
@@ -247,6 +250,7 @@
             <param name="tInterface">The Interface to register</param>
             <param name="tImplementation">The Type that implements the interface</param>
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register(System.Type,LightweightIocContainer.Lifestyle)">
             <summary>
@@ -254,6 +258,7 @@
             </summary>
             <param name="tImplementation">The <see cref="T:System.Type"/> to register</param>
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register(System.Type,System.Type,System.Type)">
             <summary>
@@ -262,18 +267,21 @@
             <param name="tInterface">The Interface to register</param>
             <param name="tImplementation">The Type that implements the interface</param>
             <param name="tScope">The Type of the multiton scope</param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.RegisterFactory``1">
             <summary>
             Register an Interface as an abstract typed factory/>
             </summary>
             <typeparam name="TFactory">The abstract typed factory to register</typeparam>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.RegisterFactory(System.Type)">
             <summary>
             Register an Interface as an abstract typed factory/>
             </summary>
             <param name="tFactory">The abstract typed factory to register</param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.RegisterUnitTestCallback``1(LightweightIocContainer.ResolveCallback{``0})">
             <summary>
@@ -281,6 +289,7 @@
             </summary>
             <typeparam name="TInterface">The Interface to register</typeparam>
             <param name="unitTestCallback">The <see cref="T:LightweightIocContainer.ResolveCallback`1"/> for the callback</param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1">
             <summary>
@@ -441,6 +450,7 @@
             <typeparam name="TInterface">The Interface to register</typeparam>
             <typeparam name="TImplementation">The Type that implements the interface</typeparam>
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.Register``1(LightweightIocContainer.Lifestyle)">
             <summary>
@@ -448,6 +458,7 @@
             </summary>
             <typeparam name="TImplementation">The <see cref="T:System.Type"/> to register</typeparam>
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.Register``3">
             <summary>
@@ -456,6 +467,7 @@
             <typeparam name="TInterface">The Interface to register</typeparam>
             <typeparam name="TImplementation">The Type that implements the interface</typeparam>
             <typeparam name="TScope">The Type of the multiton scope</typeparam>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.Register(System.Type,System.Type,LightweightIocContainer.Lifestyle)">
             <summary>
@@ -464,6 +476,7 @@
             <param name="tInterface">The Interface to register</param>
             <param name="tImplementation">The Type that implements the interface</param>
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.Register(System.Type,LightweightIocContainer.Lifestyle)">
             <summary>
@@ -471,6 +484,7 @@
             </summary>
             <param name="tImplementation">The <see cref="T:System.Type"/> to register</param>
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.Register(System.Type,System.Type,System.Type)">
             <summary>
@@ -479,18 +493,21 @@
             <param name="tInterface">The Interface to register</param>
             <param name="tImplementation">The Type that implements the interface</param>
             <param name="tScope">The Type of the multiton scope</param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.RegisterFactory``1">
             <summary>
             Register an Interface as an abstract typed factory/>
             </summary>
             <typeparam name="TFactory">The abstract typed factory to register</typeparam>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.RegisterFactory(System.Type)">
             <summary>
             Register an Interface as an abstract typed factory/>
             </summary>
             <param name="tFactory">The abstract typed factory to register</param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.RegisterUnitTestCallback``1(LightweightIocContainer.ResolveCallback{``0})">
             <summary>
@@ -498,6 +515,7 @@
             </summary>
             <typeparam name="TInterface">The Interface to register</typeparam>
             <param name="unitTestCallback">The <see cref="T:LightweightIocContainer.ResolveCallback`1"/> for the callback</param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.Register(LightweightIocContainer.Interfaces.Registrations.IRegistrationBase)">
             <summary>

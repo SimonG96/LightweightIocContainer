@@ -27,14 +27,16 @@ namespace LightweightIocContainer.Interfaces
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        void Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface;
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        IDefaultRegistration<TInterface> Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface;
 
         /// <summary>
         /// Register a <see cref="Type"/> without an interface/>
         /// </summary>
         /// <typeparam name="TImplementation">The <see cref="Type"/> to register</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        void Register<TImplementation>(Lifestyle lifestyle = Lifestyle.Transient);
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        IDefaultRegistration<TImplementation> Register<TImplementation>(Lifestyle lifestyle = Lifestyle.Transient);
 
         /// <summary>
         /// Register an Interface with a Type that implements it as a multiton/>
@@ -42,7 +44,8 @@ namespace LightweightIocContainer.Interfaces
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <typeparam name="TScope">The Type of the multiton scope</typeparam>
-        void Register<TInterface, TImplementation, TScope>() where TImplementation : TInterface;
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        IMultitonRegistration<TInterface> Register<TInterface, TImplementation, TScope>() where TImplementation : TInterface;
 
         /// <summary>
         /// Register an Interface with a Type that implements it/>
@@ -50,14 +53,16 @@ namespace LightweightIocContainer.Interfaces
         /// <param name="tInterface">The Interface to register</param>
         /// <param name="tImplementation">The Type that implements the interface</param>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        void Register(Type tInterface, Type tImplementation, Lifestyle lifestyle = Lifestyle.Transient);
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        IRegistrationBase Register(Type tInterface, Type tImplementation, Lifestyle lifestyle = Lifestyle.Transient);
 
         /// <summary>
         /// Register a <see cref="Type"/> without an interface/>
         /// </summary>
         /// <param name="tImplementation">The <see cref="Type"/> to register</param>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        void Register(Type tImplementation, Lifestyle lifestyle = Lifestyle.Transient);
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        IRegistrationBase Register(Type tImplementation, Lifestyle lifestyle = Lifestyle.Transient);
 
         /// <summary>
         /// Register an Interface with a Type that implements it as a multiton/>
@@ -65,26 +70,30 @@ namespace LightweightIocContainer.Interfaces
         /// <param name="tInterface">The Interface to register</param>
         /// <param name="tImplementation">The Type that implements the interface</param>
         /// <param name="tScope">The Type of the multiton scope</param>
-        void Register(Type tInterface, Type tImplementation, Type tScope);
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        IRegistrationBase Register(Type tInterface, Type tImplementation, Type tScope);
 
         /// <summary>
         /// Register an Interface as an abstract typed factory/>
         /// </summary>
         /// <typeparam name="TFactory">The abstract typed factory to register</typeparam>
-        void RegisterFactory<TFactory>();
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        ITypedFactoryRegistration<TFactory> RegisterFactory<TFactory>();
 
         /// <summary>
         /// Register an Interface as an abstract typed factory/>
         /// </summary>
         /// <param name="tFactory">The abstract typed factory to register</param>
-        void RegisterFactory(Type tFactory);
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        IRegistrationBase RegisterFactory(Type tFactory);
 
         /// <summary>
         /// Register an Interface with an <see cref="ResolveCallback{T}"/> as a callback that is called when <see cref="Resolve{T}()"/> is called
         /// </summary>
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <param name="unitTestCallback">The <see cref="ResolveCallback{T}"/> for the callback</param>
-        void RegisterUnitTestCallback<TInterface>(ResolveCallback<TInterface> unitTestCallback);
+        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        IUnitTestCallbackRegistration<TInterface> RegisterUnitTestCallback<TInterface>(ResolveCallback<TInterface> unitTestCallback);
 
         /// <summary>
         /// Gets an instance of the given <see cref="Type"/>
