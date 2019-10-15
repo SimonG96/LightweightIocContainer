@@ -408,7 +408,7 @@
         </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.IUnitTestCallbackRegistration`1">
             <summary>
-            A special <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/> that allows to set an <see cref="T:LightweightIocContainer.ResolveCallback`1"/> as a callback that is called on <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/>
+            A special <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/> that allows to set a <see cref="T:LightweightIocContainer.ResolveCallback`1"/> as a callback that is called on <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/>
             </summary>
             <typeparam name="TInterface"></typeparam>
         </member>
@@ -794,13 +794,13 @@
         </member>
         <member name="T:LightweightIocContainer.Registrations.UnitTestCallbackRegistration`1">
             <summary>
-            A special <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/> that allows to set an <see cref="T:LightweightIocContainer.ResolveCallback`1"/> as a callback that is called on <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/>
+            A special <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/> that allows to set a <see cref="T:LightweightIocContainer.ResolveCallback`1"/> as a callback that is called on <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/>
             </summary>
             <typeparam name="TInterface"></typeparam>
         </member>
         <member name="M:LightweightIocContainer.Registrations.UnitTestCallbackRegistration`1.#ctor(System.Type,LightweightIocContainer.ResolveCallback{`0})">
             <summary>
-            A special <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/> that allows to set an <see cref="T:LightweightIocContainer.ResolveCallback`1"/> as a callback that is called on <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/>
+            A special <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/> that allows to set a <see cref="T:LightweightIocContainer.ResolveCallback`1"/> as a callback that is called on <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/>
             </summary>
             <param name="interfaceType">The <see cref="T:System.Type"/> of the interface</param>
             <param name="unitTestResolveCallback">The <see cref="T:LightweightIocContainer.ResolveCallback`1"/> that is set as a callback</param>
