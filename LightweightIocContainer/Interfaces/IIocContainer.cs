@@ -80,6 +80,13 @@ namespace LightweightIocContainer.Interfaces
         void RegisterFactory(Type tFactory);
 
         /// <summary>
+        /// Register an Interface with an <see cref="ResolveCallback{T}"/> as a callback that is called when <see cref="Resolve{T}()"/> is called
+        /// </summary>
+        /// <typeparam name="TInterface">The Interface to register</typeparam>
+        /// <param name="unitTestCallback">The <see cref="ResolveCallback{T}"/> for the callback</param>
+        void RegisterUnitTestCallback<TInterface>(ResolveCallback<TInterface> unitTestCallback);
+
+        /// <summary>
         /// Gets an instance of the given <see cref="Type"/>
         /// </summary>
         /// <typeparam name="T">The given <see cref="Type"/></typeparam>

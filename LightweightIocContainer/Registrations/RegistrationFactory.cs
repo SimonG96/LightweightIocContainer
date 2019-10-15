@@ -42,7 +42,7 @@ namespace LightweightIocContainer.Registrations
         /// <returns>A new created <see cref="IDefaultRegistration{TInterface}"/> with the given parameters</returns>
         public IDefaultRegistration<TImplementation> Register<TImplementation>(Lifestyle lifestyle)
         {
-            if (typeof(TImplementation).IsInterface) //TODO: handle `Instance` case when an instance is given
+            if (typeof(TImplementation).IsInterface)
                 throw new InvalidRegistrationException("Can't register an interface without its implementation type.");
 
             return Register<TImplementation, TImplementation>(lifestyle);
@@ -81,7 +81,7 @@ namespace LightweightIocContainer.Registrations
         /// <returns>A new created <see cref="IDefaultRegistration{TInterface}"/> with the given parameters</returns>
         public IRegistrationBase Register(Type tImplementation, Lifestyle lifestyle)
         {
-            if (tImplementation.IsInterface) //TODO: handle `Instance` case when an instance is given
+            if (tImplementation.IsInterface)
                 throw new InvalidRegistrationException("Can't register an interface without its implementation type.");
 
             return Register(tImplementation, tImplementation, lifestyle);
@@ -119,6 +119,11 @@ namespace LightweightIocContainer.Registrations
         {
             Type factoryRegistrationType = typeof(TypedFactoryRegistration<>).MakeGenericType(tFactory);
             return (IRegistrationBase)Activator.CreateInstance(factoryRegistrationType, tFactory, _iocContainer);
+        }
+
+        public IUnitTestCallbackRegistration<TInterface> RegisterUnitTestCallback<TInterface>(ResolveCallback<TInterface> unitTestResolveCallback)
+        {
+            return new UnitTestCallbackRegistration<TInterface>(typeof(TInterface), unitTestResolveCallback);
         }
     }
 }

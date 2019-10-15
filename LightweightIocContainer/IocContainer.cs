@@ -29,7 +29,7 @@ namespace LightweightIocContainer
 
 
         /// <summary>
-        /// The constructor of the <see cref="IocContainer"/>
+        /// The main container that carries all the <see cref="IRegistrationBase"/>s and can resolve all the types you'll ever want
         /// </summary>
         public IocContainer()
         {
@@ -135,6 +135,16 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
+        /// Register an Interface with an <see cref="ResolveCallback{T}"/> as a callback that is called when <see cref="Resolve{T}()"/> is called
+        /// </summary>
+        /// <typeparam name="TInterface">The Interface to register</typeparam>
+        /// <param name="unitTestCallback">The <see cref="ResolveCallback{T}"/> for the callback</param>
+        public void RegisterUnitTestCallback<TInterface>(ResolveCallback<TInterface> unitTestCallback)
+        {
+            Register(_registrationFactory.RegisterUnitTestCallback(unitTestCallback));
+        }
+
+        /// <summary>
         /// Add the <see cref="IRegistrationBase"/> to the the <see cref="IocContainer"/>
         /// </summary>
         /// <param name="registration">The given <see cref="IRegistrationBase"/></param>
@@ -201,7 +211,11 @@ namespace LightweightIocContainer
             if (registration == null)
                 throw new TypeNotRegisteredException(typeof(T));
 
-            if (registration is IDefaultRegistration<T> defaultRegistration)
+            if (registration is IUnitTestCallbackRegistration<T> unitTestCallbackRegistration)
+            {
+                return unitTestCallbackRegistration.UnitTestResolveCallback.Invoke(arguments);
+            }
+            else if (registration is IDefaultRegistration<T> defaultRegistration)
             {
                 if (defaultRegistration.Lifestyle == Lifestyle.Singleton)
                     return GetOrCreateSingletonInstance(defaultRegistration, arguments);
