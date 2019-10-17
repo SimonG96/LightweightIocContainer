@@ -65,6 +65,7 @@ namespace Test.LightweightIocContainer
         [UsedImplicitly]
         private class TestByte : ITest
         {
+            [UsedImplicitly]
             private readonly byte _id;
 
             public TestByte(byte id)
@@ -127,25 +128,25 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestRegister()
         {
-            Assert.DoesNotThrow(() => _iocContainer.Register(typeof(ITest), typeof(Test)));
+            Assert.DoesNotThrow(() => _iocContainer.Register<ITest, Test>());
         }
 
         [Test]
         public void TestRegisterTypeWithoutInterface()
         {
-            Assert.DoesNotThrow(() => _iocContainer.Register(typeof(Test)));
+            Assert.DoesNotThrow(() => _iocContainer.Register<Test>());
         }
 
         [Test]
         public void TestRegisterMultiton()
         {
-            Assert.DoesNotThrow(() => _iocContainer.Register(typeof(ITest), typeof(Test), typeof(MultitonScope)));
+            Assert.DoesNotThrow(() => _iocContainer.Register<ITest, Test, MultitonScope>());
         }
 
         [Test]
         public void TestRegisterFactory()
         {
-            Assert.DoesNotThrow(() => _iocContainer.RegisterFactory(typeof(ITestFactory)));
+            Assert.DoesNotThrow(() => _iocContainer.RegisterFactory<ITestFactory>());
         }
 
         [Test]
@@ -160,7 +161,6 @@ namespace Test.LightweightIocContainer
         public void TestRegisterInterfaceWithoutImplementation()
         {
             Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Register<ITest>());
-            Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Register(typeof(ITest)));
         }
 
         [Test]

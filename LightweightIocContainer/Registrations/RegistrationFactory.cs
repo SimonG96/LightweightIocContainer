@@ -61,46 +61,6 @@ namespace LightweightIocContainer.Registrations
         }
 
         /// <summary>
-        /// Register an Interface with a Type that implements it and create a <see cref="IDefaultRegistration{TInterface}"/>
-        /// </summary>
-        /// <param name="tInterface">The Interface to register</param>
-        /// <param name="tImplementation">The Type that implements the interface</param>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        /// <returns>A new created <see cref="IDefaultRegistration{TInterface}"/> with the given parameters</returns>
-        public IRegistrationBase Register(Type tInterface, Type tImplementation, Lifestyle lifestyle)
-        {
-            Type defaultRegistrationType = typeof(DefaultRegistration<>).MakeGenericType(tInterface);
-            return (IRegistrationBase)Activator.CreateInstance(defaultRegistrationType, tInterface, tImplementation, lifestyle);
-        }
-
-        /// <summary>
-        /// Register a <see cref="Type"/> without an interface and create a <see cref="IDefaultRegistration{TInterface}"/>
-        /// </summary>
-        /// <param name="tImplementation">The <see cref="Type"/> to register</param>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        /// <returns>A new created <see cref="IDefaultRegistration{TInterface}"/> with the given parameters</returns>
-        public IRegistrationBase Register(Type tImplementation, Lifestyle lifestyle)
-        {
-            if (tImplementation.IsInterface)
-                throw new InvalidRegistrationException("Can't register an interface without its implementation type.");
-
-            return Register(tImplementation, tImplementation, lifestyle);
-        }
-
-        /// <summary>
-        /// Register an Interface with a Type that implements it as a multiton and create a <see cref="IMultitonRegistration{TInterface}"/>
-        /// </summary>
-        /// <param name="tInterface">The Interface to register</param>
-        /// <param name="tImplementation">The Type that implements the interface</param>
-        /// <param name="tScope">The Type of the multiton scope</param>
-        /// <returns>A new created <see cref="IMultitonRegistration{TInterface}"/> with the given parameters</returns>
-        public IRegistrationBase Register(Type tInterface, Type tImplementation, Type tScope)
-        {
-            Type multitonRegistrationType = typeof(MultitonRegistration<>).MakeGenericType(tInterface);
-            return (IRegistrationBase)Activator.CreateInstance(multitonRegistrationType, tInterface, tImplementation, tScope);
-        }
-
-        /// <summary>
         /// Register an Interface as an abstract typed factory and create a <see cref="ITypedFactoryRegistration{TFactory}"/>
         /// </summary>
         /// <typeparam name="TFactory">The abstract typed factory to register</typeparam>
@@ -108,17 +68,6 @@ namespace LightweightIocContainer.Registrations
         public ITypedFactoryRegistration<TFactory> RegisterFactory<TFactory>()
         {
             return new TypedFactoryRegistration<TFactory>(typeof(TFactory), _iocContainer);
-        }
-
-        /// <summary>
-        /// Register an Interface as an abstract typed factory and create a <see cref="ITypedFactoryRegistration{TFactory}"/>
-        /// </summary>
-        /// <param name="tFactory">The abstract typed factory to register</param>
-        /// <returns>A new created <see cref="ITypedFactoryRegistration{TFactory}"/> with the given parameters</returns>
-        public IRegistrationBase RegisterFactory(Type tFactory)
-        {
-            Type factoryRegistrationType = typeof(TypedFactoryRegistration<>).MakeGenericType(tFactory);
-            return (IRegistrationBase)Activator.CreateInstance(factoryRegistrationType, tFactory, _iocContainer);
         }
 
         public IUnitTestCallbackRegistration<TInterface> RegisterUnitTestCallback<TInterface>(ResolveCallback<TInterface> unitTestResolveCallback)
