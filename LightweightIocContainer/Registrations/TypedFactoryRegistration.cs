@@ -118,6 +118,7 @@ namespace LightweightIocContainer.Registrations
                         generator.Emit(OpCodes.Dup);
                         generator.Emit(OpCodes.Ldc_I4_S, i);
                         generator.Emit(OpCodes.Ldarg_S, i + 1);
+                        generator.Emit(OpCodes.Box, args[i].ParameterType); //Boxing is only needed for simple datatypes, but for now it is not a problem to box everything
                         generator.Emit(OpCodes.Stelem_Ref);
                     }
                 }

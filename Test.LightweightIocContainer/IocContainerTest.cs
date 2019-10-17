@@ -26,6 +26,7 @@ namespace Test.LightweightIocContainer
             ITest Create(string name);
             ITest Create(MultitonScope scope);
             ITest CreateTest(string name = null);
+            ITest Create(byte id);
 
             void ClearMultitonInstance<T>();
         }
@@ -58,6 +59,17 @@ namespace Test.LightweightIocContainer
             public TestConstructor(Test test, string name = null)
             {
 
+            }
+        }
+
+        [UsedImplicitly]
+        private class TestByte : ITest
+        {
+            private readonly byte _id;
+
+            public TestByte(byte id)
+            {
+                _id = id;
             }
         }
 
@@ -344,6 +356,18 @@ namespace Test.LightweightIocContainer
             ITest createdTest = testFactory.Create();
 
             Assert.IsInstanceOf<TestConstructor>(createdTest);
+        }
+
+        [Test]
+        public void TestResolveFromFactoryWithByte()
+        {
+            _iocContainer.Register<ITest, TestByte>();
+            _iocContainer.RegisterFactory<ITestFactory>();
+
+            ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
+            ITest createdTest = testFactory.Create(1);
+
+            Assert.IsInstanceOf<TestByte>(createdTest);
         }
 
         [Test]
