@@ -295,11 +295,15 @@ namespace LightweightIocContainer
         /// <param name="type">The <see cref="Type"/> that will be created</param>
         /// <param name="arguments">The existing arguments</param>
         /// <returns>An array of all needed constructor arguments to create the <see cref="Type"/></returns>
+        /// <exception cref="NoMatchingConstructorFoundException">No matching constructor was found for the given or resolvable arguments</exception>
         [CanBeNull]
         private object[] ResolveConstructorArguments(Type type, object[] arguments)
         {
             //find best ctor
             IOrderedEnumerable<ConstructorInfo> sortedConstructors = type.GetConstructors().OrderByDescending(c => c.GetParameters().Length);
+
+            NoMatchingConstructorFoundException noMatchingConstructorFoundException = null;
+
             foreach (ConstructorInfo ctor in sortedConstructors)
             {
                 try
@@ -348,11 +352,17 @@ namespace LightweightIocContainer
 
                     return ctorParams.ToArray();
                 }
-                catch (Exception ex) //TODO: Decide what exactly to do in this case
+                catch (Exception ex)
                 {
-                    continue;
+                    if (noMatchingConstructorFoundException == null)
+                        noMatchingConstructorFoundException = new NoMatchingConstructorFoundException(type);
+
+                    noMatchingConstructorFoundException.AddInnerException(new ConstructorNotMatchingException(ctor, ex));
                 }
             }
+
+            if (noMatchingConstructorFoundException != null)
+                throw noMatchingConstructorFoundException;
             
             return null;
         }

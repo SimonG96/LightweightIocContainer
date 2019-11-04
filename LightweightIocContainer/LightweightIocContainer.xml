@@ -33,6 +33,23 @@
             <param name="predicate">A function to test each element for a condition</param>
             <returns>The first element of the <see cref="T:System.Collections.Generic.IEnumerable`1"/> or a new instance of the given <see cref="T:System.Type"/> when no element is found</returns>
         </member>
+        <member name="T:LightweightIocContainer.Exceptions.ConstructorNotMatchingException">
+            <summary>
+            The constructor does not match the given or resolvable arguments
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Exceptions.ConstructorNotMatchingException.#ctor(System.Reflection.ConstructorInfo,System.Exception)">
+            <summary>
+            The constructor does not match the given or resolvable arguments
+            </summary>
+            <param name="constructor">The constructor that does not match</param>
+            <param name="exception">The inner exception</param>
+        </member>
+        <member name="P:LightweightIocContainer.Exceptions.ConstructorNotMatchingException.Constructor">
+            <summary>
+            The constructor that does not match
+            </summary>
+        </member>
         <member name="T:LightweightIocContainer.Exceptions.IllegalAbstractMethodCreationException">
             <summary>
             The creation of the abstract method is illegal in its current state
@@ -115,6 +132,34 @@
             <summary>
             The <see cref="T:System.Type"/> of the multiton that's responsible for the exception
             </summary>
+        </member>
+        <member name="T:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException">
+            <summary>
+            No matching constructor was found for the given or resolvable arguments
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException.#ctor(System.Type,LightweightIocContainer.Exceptions.ConstructorNotMatchingException[])">
+            <summary>
+            No matching constructor was found for the given or resolvable arguments
+            </summary>
+            <param name="type">The <see cref="P:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException.Type"/> with no matching constructor</param>
+            <param name="exceptions">The inner exceptions of type <see cref="T:LightweightIocContainer.Exceptions.ConstructorNotMatchingException"/></param>
+        </member>
+        <member name="P:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException.Type">
+            <summary>
+            The <see cref="P:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException.Type"/> with no matching constructor
+            </summary>
+        </member>
+        <member name="P:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException.InnerExceptions">
+            <summary>
+            The inner exceptions of the <see cref="T:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException"/>
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException.AddInnerException(LightweightIocContainer.Exceptions.ConstructorNotMatchingException)">
+            <summary>
+            Add an inner exception to the <see cref="P:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException.InnerExceptions"/>
+            </summary>
+            <param name="exception">The <see cref="T:LightweightIocContainer.Exceptions.ConstructorNotMatchingException"/></param>
         </member>
         <member name="T:LightweightIocContainer.Exceptions.TypeNotRegisteredException">
             <summary>
@@ -528,6 +573,7 @@
             <param name="type">The <see cref="T:System.Type"/> that will be created</param>
             <param name="arguments">The existing arguments</param>
             <returns>An array of all needed constructor arguments to create the <see cref="T:System.Type"/></returns>
+            <exception cref="T:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException">No matching constructor was found for the given or resolvable arguments</exception>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.ClearMultitonInstances``1">
             <summary>
