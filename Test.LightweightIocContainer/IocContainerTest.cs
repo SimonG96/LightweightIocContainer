@@ -63,6 +63,15 @@ namespace Test.LightweightIocContainer
         }
 
         [UsedImplicitly]
+        private class TestPrivateConstructor : ITest
+        {
+            private TestPrivateConstructor()
+            {
+
+            }
+        }
+
+        [UsedImplicitly]
         private class TestByte : ITest
         {
             [UsedImplicitly]
@@ -301,6 +310,13 @@ namespace Test.LightweightIocContainer
         {
             _iocContainer.Register<ITest, TestConstructor>();
             Assert.Throws<NoMatchingConstructorFoundException>(() => _iocContainer.Resolve<ITest>());
+        }
+
+        [Test]
+        public void TestResolvePrivateConstructor()
+        {
+            _iocContainer.Register<ITest, TestPrivateConstructor>();
+            Assert.Throws<NoPublicConstructorFoundException>(() => _iocContainer.Resolve<ITest>());
         }
 
         [Test]

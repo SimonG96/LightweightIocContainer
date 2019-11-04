@@ -300,7 +300,9 @@ namespace LightweightIocContainer
         private object[] ResolveConstructorArguments(Type type, object[] arguments)
         {
             //find best ctor
-            IOrderedEnumerable<ConstructorInfo> sortedConstructors = type.GetConstructors().OrderByDescending(c => c.GetParameters().Length);
+            List<ConstructorInfo> sortedConstructors = type.GetConstructors().OrderByDescending(c => c.GetParameters().Length).ToList();
+            if (!sortedConstructors.Any()) //no public constructor available
+                throw new NoPublicConstructorFoundException(type);
 
             NoMatchingConstructorFoundException noMatchingConstructorFoundException = null;
 

@@ -161,6 +161,22 @@
             </summary>
             <param name="exception">The <see cref="T:LightweightIocContainer.Exceptions.ConstructorNotMatchingException"/></param>
         </member>
+        <member name="T:LightweightIocContainer.Exceptions.NoPublicConstructorFoundException">
+            <summary>
+            No public constructor can be found for a <see cref="P:LightweightIocContainer.Exceptions.NoPublicConstructorFoundException.Type"/>
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Exceptions.NoPublicConstructorFoundException.#ctor(System.Type)">
+            <summary>
+            No public constructor can be found for a <see cref="P:LightweightIocContainer.Exceptions.NoPublicConstructorFoundException.Type"/>
+            </summary>
+            <param name="type">The <see cref="P:LightweightIocContainer.Exceptions.NoPublicConstructorFoundException.Type"/> with no public constructor</param>
+        </member>
+        <member name="P:LightweightIocContainer.Exceptions.NoPublicConstructorFoundException.Type">
+            <summary>
+            The <see cref="P:LightweightIocContainer.Exceptions.NoPublicConstructorFoundException.Type"/> with no public constructor
+            </summary>
+        </member>
         <member name="T:LightweightIocContainer.Exceptions.TypeNotRegisteredException">
             <summary>
             The <see cref="T:System.Type"/> is not registered in this <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/>
