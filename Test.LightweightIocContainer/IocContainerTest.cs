@@ -297,6 +297,13 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
+        public void TestResolveNoMatchingConstructor()
+        {
+            _iocContainer.Register<ITest, TestConstructor>();
+            Assert.Throws<NoMatchingConstructorFoundException>(() => _iocContainer.Resolve<ITest>());
+        }
+
+        [Test]
         public void TestResolveFactory()
         {
             _iocContainer.Register<ITest, Test>();
