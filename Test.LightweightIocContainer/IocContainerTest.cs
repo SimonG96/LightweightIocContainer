@@ -239,16 +239,6 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
-        public void TestResolveReflection()
-        {
-            _iocContainer.Register<ITest, Test>();
-
-            object resolvedTest = _iocContainer.Resolve(typeof(ITest), null);
-
-            Assert.IsInstanceOf<Test>(resolvedTest);
-        }
-
-        [Test]
         public void TestResolveSingleton()
         {
             _iocContainer.Register<ITest, Test>(Lifestyle.Singleton);
@@ -309,14 +299,16 @@ namespace Test.LightweightIocContainer
         public void TestResolveNoMatchingConstructor()
         {
             _iocContainer.Register<ITest, TestConstructor>();
-            Assert.Throws<NoMatchingConstructorFoundException>(() => _iocContainer.Resolve<ITest>());
+            NoMatchingConstructorFoundException exception = Assert.Throws<NoMatchingConstructorFoundException>(() => _iocContainer.Resolve<ITest>());
+            Assert.AreEqual(typeof(TestConstructor), exception.Type);
         }
 
         [Test]
         public void TestResolvePrivateConstructor()
         {
             _iocContainer.Register<ITest, TestPrivateConstructor>();
-            Assert.Throws<NoPublicConstructorFoundException>(() => _iocContainer.Resolve<ITest>());
+            NoPublicConstructorFoundException exception = Assert.Throws<NoPublicConstructorFoundException>(() => _iocContainer.Resolve<ITest>());
+            Assert.AreEqual(typeof(TestPrivateConstructor), exception.Type);
         }
 
         [Test]

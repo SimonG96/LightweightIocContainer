@@ -163,9 +163,10 @@ namespace LightweightIocContainer
         /// </summary>
         /// <param name="type">The given <see cref="Type"/></param>
         /// <param name="arguments">The constructor arguments</param>
+        /// <param name="resolveStack">The current resolve stack</param>
         /// <returns>An instance of the given <see cref="Type"/></returns>
         /// <exception cref="InternalResolveException">Could not find function <see cref="ResolveInternal{T}"/></exception>
-        public object Resolve(Type type, object[] arguments)
+        private object Resolve(Type type, object[] arguments, List<Type> resolveStack)
         {
             MethodInfo resolveMethod = typeof(IocContainer).GetMethod(nameof(ResolveInternal), BindingFlags.NonPublic | BindingFlags.Instance);
             MethodInfo genericResolveMethod = resolveMethod?.MakeGenericMethod(type);
@@ -173,7 +174,14 @@ namespace LightweightIocContainer
             if (genericResolveMethod == null)
                 throw new InternalResolveException($"Could not find function {nameof(ResolveInternal)}");
 
-            return genericResolveMethod.Invoke(this, new object[] {arguments});
+            try //exceptions thrown by methods called with invoke are wrapped into another exception, the exception thrown by the invoked method can be returned by `Exception.GetBaseException()`
+            {
+                return genericResolveMethod.Invoke(this, new object[] { arguments, resolveStack });
+            }
+            catch (Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
         }
 
         /// <summary>
@@ -181,14 +189,23 @@ namespace LightweightIocContainer
         /// </summary>
         /// <typeparam name="T">The registered <see cref="Type"/></typeparam>
         /// <param name="arguments">The constructor arguments</param>
+        /// <param name="resolveStack">The current resolve stack</param>
         /// <returns>An instance of the given registered <see cref="Type"/></returns>
         /// <exception cref="TypeNotRegisteredException">The given <see cref="Type"/> is not registered in this <see cref="IocContainer"/></exception>
         /// <exception cref="UnknownRegistrationException">The registration for the given <see cref="Type"/> has an unknown <see cref="Type"/></exception>
-        private T ResolveInternal<T>(params object[] arguments)
+        private T ResolveInternal<T>(object[] arguments, List<Type> resolveStack = null)
         {
             IRegistrationBase registration = _registrations.FirstOrDefault(r => r.InterfaceType == typeof(T));
             if (registration == null)
                 throw new TypeNotRegisteredException(typeof(T));
+
+            //Circular dependency check
+            if (resolveStack == null) //first resolve call
+                resolveStack = new List<Type> {typeof(T)}; //create new stack and add the currently resolving type to the stack
+            else if (resolveStack.Contains(typeof(T)))
+                throw new CircularDependencyException(typeof(T), resolveStack); //currently resolving type is still resolving -> circular dependency
+            else //not the first resolve call in chain but no circular dependencies for now
+                resolveStack.Add(typeof(T)); //add currently resolving type to the stack
 
             if (registration is IUnitTestCallbackRegistration<T> unitTestCallbackRegistration)
             {
@@ -197,11 +214,11 @@ namespace LightweightIocContainer
             else if (registration is IDefaultRegistration<T> defaultRegistration)
             {
                 if (defaultRegistration.Lifestyle == Lifestyle.Singleton)
-                    return GetOrCreateSingletonInstance(defaultRegistration, arguments);
+                    return GetOrCreateSingletonInstance(defaultRegistration, arguments, resolveStack);
                 else if (defaultRegistration is IMultitonRegistration<T> multitonRegistration && defaultRegistration.Lifestyle == Lifestyle.Multiton)
-                    return GetOrCreateMultitonInstance(multitonRegistration, arguments);
+                    return GetOrCreateMultitonInstance(multitonRegistration, arguments, resolveStack);
 
-                return CreateInstance(defaultRegistration, arguments);
+                return CreateInstance(defaultRegistration, arguments, resolveStack);
             }
             else if (registration is ITypedFactoryRegistration<T> typedFactoryRegistration)
             {
@@ -217,8 +234,9 @@ namespace LightweightIocContainer
         /// <typeparam name="T">The given <see cref="Type"/></typeparam>
         /// <param name="registration">The registration of the given <see cref="Type"/></param>
         /// <param name="arguments">The arguments to resolve</param>
+        /// <param name="resolveStack">The current resolve stack</param>
         /// <returns>An existing or newly created singleton instance of the given <see cref="Type"/></returns>
-        private T GetOrCreateSingletonInstance<T>(IDefaultRegistration<T> registration, params object[] arguments)
+        private T GetOrCreateSingletonInstance<T>(IDefaultRegistration<T> registration, object[] arguments, List<Type> resolveStack)
         {
             //if a singleton instance exists return it
             object instance = _singletons.FirstOrDefault(s => s.type == typeof(T)).instance;
@@ -226,7 +244,7 @@ namespace LightweightIocContainer
                 return (T) instance;
 
             //if it doesn't already exist create a new instance and add it to the list
-            T newInstance = CreateInstance(registration, arguments);
+            T newInstance = CreateInstance(registration, arguments, resolveStack);
             _singletons.Add((typeof(T), newInstance));
 
             return newInstance;
@@ -238,10 +256,11 @@ namespace LightweightIocContainer
         /// <typeparam name="T">The given <see cref="Type"/></typeparam>
         /// <param name="registration">The registration of the given <see cref="Type"/></param>
         /// <param name="arguments">The arguments to resolve</param>
+        /// <param name="resolveStack">The current resolve stack</param>
         /// <returns>An existing or newly created multiton instance of the given <see cref="Type"/></returns>
         /// <exception cref="MultitonResolveException">No arguments given</exception>
         /// <exception cref="MultitonResolveException">Scope argument not given</exception>
-        private T GetOrCreateMultitonInstance<T>(IMultitonRegistration<T> registration, params object[] arguments)
+        private T GetOrCreateMultitonInstance<T>(IMultitonRegistration<T> registration, object[] arguments, List<Type> resolveStack)
         {
             if (arguments == null || !arguments.Any())
                 throw new MultitonResolveException("Can not resolve multiton without arguments.", typeof(T));
@@ -257,13 +276,13 @@ namespace LightweightIocContainer
                 if (instances.TryGetValue(scopeArgument, out object instance))
                     return (T) instance;
 
-                T createdInstance = CreateInstance(registration, arguments);
+                T createdInstance = CreateInstance(registration, arguments, resolveStack);
                 instances.Add(scopeArgument, createdInstance);
 
                 return createdInstance;
             }
 
-            T newInstance = CreateInstance(registration, arguments);
+            T newInstance = CreateInstance(registration, arguments, resolveStack);
 
             ConditionalWeakTable<object, object> weakTable = new ConditionalWeakTable<object, object>();
             weakTable.Add(scopeArgument, newInstance);
@@ -279,10 +298,11 @@ namespace LightweightIocContainer
         /// <typeparam name="T">The given <see cref="Type"/></typeparam>
         /// <param name="registration">The registration of the given <see cref="Type"/></param>
         /// <param name="arguments">The constructor arguments</param>
+        /// <param name="resolveStack">The current resolve stack</param>
         /// <returns>A newly created instance of the given <see cref="Type"/></returns>
-        private T CreateInstance<T>(IDefaultRegistration<T> registration, params object[] arguments)
+        private T CreateInstance<T>(IDefaultRegistration<T> registration, object[] arguments, List<Type> resolveStack)
         {
-            arguments = ResolveConstructorArguments(registration.ImplementationType, arguments);
+            arguments = ResolveConstructorArguments(registration.ImplementationType, arguments, resolveStack);
             T instance = (T) Activator.CreateInstance(registration.ImplementationType, arguments);
             registration.OnCreateAction?.Invoke(instance); //TODO: Allow async OnCreateAction?
 
@@ -294,10 +314,11 @@ namespace LightweightIocContainer
         /// </summary>
         /// <param name="type">The <see cref="Type"/> that will be created</param>
         /// <param name="arguments">The existing arguments</param>
+        /// <param name="resolveStack">The current resolve stack</param>
         /// <returns>An array of all needed constructor arguments to create the <see cref="Type"/></returns>
         /// <exception cref="NoMatchingConstructorFoundException">No matching constructor was found for the given or resolvable arguments</exception>
         [CanBeNull]
-        private object[] ResolveConstructorArguments(Type type, object[] arguments)
+        private object[] ResolveConstructorArguments(Type type, object[] arguments, List<Type> resolveStack)
         {
             //find best ctor
             List<ConstructorInfo> sortedConstructors = type.GetConstructors().OrderByDescending(c => c.GetParameters().Length).ToList();
@@ -319,7 +340,8 @@ namespace LightweightIocContainer
                         object fittingArgument = new InternalResolvePlaceholder();
                         if (argumentsList != null)
                         {
-                            fittingArgument = argumentsList.FirstOrGiven<object, InternalResolvePlaceholder>(a => a?.GetType() == parameter.ParameterType || parameter.ParameterType.IsInstanceOfType(a));
+                            fittingArgument = argumentsList.FirstOrGiven<object, InternalResolvePlaceholder>(a =>
+                                a?.GetType() == parameter.ParameterType || parameter.ParameterType.IsInstanceOfType(a));
                             if (!(fittingArgument is InternalResolvePlaceholder))
                             {
                                 int index = argumentsList.IndexOf(fittingArgument);
@@ -329,7 +351,7 @@ namespace LightweightIocContainer
                             {
                                 try
                                 {
-                                    fittingArgument = Resolve(parameter.ParameterType, null);
+                                    fittingArgument = Resolve(parameter.ParameterType, null, resolveStack);
                                 }
                                 catch (Exception)
                                 {
@@ -347,12 +369,16 @@ namespace LightweightIocContainer
                         if (fittingArgument is InternalResolvePlaceholder && parameter.HasDefaultValue)
                             ctorParams.Add(parameter.DefaultValue);
                         else if (fittingArgument is InternalResolvePlaceholder)
-                            ctorParams.Add(Resolve(parameter.ParameterType, null));
+                            ctorParams.Add(Resolve(parameter.ParameterType, null, resolveStack));
                         else
                             ctorParams.Add(fittingArgument);
                     }
 
                     return ctorParams.ToArray();
+                }
+                catch (CircularDependencyException) //don't handle circular dependencies as no matching constructor, just rethrow them
+                {
+                    throw;
                 }
                 catch (Exception ex)
                 {

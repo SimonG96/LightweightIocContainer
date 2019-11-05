@@ -78,15 +78,6 @@ namespace LightweightIocContainer.Interfaces
         T Resolve<T>(params object[] arguments);
 
         /// <summary>
-        /// Gets an instance of the given <see cref="Type"/>
-        /// </summary>
-        /// <param name="type">The given <see cref="Type"/></param>
-        /// <param name="arguments">The constructor arguments</param>
-        /// <returns>An instance of the given <see cref="Type"/></returns>
-        /// <exception cref="InternalResolveException">Could not find function <see cref="IocContainer.ResolveInternal{T}"/></exception>
-        object Resolve(Type type, object[] arguments);
-
-        /// <summary>
         /// Clear the multiton instances of the given <see cref="Type"/> from the registered multitons list
         /// </summary>
         /// <typeparam name="T">The <see cref="Type"/> to clear the multiton instances</typeparam>
