@@ -14,7 +14,7 @@ namespace Test.LightweightIocContainer
     [TestFixture]
     public class IocContainerRecursionTest
     {
-        #region TestClasses
+        #region TestClassesCircularDependency
 
         [UsedImplicitly]
         public interface IFoo
@@ -44,7 +44,51 @@ namespace Test.LightweightIocContainer
             }
         }
 
-        #endregion TestClasses
+        #endregion TestClassesCircularDependency
+
+        #region TestClassesNonCircularDependency
+        
+        [UsedImplicitly]
+        public interface IA
+        {
+            
+        }
+
+        [UsedImplicitly]
+        public interface IB
+        {
+            
+        }
+
+        [UsedImplicitly]
+        public interface IC
+        {
+            
+        }
+
+        [UsedImplicitly]
+        private class A : IA
+        {
+            public A(IB b, IC c)
+            {
+            }
+        }
+
+        [UsedImplicitly]
+        private class B : IB
+        {
+            public B(IC c)
+            {
+            }
+        }
+
+        [UsedImplicitly]
+        private class C : IC
+        {
+
+        }
+
+        #endregion TestClassesNonCircularDependency
 
 
 
@@ -54,9 +98,6 @@ namespace Test.LightweightIocContainer
         public void SetUp()
         {
             _iocContainer = new IocContainer();
-
-            _iocContainer.Register<IFoo, Foo>();
-            _iocContainer.Register<IBar, Bar>();
         }
 
         [TearDown]
@@ -68,6 +109,9 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestCircularDependencies()
         {
+            _iocContainer.Register<IFoo, Foo>();
+            _iocContainer.Register<IBar, Bar>();
+
             CircularDependencyException exception = Assert.Throws<CircularDependencyException>(() => _iocContainer.Resolve<IFoo>());
             Assert.AreEqual(typeof(IFoo), exception.ResolvingType);
             Assert.AreEqual(2, exception.ResolveStack.Count);
@@ -82,8 +126,21 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
+        public void TestNonCircularDependencies()
+        {
+            _iocContainer.Register<IA, A>();
+            _iocContainer.Register<IB, B>();
+            _iocContainer.Register<IC, C>();
+
+            IA a = _iocContainer.Resolve<IA>();
+        }
+
+        [Test]
         public void TestRecursionWithParam()
         {
+            _iocContainer.Register<IFoo, Foo>();
+            _iocContainer.Register<IBar, Bar>();
+
             Assert.DoesNotThrow(() => _iocContainer.Resolve<IFoo>(new Mock<IBar>().Object));
             Assert.DoesNotThrow(() => _iocContainer.Resolve<IBar>(new Mock<IFoo>().Object));
         }

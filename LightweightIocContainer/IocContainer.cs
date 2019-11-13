@@ -207,25 +207,31 @@ namespace LightweightIocContainer
             else //not the first resolve call in chain but no circular dependencies for now
                 resolveStack.Add(typeof(T)); //add currently resolving type to the stack
 
+            T resolvedInstance;
+
             if (registration is IUnitTestCallbackRegistration<T> unitTestCallbackRegistration)
             {
-                return unitTestCallbackRegistration.UnitTestResolveCallback.Invoke(arguments);
+                resolvedInstance = unitTestCallbackRegistration.UnitTestResolveCallback.Invoke(arguments);
             }
             else if (registration is IDefaultRegistration<T> defaultRegistration)
             {
                 if (defaultRegistration.Lifestyle == Lifestyle.Singleton)
-                    return GetOrCreateSingletonInstance(defaultRegistration, arguments, resolveStack);
+                    resolvedInstance = GetOrCreateSingletonInstance(defaultRegistration, arguments, resolveStack);
                 else if (defaultRegistration is IMultitonRegistration<T> multitonRegistration && defaultRegistration.Lifestyle == Lifestyle.Multiton)
-                    return GetOrCreateMultitonInstance(multitonRegistration, arguments, resolveStack);
-
-                return CreateInstance(defaultRegistration, arguments, resolveStack);
+                    resolvedInstance = GetOrCreateMultitonInstance(multitonRegistration, arguments, resolveStack);
+                else
+                    resolvedInstance = CreateInstance(defaultRegistration, arguments, resolveStack);
             }
             else if (registration is ITypedFactoryRegistration<T> typedFactoryRegistration)
             {
-                return typedFactoryRegistration.Factory.Factory;
+                resolvedInstance = typedFactoryRegistration.Factory.Factory;
             }
             else
                 throw new UnknownRegistrationException($"There is no registration of type {registration.GetType().Name}.");
+
+            resolveStack.Remove(typeof(T)); //T was successfully resolved -> no circular dependency -> remove from resolve stack
+
+            return resolvedInstance;
         }
 
         /// <summary>
