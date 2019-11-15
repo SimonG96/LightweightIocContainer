@@ -17,13 +17,13 @@ The easiest way to [install](https://github.com/SimonG96/LightweightIocContainer
 You can either use the [`PackageManager`](https://github.com/SimonG96/LightweightIocContainer/wiki/Install-Lightweight-IOC-Container#packagemanager) in VisualStudio:
 
 ```PM
-PM> Install-Package LightweightIocContainer -Version 2.0.0
+PM> Install-Package LightweightIocContainer -Version 2.0.1
 ```
 
 or you can use the [`.NET CLI`](https://github.com/SimonG96/LightweightIocContainer/wiki/Install-Lightweight-IOC-Container#net-cli):
 
 ```.net
-> dotnet add package LightweightIocContainer --version 2.0.0
+> dotnet add package LightweightIocContainer --version 2.0.1
 ```
 
 ### Example usage
