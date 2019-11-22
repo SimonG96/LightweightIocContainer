@@ -9,13 +9,14 @@ using LightweightIocContainer.Interfaces.Registrations;
 namespace LightweightIocContainer.Registrations
 {
     /// <summary>
-    /// A special <see cref="IRegistrationBase"/> that allows to set a <see cref="ResolveCallback{T}"/> as a callback that is called on <see cref="IIocContainer.Resolve{T}()"/>
+    /// A special <see cref="IRegistration"/> that allows to set a <see cref="ResolveCallback{T}"/> as a callback that is called on <see cref="IIocContainer.Resolve{T}()"/>
     /// </summary>
     /// <typeparam name="TInterface"></typeparam>
+    [Obsolete("UnitTestCallbackRegistration is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
     public class UnitTestCallbackRegistration<TInterface> : IUnitTestCallbackRegistration<TInterface>
     {
         /// <summary>
-        /// A special <see cref="IRegistrationBase"/> that allows to set a <see cref="ResolveCallback{T}"/> as a callback that is called on <see cref="IIocContainer.Resolve{T}()"/>
+        /// A special <see cref="IRegistration"/> that allows to set a <see cref="ResolveCallback{T}"/> as a callback that is called on <see cref="IIocContainer.Resolve{T}()"/>
         /// </summary>
         /// <param name="interfaceType">The <see cref="Type"/> of the interface</param>
         /// <param name="unitTestResolveCallback">The <see cref="ResolveCallback{T}"/> that is set as a callback</param>

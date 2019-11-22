@@ -1,39 +1,20 @@
-﻿// Author: simon.gockner
-// Created: 2019-05-20
+﻿// Author: Gockner, Simon
+// Created: 2019-11-22
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System;
-using LightweightIocContainer.Interfaces.Installers;
 
 namespace LightweightIocContainer.Interfaces.Registrations
 {
     /// <summary>
-    /// The default registration that is used to register a <see cref="Type"/> for the Interface it implements
+    /// The <see cref="IDefaultRegistration{TInterface}"/> to register a <see cref="Type"/> for the Interface it implements
     /// </summary>
-    /// <typeparam name="TInterface">The registered Interface</typeparam>
-    public interface IDefaultRegistration<TInterface> : IRegistrationBase
+    /// <typeparam name="TInterface">The <see cref="Type"/> of the interface</typeparam>
+    public interface IDefaultRegistration<TInterface> : IRegistrationBase<TInterface>
     {
         /// <summary>
-        /// The <see cref="Type"/> that implements the <see cref="IRegistrationBase.InterfaceType"/> that is registered with this <see cref="IDefaultRegistration{TInterface}"/>
+        /// The <see cref="Type"/> that implements the <see cref="IRegistration.InterfaceType"/> that is registered with this <see cref="IRegistrationBase{TInterface}"/>
         /// </summary>
         Type ImplementationType { get; }
-
-        /// <summary>
-        /// The Lifestyle of Instances that are created with this <see cref="IDefaultRegistration{TInterface}"/>
-        /// </summary>
-        Lifestyle Lifestyle { get; }
-
-        /// <summary>
-        /// This <see cref="Action{T}"/> is invoked when an instance of this type is created.
-        /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="OnCreate"/></para>
-        /// </summary>
-        Action<TInterface> OnCreateAction { get; }
-
-        /// <summary>
-        /// Pass an <see cref="Action{T}"/> that will be invoked when an instance of this type is created
-        /// </summary>
-        /// <param name="action">The <see cref="Action{T}"/></param>
-        /// <returns>The current instance of this <see cref="IDefaultRegistration{TInterface}"/></returns>
-        IDefaultRegistration<TInterface> OnCreate(Action<TInterface> action);
     }
 }

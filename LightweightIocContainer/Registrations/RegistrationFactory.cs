@@ -3,7 +3,6 @@
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System;
-using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
@@ -11,7 +10,7 @@ using LightweightIocContainer.Interfaces.Registrations;
 namespace LightweightIocContainer.Registrations
 {
     /// <summary>
-    /// A factory to register interfaces and factories in an <see cref="IIocInstaller"/> and create the needed <see cref="IRegistrationBase"/>s
+    /// A factory to register interfaces and factories in an <see cref="IIocInstaller"/> and create the needed <see cref="IRegistration"/>s
     /// </summary>
     internal class RegistrationFactory
     {
@@ -35,17 +34,14 @@ namespace LightweightIocContainer.Registrations
         }
 
         /// <summary>
-        /// Register a <see cref="Type"/> without an interface and create a <see cref="IDefaultRegistration{TInterface}"/>
+        /// Register a <see cref="Type"/> without an interface and create a <see cref="ISingleTypeRegistration{TInterface}"/>
         /// </summary>
-        /// <typeparam name="TImplementation">The <see cref="Type"/> to register</typeparam>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        /// <returns>A new created <see cref="IDefaultRegistration{TInterface}"/> with the given parameters</returns>
-        public IDefaultRegistration<TImplementation> Register<TImplementation>(Lifestyle lifestyle)
+        /// <typeparam name="T">The <see cref="Type"/> to register</typeparam>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="ISingleTypeRegistration{TInterface}"/></param>
+        /// <returns>A new created <see cref="ISingleTypeRegistration{TInterface}"/> with the given parameters</returns>
+        public ISingleTypeRegistration<T> Register<T>(Lifestyle lifestyle)
         {
-            if (typeof(TImplementation).IsInterface)
-                throw new InvalidRegistrationException("Can't register an interface without its implementation type.");
-
-            return Register<TImplementation, TImplementation>(lifestyle);
+            return new SingleTypeRegistration<T>(typeof(T), lifestyle);
         }
 
         /// <summary>
@@ -70,6 +66,7 @@ namespace LightweightIocContainer.Registrations
             return new TypedFactoryRegistration<TFactory>(typeof(TFactory), _iocContainer);
         }
 
+        [Obsolete("RegisterUnitTestCallback is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
         public IUnitTestCallbackRegistration<TInterface> RegisterUnitTestCallback<TInterface>(ResolveCallback<TInterface> unitTestResolveCallback)
         {
             return new UnitTestCallbackRegistration<TInterface>(typeof(TInterface), unitTestResolveCallback);

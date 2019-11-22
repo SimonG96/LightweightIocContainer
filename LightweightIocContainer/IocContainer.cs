@@ -17,19 +17,19 @@ using LightweightIocContainer.Registrations;
 namespace LightweightIocContainer
 {
     /// <summary>
-    /// The main container that carries all the <see cref="IRegistrationBase"/>s and can resolve all the types you'll ever want
+    /// The main container that carries all the <see cref="IRegistration"/>s and can resolve all the types you'll ever want
     /// </summary>
     public class IocContainer : IIocContainer
     {
         private readonly RegistrationFactory _registrationFactory;
 
-        private readonly List<IRegistrationBase> _registrations = new List<IRegistrationBase>();
+        private readonly List<IRegistration> _registrations = new List<IRegistration>();
         private readonly List<(Type type, object instance)> _singletons = new List<(Type, object)>();
         private readonly List<(Type type, Type scope, ConditionalWeakTable<object, object> instances)> _multitons = new List<(Type, Type, ConditionalWeakTable<object, object>)>();
 
 
         /// <summary>
-        /// The main container that carries all the <see cref="IRegistrationBase"/>s and can resolve all the types you'll ever want
+        /// The main container that carries all the <see cref="IRegistration"/>s and can resolve all the types you'll ever want
         /// </summary>
         public IocContainer()
         {
@@ -57,8 +57,8 @@ namespace LightweightIocContainer
         /// </summary>
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <returns>The created <see cref="IRegistration"/></returns>
         public IDefaultRegistration<TInterface> Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface
         {
             IDefaultRegistration<TInterface> registration = _registrationFactory.Register<TInterface, TImplementation>(lifestyle);
@@ -71,11 +71,11 @@ namespace LightweightIocContainer
         /// Register a <see cref="Type"/> without an interface
         /// </summary>
         /// <typeparam name="TImplementation">The <see cref="Type"/> to register</typeparam>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        /// <returns>The created <see cref="IRegistrationBase"/></returns>
-        public IDefaultRegistration<TImplementation> Register<TImplementation>(Lifestyle lifestyle = Lifestyle.Transient)
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <returns>The created <see cref="IRegistration"/></returns>
+        public ISingleTypeRegistration<TImplementation> Register<TImplementation>(Lifestyle lifestyle = Lifestyle.Transient)
         {
-            IDefaultRegistration<TImplementation> registration = _registrationFactory.Register<TImplementation>(lifestyle);
+            ISingleTypeRegistration<TImplementation> registration = _registrationFactory.Register<TImplementation>(lifestyle);
             Register(registration);
 
             return registration;
@@ -87,7 +87,7 @@ namespace LightweightIocContainer
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <typeparam name="TScope">The Type of the multiton scope</typeparam>
-        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        /// <returns>The created <see cref="IRegistration"/></returns>
         public IMultitonRegistration<TInterface> Register<TInterface, TImplementation, TScope>() where TImplementation : TInterface
         {
             IMultitonRegistration<TInterface> registration = _registrationFactory.Register<TInterface, TImplementation, TScope>();
@@ -100,7 +100,7 @@ namespace LightweightIocContainer
         /// Register an Interface as an abstract typed factory
         /// </summary>
         /// <typeparam name="TFactory">The abstract typed factory to register</typeparam>
-        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        /// <returns>The created <see cref="IRegistration"/></returns>
         public ITypedFactoryRegistration<TFactory> RegisterFactory<TFactory>()
         {
             ITypedFactoryRegistration<TFactory> registration = _registrationFactory.RegisterFactory<TFactory>();
@@ -114,7 +114,8 @@ namespace LightweightIocContainer
         /// </summary>
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <param name="unitTestCallback">The <see cref="ResolveCallback{T}"/> for the callback</param>
-        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        /// <returns>The created <see cref="IRegistration"/></returns>
+        [Obsolete("RegisterUnitTestCallback is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
         public IUnitTestCallbackRegistration<TInterface> RegisterUnitTestCallback<TInterface>(ResolveCallback<TInterface> unitTestCallback)
         {
             IUnitTestCallbackRegistration<TInterface> registration = _registrationFactory.RegisterUnitTestCallback(unitTestCallback);
@@ -124,11 +125,11 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
-        /// Add the <see cref="IRegistrationBase"/> to the the <see cref="IocContainer"/>
+        /// Add the <see cref="IRegistration"/> to the the <see cref="IocContainer"/>
         /// </summary>
-        /// <param name="registration">The given <see cref="IRegistrationBase"/></param>
+        /// <param name="registration">The given <see cref="IRegistration"/></param>
         /// <exception cref="MultipleRegistrationException">The <see cref="Type"/> is already registered in this <see cref="IocContainer"/></exception>
-        private void Register(IRegistrationBase registration)
+        private void Register(IRegistration registration)
         {
             //if type is already registered
             if (_registrations.Any(r => r.InterfaceType == registration.InterfaceType))
@@ -195,7 +196,7 @@ namespace LightweightIocContainer
         /// <exception cref="UnknownRegistrationException">The registration for the given <see cref="Type"/> has an unknown <see cref="Type"/></exception>
         private T ResolveInternal<T>(object[] arguments, List<Type> resolveStack = null)
         {
-            IRegistrationBase registration = _registrations.FirstOrDefault(r => r.InterfaceType == typeof(T));
+            IRegistration registration = _registrations.FirstOrDefault(r => r.InterfaceType == typeof(T));
             if (registration == null)
                 throw new TypeNotRegisteredException(typeof(T));
 
@@ -209,11 +210,14 @@ namespace LightweightIocContainer
 
             T resolvedInstance;
 
+            //TODO: remove this #pragma when IUnitTestCallbackRegistration is removed
+#pragma warning disable 618
             if (registration is IUnitTestCallbackRegistration<T> unitTestCallbackRegistration)
             {
                 resolvedInstance = unitTestCallbackRegistration.UnitTestResolveCallback.Invoke(arguments);
             }
-            else if (registration is IDefaultRegistration<T> defaultRegistration)
+#pragma warning restore 618
+            else if (registration is IRegistrationBase<T> defaultRegistration)
             {
                 if (defaultRegistration.Lifestyle == Lifestyle.Singleton)
                     resolvedInstance = GetOrCreateSingletonInstance(defaultRegistration, arguments, resolveStack);
@@ -242,7 +246,7 @@ namespace LightweightIocContainer
         /// <param name="arguments">The arguments to resolve</param>
         /// <param name="resolveStack">The current resolve stack</param>
         /// <returns>An existing or newly created singleton instance of the given <see cref="Type"/></returns>
-        private T GetOrCreateSingletonInstance<T>(IDefaultRegistration<T> registration, object[] arguments, List<Type> resolveStack)
+        private T GetOrCreateSingletonInstance<T>(IRegistrationBase<T> registration, object[] arguments, List<Type> resolveStack)
         {
             //if a singleton instance exists return it
             object instance = _singletons.FirstOrDefault(s => s.type == typeof(T)).instance;
@@ -306,13 +310,80 @@ namespace LightweightIocContainer
         /// <param name="arguments">The constructor arguments</param>
         /// <param name="resolveStack">The current resolve stack</param>
         /// <returns>A newly created instance of the given <see cref="Type"/></returns>
-        private T CreateInstance<T>(IDefaultRegistration<T> registration, object[] arguments, List<Type> resolveStack)
+        private T CreateInstance<T>(IRegistrationBase<T> registration, object[] arguments, List<Type> resolveStack)
         {
-            arguments = ResolveConstructorArguments(registration.ImplementationType, arguments, resolveStack);
-            T instance = (T) Activator.CreateInstance(registration.ImplementationType, arguments);
+            if (registration.Parameters != null)
+                arguments = UpdateArgumentsWithRegistrationParameters(registration, arguments);
+
+            T instance;
+            if (registration is IDefaultRegistration<T> defaultRegistration)
+            {
+                arguments = ResolveConstructorArguments(defaultRegistration.ImplementationType, arguments, resolveStack);
+                instance = (T) Activator.CreateInstance(defaultRegistration.ImplementationType, arguments);
+            }
+            else if (registration is ISingleTypeRegistration<T> singleTypeRegistration)
+            {
+                if (singleTypeRegistration.InterfaceType.IsInterface && singleTypeRegistration.FactoryMethod == null)
+                    throw new InvalidRegistrationException($"Can't register an interface without its implementation type or without a factory method (Type: {singleTypeRegistration.InterfaceType}).");
+
+                if (singleTypeRegistration.FactoryMethod == null) //type registration without interface -> just create this type
+                {
+                    arguments = ResolveConstructorArguments(singleTypeRegistration.InterfaceType, arguments, resolveStack);
+                    instance = (T)Activator.CreateInstance(singleTypeRegistration.InterfaceType, arguments);
+                }
+                else //factory method set to create the instance
+                    instance = singleTypeRegistration.FactoryMethod(this);
+            }
+            else
+                throw new UnknownRegistrationException($"There is no registration of type {registration.GetType().Name}.");
+
             registration.OnCreateAction?.Invoke(instance); //TODO: Allow async OnCreateAction?
 
             return instance;
+        }
+
+        /// <summary>
+        /// Update the given arguments with the <see cref="IRegistrationBase{TInterface}.Parameters"/> of the given <see cref="IRegistrationBase{TInterface}"/>
+        /// </summary>
+        /// <typeparam name="T">The given <see cref="Type"/></typeparam>
+        /// <param name="registration">The <see cref="IRegistrationBase{TInterface}"/> of the given <see cref="Type"/></param>
+        /// <param name="arguments">The constructor arguments</param>
+        /// <returns>The argument list updated with the <see cref="IRegistrationBase{TInterface}.Parameters"/></returns>
+        private object[] UpdateArgumentsWithRegistrationParameters<T>(IRegistrationBase<T> registration, object[] arguments)
+        {
+            if (arguments != null && arguments.Any()) //if more arguments were passed to resolve
+            {
+                int argumentsSize = registration.Parameters.Length + arguments.Length;
+                object[] newArguments = new object[argumentsSize];
+
+                for (int i = 0; i < argumentsSize; i++)
+                {
+                    if (i < registration.Parameters.Length) //if `i` is bigger than the length of the parameters, take the given arguments
+                    {
+                        object currentParameter = registration.Parameters[i];
+                        if (!(currentParameter is InternalResolvePlaceholder)) //use the parameter at the current index if it is not a placeholder
+                        {
+                            newArguments[i] = currentParameter;
+                            continue;
+                        }
+                    }
+
+                    object firstArgument = arguments.FirstOrGiven<object, InternalResolvePlaceholder>(a => !(a is InternalResolvePlaceholder)); //find the first argument that is not a placeholder
+                    if (firstArgument is InternalResolvePlaceholder) //no more arguments available
+                        break; //there won't be any more arguments
+
+                    newArguments[i] = firstArgument;
+
+                    int indexOfFirstArgument = Array.IndexOf(arguments, firstArgument);
+                    arguments[indexOfFirstArgument] = new InternalResolvePlaceholder();
+                }
+
+                arguments = newArguments;
+            }
+            else //no more arguments were passed to resolve -> only use parameters set during registration
+                arguments = registration.Parameters;
+
+            return arguments;
         }
 
         /// <summary>
@@ -431,14 +502,6 @@ namespace LightweightIocContainer
             _registrations.Clear();
             _singletons.Clear();
             _multitons.Clear();
-        }
-
-        /// <summary>
-        /// An internal placeholder that is used during the resolving process
-        /// </summary>
-        private class InternalResolvePlaceholder
-        {
-
         }
     }
 }

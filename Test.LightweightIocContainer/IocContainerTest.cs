@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Exceptions;
@@ -43,6 +44,11 @@ namespace Test.LightweightIocContainer
             void ClearMultitonInstance();
         }
 
+        private interface IFoo
+        {
+
+        }
+
         private class Test : ITest
         {
 
@@ -57,6 +63,11 @@ namespace Test.LightweightIocContainer
             }
 
             public TestConstructor(Test test, string name = null)
+            {
+
+            }
+
+            public TestConstructor(IFoo foo, string name)
             {
 
             }
@@ -81,6 +92,12 @@ namespace Test.LightweightIocContainer
             {
                 _id = id;
             }
+        }
+
+        [UsedImplicitly]
+        private class Foo : IFoo
+        {
+
         }
 
         public class MultitonScope
@@ -167,12 +184,6 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
-        public void TestRegisterInterfaceWithoutImplementation()
-        {
-            Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Register<ITest>());
-        }
-
-        [Test]
         public void TestRegisterFactoryWithoutCreate()
         {
             Assert.Throws<InvalidFactoryRegistrationException>(() => _iocContainer.RegisterFactory<ITestFactoryNoCreate>());
@@ -185,6 +196,7 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
+        [Obsolete("RegisterUnitTestCallback is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
         public void TestRegisterUnitTestCallback()
         {
             Assert.DoesNotThrow(() => _iocContainer.RegisterUnitTestCallback<ITest>(delegate {return new Test(); }));
@@ -215,6 +227,13 @@ namespace Test.LightweightIocContainer
             Test resolvedTest = _iocContainer.Resolve<Test>();
 
             Assert.IsInstanceOf<Test>(resolvedTest);
+        }
+
+        [Test]
+        public void TestResolveInterfaceWithoutImplementation()
+        {
+            _iocContainer.Register<ITest>();
+            Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Resolve<ITest>());
         }
 
         [Test]
@@ -435,6 +454,7 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
+        [Obsolete("RegisterUnitTestCallback is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
         public void TestResolveUnitTestCallbackRegistration()
         {
             ITest callbackTest = new Test();
@@ -443,6 +463,17 @@ namespace Test.LightweightIocContainer
             ITest test = _iocContainer.Resolve<ITest>();
 
             Assert.AreEqual(callbackTest, test);
+        }
+
+        [Test]
+        public void TestResolveSingleTypeRegistrationWithFactoryMethod()
+        {
+            _iocContainer.Register<IFoo, Foo>();
+            _iocContainer.Register<ITest>().WithFactoryMethod(c => new TestConstructor(c.Resolve<IFoo>(), "someName"));
+
+            ITest test = _iocContainer.Resolve<ITest>();
+            
+            Assert.NotNull(test);
         }
 
         [Test]

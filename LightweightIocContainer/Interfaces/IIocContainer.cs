@@ -3,14 +3,13 @@
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System;
-using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
 
 namespace LightweightIocContainer.Interfaces
 {
     /// <summary>
-    /// The main container that carries all the <see cref="IRegistrationBase"/>s and can resolve all the types you'll ever want
+    /// The main container that carries all the <see cref="IRegistration"/>s and can resolve all the types you'll ever want
     /// </summary>
     public interface IIocContainer : IDisposable
     {
@@ -26,17 +25,17 @@ namespace LightweightIocContainer.Interfaces
         /// </summary>
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <returns>The created <see cref="IRegistration"/></returns>
         IDefaultRegistration<TInterface> Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface;
 
         /// <summary>
         /// Register a <see cref="Type"/> without an interface
         /// </summary>
         /// <typeparam name="TImplementation">The <see cref="Type"/> to register</typeparam>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        /// <returns>The created <see cref="IRegistrationBase"/></returns>
-        IDefaultRegistration<TImplementation> Register<TImplementation>(Lifestyle lifestyle = Lifestyle.Transient);
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <returns>The created <see cref="IRegistration"/></returns>
+        ISingleTypeRegistration<TImplementation> Register<TImplementation>(Lifestyle lifestyle = Lifestyle.Transient);
 
         /// <summary>
         /// Register an Interface with a Type that implements it as a multiton
@@ -44,14 +43,14 @@ namespace LightweightIocContainer.Interfaces
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <typeparam name="TScope">The Type of the multiton scope</typeparam>
-        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        /// <returns>The created <see cref="IRegistration"/></returns>
         IMultitonRegistration<TInterface> Register<TInterface, TImplementation, TScope>() where TImplementation : TInterface;
 
         /// <summary>
         /// Register an Interface as an abstract typed factory
         /// </summary>
         /// <typeparam name="TFactory">The abstract typed factory to register</typeparam>
-        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        /// <returns>The created <see cref="IRegistration"/></returns>
         ITypedFactoryRegistration<TFactory> RegisterFactory<TFactory>();
 
         /// <summary>
@@ -59,7 +58,8 @@ namespace LightweightIocContainer.Interfaces
         /// </summary>
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <param name="unitTestCallback">The <see cref="ResolveCallback{T}"/> for the callback</param>
-        /// <returns>The created <see cref="IRegistrationBase"/></returns>
+        /// <returns>The created <see cref="IRegistration"/></returns>
+        [Obsolete("RegisterUnitTestCallback is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
         IUnitTestCallbackRegistration<TInterface> RegisterUnitTestCallback<TInterface>(ResolveCallback<TInterface> unitTestCallback);
 
         /// <summary>
