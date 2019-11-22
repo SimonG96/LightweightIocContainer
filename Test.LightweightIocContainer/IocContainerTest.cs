@@ -167,12 +167,6 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
-        public void TestRegisterInterfaceWithoutImplementation()
-        {
-            Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Register<ITest>());
-        }
-
-        [Test]
         public void TestRegisterFactoryWithoutCreate()
         {
             Assert.Throws<InvalidFactoryRegistrationException>(() => _iocContainer.RegisterFactory<ITestFactoryNoCreate>());
@@ -215,6 +209,13 @@ namespace Test.LightweightIocContainer
             Test resolvedTest = _iocContainer.Resolve<Test>();
 
             Assert.IsInstanceOf<Test>(resolvedTest);
+        }
+
+        [Test]
+        public void TestResolveInterfaceWithoutImplementation()
+        {
+            _iocContainer.Register<ITest>();
+            Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Resolve<ITest>());
         }
 
         [Test]

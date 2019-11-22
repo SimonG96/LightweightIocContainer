@@ -73,9 +73,9 @@ namespace LightweightIocContainer
         /// <typeparam name="TImplementation">The <see cref="Type"/> to register</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
         /// <returns>The created <see cref="IRegistration"/></returns>
-        public IRegistrationBase<TImplementation> Register<TImplementation>(Lifestyle lifestyle = Lifestyle.Transient)
+        public ISingleTypeRegistration<TImplementation> Register<TImplementation>(Lifestyle lifestyle = Lifestyle.Transient)
         {
-            IRegistrationBase<TImplementation> registration = _registrationFactory.Register<TImplementation>(lifestyle);
+            ISingleTypeRegistration<TImplementation> registration = _registrationFactory.Register<TImplementation>(lifestyle);
             Register(registration);
 
             return registration;
@@ -213,7 +213,7 @@ namespace LightweightIocContainer
             {
                 resolvedInstance = unitTestCallbackRegistration.UnitTestResolveCallback.Invoke(arguments);
             }
-            else if (registration is IDefaultRegistration<T> defaultRegistration)
+            else if (registration is IRegistrationBase<T> defaultRegistration)
             {
                 if (defaultRegistration.Lifestyle == Lifestyle.Singleton)
                     resolvedInstance = GetOrCreateSingletonInstance(defaultRegistration, arguments, resolveStack);
@@ -242,7 +242,7 @@ namespace LightweightIocContainer
         /// <param name="arguments">The arguments to resolve</param>
         /// <param name="resolveStack">The current resolve stack</param>
         /// <returns>An existing or newly created singleton instance of the given <see cref="Type"/></returns>
-        private T GetOrCreateSingletonInstance<T>(IDefaultRegistration<T> registration, object[] arguments, List<Type> resolveStack)
+        private T GetOrCreateSingletonInstance<T>(IRegistrationBase<T> registration, object[] arguments, List<Type> resolveStack)
         {
             //if a singleton instance exists return it
             object instance = _singletons.FirstOrDefault(s => s.type == typeof(T)).instance;
@@ -306,10 +306,30 @@ namespace LightweightIocContainer
         /// <param name="arguments">The constructor arguments</param>
         /// <param name="resolveStack">The current resolve stack</param>
         /// <returns>A newly created instance of the given <see cref="Type"/></returns>
-        private T CreateInstance<T>(IDefaultRegistration<T> registration, object[] arguments, List<Type> resolveStack)
+        private T CreateInstance<T>(IRegistrationBase<T> registration, object[] arguments, List<Type> resolveStack)
         {
-            arguments = ResolveConstructorArguments(registration.ImplementationType, arguments, resolveStack);
-            T instance = (T) Activator.CreateInstance(registration.ImplementationType, arguments);
+            T instance;
+            if (registration is IDefaultRegistration<T> defaultRegistration)
+            {
+                arguments = ResolveConstructorArguments(defaultRegistration.ImplementationType, arguments, resolveStack);
+                instance = (T) Activator.CreateInstance(defaultRegistration.ImplementationType, arguments);
+            }
+            else if (registration is ISingleTypeRegistration<T> singleTypeRegistration)
+            {
+                if (singleTypeRegistration.InterfaceType.IsInterface && singleTypeRegistration.FactoryMethod == null)
+                    throw new InvalidRegistrationException($"Can't register an interface without its implementation type or without a factory method (Type: {singleTypeRegistration.InterfaceType}).");
+
+                if (singleTypeRegistration.FactoryMethod == null) //type registration without interface -> just create this type
+                {
+                    arguments = ResolveConstructorArguments(singleTypeRegistration.InterfaceType, arguments, resolveStack);
+                    instance = (T)Activator.CreateInstance(singleTypeRegistration.InterfaceType, arguments);
+                }
+                else //factory method set to create the instance
+                    instance = singleTypeRegistration.FactoryMethod(this);
+            }
+            else
+                throw new UnknownRegistrationException($"There is no registration of type {registration.GetType().Name}.");
+
             registration.OnCreateAction?.Invoke(instance); //TODO: Allow async OnCreateAction?
 
             return instance;

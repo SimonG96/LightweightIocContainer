@@ -36,7 +36,7 @@ namespace LightweightIocContainer.Interfaces
         /// <typeparam name="TImplementation">The <see cref="Type"/> to register</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
         /// <returns>The created <see cref="IRegistration"/></returns>
-        IRegistrationBase<TImplementation> Register<TImplementation>(Lifestyle lifestyle = Lifestyle.Transient);
+        ISingleTypeRegistration<TImplementation> Register<TImplementation>(Lifestyle lifestyle = Lifestyle.Transient);
 
         /// <summary>
         /// Register an Interface with a Type that implements it as a multiton

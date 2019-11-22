@@ -456,6 +456,24 @@
             <param name="action">The <see cref="T:System.Action`1"/></param>
             <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></returns>
         </member>
+        <member name="T:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1">
+            <summary>
+            The <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/> to register either only an interface or only a <see cref="T:System.Type"/>
+            </summary>
+            <typeparam name="T">The <see cref="T:System.Type"/> of the <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></typeparam>
+        </member>
+        <member name="P:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1.FactoryMethod">
+            <summary>
+            <see cref="T:System.Func`2"/> that is invoked instead of creating an instance of this <see cref="T:System.Type"/> the default way
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1.WithFactoryMethod(System.Func{LightweightIocContainer.Interfaces.IIocContainer,`0})">
+            <summary>
+            Pass a <see cref="T:System.Func`2"/> that will be invoked instead of creating an instance of this <see cref="T:System.Type"/> the default way
+            </summary>
+            <param name="factoryMethod">The <see cref="T:System.Func`2"/></param>
+            <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></returns>
+        </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.ITypedFactoryRegistration`1">
             <summary>
             The registration that is used to register an abstract typed factory
@@ -579,7 +597,7 @@
             <exception cref="T:LightweightIocContainer.Exceptions.TypeNotRegisteredException">The given <see cref="T:System.Type"/> is not registered in this <see cref="T:LightweightIocContainer.IocContainer"/></exception>
             <exception cref="T:LightweightIocContainer.Exceptions.UnknownRegistrationException">The registration for the given <see cref="T:System.Type"/> has an unknown <see cref="T:System.Type"/></exception>
         </member>
-        <member name="M:LightweightIocContainer.IocContainer.GetOrCreateSingletonInstance``1(LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration{``0},System.Object[],System.Collections.Generic.List{System.Type})">
+        <member name="M:LightweightIocContainer.IocContainer.GetOrCreateSingletonInstance``1(LightweightIocContainer.Interfaces.Registrations.IRegistrationBase{``0},System.Object[],System.Collections.Generic.List{System.Type})">
             <summary>
             Gets or creates a singleton instance of a given <see cref="T:System.Type"/>
             </summary>
@@ -601,7 +619,7 @@
             <exception cref="T:LightweightIocContainer.Exceptions.MultitonResolveException">No arguments given</exception>
             <exception cref="T:LightweightIocContainer.Exceptions.MultitonResolveException">Scope argument not given</exception>
         </member>
-        <member name="M:LightweightIocContainer.IocContainer.CreateInstance``1(LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration{``0},System.Object[],System.Collections.Generic.List{System.Type})">
+        <member name="M:LightweightIocContainer.IocContainer.CreateInstance``1(LightweightIocContainer.Interfaces.Registrations.IRegistrationBase{``0},System.Object[],System.Collections.Generic.List{System.Type})">
             <summary>
             Creates an instance of a given <see cref="T:System.Type"/>
             </summary>
@@ -759,11 +777,11 @@
         </member>
         <member name="M:LightweightIocContainer.Registrations.RegistrationFactory.Register``1(LightweightIocContainer.Lifestyle)">
             <summary>
-            Register a <see cref="T:System.Type"/> without an interface and create a <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/>
+            Register a <see cref="T:System.Type"/> without an interface and create a <see cref="T:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1"/>
             </summary>
-            <typeparam name="TImplementation">The <see cref="T:System.Type"/> to register</typeparam>
-            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></param>
-            <returns>A new created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/> with the given parameters</returns>
+            <typeparam name="T">The <see cref="T:System.Type"/> to register</typeparam>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1"/></param>
+            <returns>A new created <see cref="T:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1"/> with the given parameters</returns>
         </member>
         <member name="M:LightweightIocContainer.Registrations.RegistrationFactory.Register``3">
             <summary>
@@ -780,6 +798,31 @@
             </summary>
             <typeparam name="TFactory">The abstract typed factory to register</typeparam>
             <returns>A new created <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedFactoryRegistration`1"/> with the given parameters</returns>
+        </member>
+        <member name="T:LightweightIocContainer.Registrations.SingleTypeRegistration`1">
+            <summary>
+            The <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/> to register either only an interface or only a <see cref="T:System.Type"/>
+            </summary>
+            <typeparam name="T">The <see cref="T:System.Type"/> of the <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></typeparam>
+        </member>
+        <member name="M:LightweightIocContainer.Registrations.SingleTypeRegistration`1.#ctor(System.Type,LightweightIocContainer.Lifestyle)">
+            <summary>
+            The <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/> to register either only an interface or only a <see cref="T:System.Type"/>
+            </summary>
+            <param name="interfaceType">The <see cref="T:System.Type"/> of the interface or <see cref="T:System.Type"/></param>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> of the <see cref="T:LightweightIocContainer.Registrations.RegistrationBase`1"/></param>
+        </member>
+        <member name="P:LightweightIocContainer.Registrations.SingleTypeRegistration`1.FactoryMethod">
+            <summary>
+            <see cref="T:System.Func`2"/> that is invoked instead of creating an instance of this <see cref="T:System.Type"/> the default way
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Registrations.SingleTypeRegistration`1.WithFactoryMethod(System.Func{LightweightIocContainer.Interfaces.IIocContainer,`0})">
+            <summary>
+            Pass a <see cref="T:System.Func`2"/> that will be invoked instead of creating an instance of this <see cref="T:System.Type"/> the default way
+            </summary>
+            <param name="factoryMethod">The <see cref="T:System.Func`2"/></param>
+            <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></returns>
         </member>
         <member name="T:LightweightIocContainer.Registrations.TypedFactoryRegistration`1">
             <summary>

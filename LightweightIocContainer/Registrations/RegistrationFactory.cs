@@ -35,17 +35,14 @@ namespace LightweightIocContainer.Registrations
         }
 
         /// <summary>
-        /// Register a <see cref="Type"/> without an interface and create a <see cref="IRegistrationBase{TInterface}"/>
+        /// Register a <see cref="Type"/> without an interface and create a <see cref="ISingleTypeRegistration{TInterface}"/>
         /// </summary>
-        /// <typeparam name="TImplementation">The <see cref="Type"/> to register</typeparam>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
-        /// <returns>A new created <see cref="IRegistrationBase{TInterface}"/> with the given parameters</returns>
-        public IRegistrationBase<TImplementation> Register<TImplementation>(Lifestyle lifestyle)
+        /// <typeparam name="T">The <see cref="Type"/> to register</typeparam>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="ISingleTypeRegistration{TInterface}"/></param>
+        /// <returns>A new created <see cref="ISingleTypeRegistration{TInterface}"/> with the given parameters</returns>
+        public ISingleTypeRegistration<T> Register<T>(Lifestyle lifestyle)
         {
-            if (typeof(TImplementation).IsInterface)
-                throw new InvalidRegistrationException("Can't register an interface without its implementation type.");
-
-            return Register<TImplementation, TImplementation>(lifestyle);
+            return new SingleTypeRegistration<T>(typeof(T), lifestyle);
         }
 
         /// <summary>
