@@ -22,6 +22,6 @@ namespace LightweightIocContainer.Interfaces.Registrations
         /// </summary>
         /// <param name="factoryMethod">The <see cref="Func{T,TResult}"/></param>
         /// <returns>The current instance of this <see cref="IRegistrationBase{TInterface}"/></returns>
-        IRegistrationBase<T> WithFactoryMethod(Func<IIocContainer, T> factoryMethod);
+        ISingleTypeRegistration<T> WithFactoryMethod(Func<IIocContainer, T> factoryMethod);
     }
 }
