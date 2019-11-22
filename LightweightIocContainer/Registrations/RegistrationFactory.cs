@@ -27,8 +27,8 @@ namespace LightweightIocContainer.Registrations
         /// </summary>
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
-        /// <returns>A new created <see cref="IRegistrationBase{TInterface}"/> with the given parameters</returns>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
+        /// <returns>A new created <see cref="IDefaultRegistration{TInterface}"/> with the given parameters</returns>
         public IDefaultRegistration<TInterface> Register<TInterface, TImplementation>(Lifestyle lifestyle) where TImplementation : TInterface
         {
             return new DefaultRegistration<TInterface>(typeof(TInterface), typeof(TImplementation), lifestyle);

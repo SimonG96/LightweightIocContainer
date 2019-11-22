@@ -28,7 +28,7 @@ namespace LightweightIocContainer.Interfaces
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
         /// <returns>The created <see cref="IRegistration"/></returns>
-        IRegistrationBase<TInterface> Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface;
+        IDefaultRegistration<TInterface> Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface;
 
         /// <summary>
         /// Register a <see cref="Type"/> without an interface
