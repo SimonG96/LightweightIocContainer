@@ -312,6 +312,9 @@ namespace LightweightIocContainer
         /// <returns>A newly created instance of the given <see cref="Type"/></returns>
         private T CreateInstance<T>(IRegistrationBase<T> registration, object[] arguments, List<Type> resolveStack)
         {
+            if (registration.Parameters != null)
+                arguments = UpdateArgumentsWithRegistrationParameters(registration, arguments);
+
             T instance;
             if (registration is IDefaultRegistration<T> defaultRegistration)
             {
@@ -337,6 +340,50 @@ namespace LightweightIocContainer
             registration.OnCreateAction?.Invoke(instance); //TODO: Allow async OnCreateAction?
 
             return instance;
+        }
+
+        /// <summary>
+        /// Update the given arguments with the <see cref="IRegistrationBase{TInterface}.Parameters"/> of the given <see cref="IRegistrationBase{TInterface}"/>
+        /// </summary>
+        /// <typeparam name="T">The given <see cref="Type"/></typeparam>
+        /// <param name="registration">The <see cref="IRegistrationBase{TInterface}"/> of the given <see cref="Type"/></param>
+        /// <param name="arguments">The constructor arguments</param>
+        /// <returns>The argument list updated with the <see cref="IRegistrationBase{TInterface}.Parameters"/></returns>
+        private object[] UpdateArgumentsWithRegistrationParameters<T>(IRegistrationBase<T> registration, object[] arguments)
+        {
+            if (arguments != null && arguments.Any()) //if more arguments were passed to resolve
+            {
+                int argumentsSize = registration.Parameters.Length + arguments.Length;
+                object[] newArguments = new object[argumentsSize];
+
+                for (int i = 0; i < argumentsSize; i++)
+                {
+                    if (i < registration.Parameters.Length) //if `i` is bigger than the length of the parameters, take the given arguments
+                    {
+                        object currentParameter = registration.Parameters[i];
+                        if (!(currentParameter is InternalResolvePlaceholder)) //use the parameter at the current index if it is not a placeholder
+                        {
+                            newArguments[i] = currentParameter;
+                            continue;
+                        }
+                    }
+
+                    object firstArgument = arguments.FirstOrGiven<object, InternalResolvePlaceholder>(a => !(a is InternalResolvePlaceholder)); //find the first argument that is not a placeholder
+                    if (firstArgument is InternalResolvePlaceholder) //no more arguments available
+                        break; //there won't be any more arguments
+
+                    newArguments[i] = firstArgument;
+
+                    int indexOfFirstArgument = Array.IndexOf(arguments, firstArgument);
+                    arguments[indexOfFirstArgument] = new InternalResolvePlaceholder();
+                }
+
+                arguments = newArguments;
+            }
+            else //no more arguments were passed to resolve -> only use parameters set during registration
+                arguments = registration.Parameters;
+
+            return arguments;
         }
 
         /// <summary>
@@ -455,14 +502,6 @@ namespace LightweightIocContainer
             _registrations.Clear();
             _singletons.Clear();
             _multitons.Clear();
-        }
-
-        /// <summary>
-        /// An internal placeholder that is used during the resolving process
-        /// </summary>
-        private class InternalResolvePlaceholder
-        {
-
         }
     }
 }
