@@ -44,6 +44,11 @@ namespace Test.LightweightIocContainer
             void ClearMultitonInstance();
         }
 
+        private interface IFoo
+        {
+
+        }
+
         private class Test : ITest
         {
 
@@ -58,6 +63,11 @@ namespace Test.LightweightIocContainer
             }
 
             public TestConstructor(Test test, string name = null)
+            {
+
+            }
+
+            public TestConstructor(IFoo foo, string name)
             {
 
             }
@@ -82,6 +92,12 @@ namespace Test.LightweightIocContainer
             {
                 _id = id;
             }
+        }
+
+        [UsedImplicitly]
+        private class Foo : IFoo
+        {
+
         }
 
         public class MultitonScope
@@ -447,6 +463,17 @@ namespace Test.LightweightIocContainer
             ITest test = _iocContainer.Resolve<ITest>();
 
             Assert.AreEqual(callbackTest, test);
+        }
+
+        [Test]
+        public void TestResolveSingleTypeRegistrationWithFactoryMethod()
+        {
+            _iocContainer.Register<IFoo, Foo>();
+            _iocContainer.Register<ITest>().WithFactoryMethod(c => new TestConstructor(c.Resolve<IFoo>(), "someName"));
+
+            ITest test = _iocContainer.Resolve<ITest>();
+            
+            Assert.NotNull(test);
         }
 
         [Test]
