@@ -126,6 +126,14 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
+        public void TestCircularDependencyExceptionNoStack()
+        {
+            CircularDependencyException circularDependencyException = new CircularDependencyException(typeof(IFoo), null);
+            string message = $"Circular dependency has been detected when trying to resolve `{typeof(IFoo)}`.\n";
+            Assert.AreEqual(message, circularDependencyException.Message);
+        }
+
+        [Test]
         public void TestNonCircularDependencies()
         {
             _iocContainer.Register<IA, A>();
