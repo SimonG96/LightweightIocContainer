@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using LightweightIocContainer.Interfaces;
 
 namespace LightweightIocContainer.Exceptions
@@ -43,20 +44,20 @@ namespace LightweightIocContainer.Exceptions
         {
             get
             {
-                string message = $"Circular dependency has been detected when trying to resolve `{ResolvingType}`.\n" +
-                                 "Resolve stack that resulted in the circular dependency:\n" +
-                                 $"\t`{ResolvingType}` resolved as dependency of\n";
-
+                StringBuilder message = new StringBuilder($"Circular dependency has been detected when trying to resolve `{ResolvingType}`.\n");
                 if (ResolveStack == null || !ResolveStack.Any())
-                    return message;
+                    return message.ToString();
+
+                message.Append("Resolve stack that resulted in the circular dependency:\n");
+                message.Append($"\t`{ResolvingType}` resolved as dependency of\n");
 
                 for (int i = ResolveStack.Count - 1; i >= 1 ; i--)
                 {
-                    message += $"\t`{ResolveStack[i]}` resolved as dependency of\n";
+                    message.Append($"\t`{ResolveStack[i]}` resolved as dependency of\n");
                 }
 
-                message += $"\t`{ResolveStack[0]}` which is the root type being resolved.";
-                return message;
+                message.Append($"\t`{ResolveStack[0]}` which is the root type being resolved.");
+                return message.ToString();
             }
         }
     }
