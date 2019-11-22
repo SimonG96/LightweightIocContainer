@@ -10,7 +10,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// The <see cref="System.Type"/> is not registered in this <see cref="IIocContainer"/>
     /// </summary>
-    internal class TypeNotRegisteredException : Exception
+    internal class TypeNotRegisteredException : IocContainerException
     {
         /// <summary>
         /// The <see cref="System.Type"/> is not registered in this <see cref="IIocContainer"/>

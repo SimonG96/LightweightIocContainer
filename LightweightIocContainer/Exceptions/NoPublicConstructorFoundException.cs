@@ -9,7 +9,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// No public constructor can be found for a <see cref="Type"/>
     /// </summary>
-    internal class NoPublicConstructorFoundException : Exception
+    internal class NoPublicConstructorFoundException : IocContainerException
     {
         /// <summary>
         /// No public constructor can be found for a <see cref="Type"/>

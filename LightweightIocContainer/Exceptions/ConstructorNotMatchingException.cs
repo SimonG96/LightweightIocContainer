@@ -10,7 +10,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// The constructor does not match the given or resolvable arguments
     /// </summary>
-    internal class ConstructorNotMatchingException : Exception
+    internal class ConstructorNotMatchingException : IocContainerException
     {
         /// <summary>
         /// The constructor does not match the given or resolvable arguments

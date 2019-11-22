@@ -11,7 +11,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// No matching constructor was found for the given or resolvable arguments
     /// </summary>
-    internal class NoMatchingConstructorFoundException : AggregateException
+    internal class NoMatchingConstructorFoundException : IocContainerException
     {
         /// <summary>
         /// No matching constructor was found for the given or resolvable arguments
@@ -24,9 +24,9 @@ namespace LightweightIocContainer.Exceptions
             Type = type;
 
             if (exceptions == null)
-                InnerExceptions = new List<ConstructorNotMatchingException>();
+                InnerExceptions = new List<Exception>();
             else
-                InnerExceptions = exceptions.ToList();
+                InnerExceptions = exceptions.OfType<Exception>().ToList();
         }
 
 
@@ -36,13 +36,7 @@ namespace LightweightIocContainer.Exceptions
         public Type Type { get; }
 
         /// <summary>
-        /// The inner exceptions of the <see cref="NoMatchingConstructorFoundException"/>
-        /// </summary>
-        public new List<ConstructorNotMatchingException> InnerExceptions { get; }
-
-
-        /// <summary>
-        /// Add an inner exception to the <see cref="InnerExceptions"/>
+        /// Add an inner exception to the <see cref="IocContainerException.InnerExceptions"/>
         /// </summary>
         /// <param name="exception">The <see cref="ConstructorNotMatchingException"/></param>
         public void AddInnerException(ConstructorNotMatchingException exception)

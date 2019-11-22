@@ -2,7 +2,6 @@
 // Created: 2019-06-28
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
-using System;
 using System.Reflection;
 
 namespace LightweightIocContainer.Exceptions
@@ -10,7 +9,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// The creation of the abstract method is illegal in its current state
     /// </summary>
-    internal class IllegalAbstractMethodCreationException : Exception
+    internal class IllegalAbstractMethodCreationException : IocContainerException
     {
         /// <summary>
         /// The creation of the abstract method is illegal in its current state

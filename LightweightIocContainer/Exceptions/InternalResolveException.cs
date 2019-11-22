@@ -2,7 +2,6 @@
 // Created: 2019-05-27
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
-using System;
 using LightweightIocContainer.Interfaces;
 
 namespace LightweightIocContainer.Exceptions
@@ -10,7 +9,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// An internal Error happened while the <see cref="IIocContainer"/> tried to resolve an instance
     /// </summary>
-    internal class InternalResolveException : Exception
+    internal class InternalResolveException : IocContainerException
     {
         /// <summary>
         /// An internal Error happened while the <see cref="IIocContainer"/> tried to resolve an instance

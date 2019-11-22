@@ -2,7 +2,6 @@
 // Created: 2019-05-21
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
-using System;
 using LightweightIocContainer.Interfaces.Registrations;
 
 namespace LightweightIocContainer.Exceptions
@@ -10,7 +9,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// An unknown <see cref="IRegistration"/> was used
     /// </summary>
-    internal class UnknownRegistrationException : Exception
+    internal class UnknownRegistrationException : IocContainerException
     {
         /// <summary>
         /// An unknown <see cref="IRegistration"/> was used

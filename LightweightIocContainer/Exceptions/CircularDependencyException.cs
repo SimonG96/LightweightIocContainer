@@ -12,7 +12,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// A circular dependency was detected during <see cref="IIocContainer.Resolve{T}()"/>
     /// </summary>
-    internal class CircularDependencyException : Exception
+    internal class CircularDependencyException : IocContainerException
     {
         /// <summary>
         /// A circular dependency was detected during <see cref="IIocContainer.Resolve{T}()"/>

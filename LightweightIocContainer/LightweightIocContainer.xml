@@ -127,6 +127,34 @@
             </summary>
             <param name="message">The exception message</param>
         </member>
+        <member name="T:LightweightIocContainer.Exceptions.IocContainerException">
+            <summary>
+            A base <see cref="T:System.Exception"/> for the <see cref="N:LightweightIocContainer"/>
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Exceptions.IocContainerException.#ctor">
+            <summary>
+             A base <see cref="T:System.Exception"/> for the <see cref="N:LightweightIocContainer"/>
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Exceptions.IocContainerException.#ctor(System.String)">
+            <summary>
+            A base <see cref="T:System.Exception"/> for the <see cref="N:LightweightIocContainer"/>
+            </summary>
+            <param name="message">The message of the <see cref="T:System.Exception"/></param>
+        </member>
+        <member name="M:LightweightIocContainer.Exceptions.IocContainerException.#ctor(System.String,System.Exception)">
+            <summary>
+            A base <see cref="T:System.Exception"/> for the <see cref="N:LightweightIocContainer"/>
+            </summary>
+            <param name="message">The message of the <see cref="T:System.Exception"/></param>
+            <param name="innerException">The inner <see cref="T:System.Exception"/></param>
+        </member>
+        <member name="P:LightweightIocContainer.Exceptions.IocContainerException.InnerExceptions">
+            <summary>
+            The inner exceptions of the <see cref="T:LightweightIocContainer.Exceptions.IocContainerException"/>
+            </summary>
+        </member>
         <member name="T:LightweightIocContainer.Exceptions.MultipleRegistrationException">
             <summary>
             The <see cref="T:System.Type"/> is already registered in this <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/>
@@ -177,14 +205,9 @@
             The <see cref="P:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException.Type"/> with no matching constructor
             </summary>
         </member>
-        <member name="P:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException.InnerExceptions">
-            <summary>
-            The inner exceptions of the <see cref="T:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException"/>
-            </summary>
-        </member>
         <member name="M:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException.AddInnerException(LightweightIocContainer.Exceptions.ConstructorNotMatchingException)">
             <summary>
-            Add an inner exception to the <see cref="P:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException.InnerExceptions"/>
+            Add an inner exception to the <see cref="P:LightweightIocContainer.Exceptions.IocContainerException.InnerExceptions"/>
             </summary>
             <param name="exception">The <see cref="T:LightweightIocContainer.Exceptions.ConstructorNotMatchingException"/></param>
         </member>
