@@ -59,6 +59,7 @@ namespace LightweightIocContainer.Interfaces
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <param name="unitTestCallback">The <see cref="ResolveCallback{T}"/> for the callback</param>
         /// <returns>The created <see cref="IRegistration"/></returns>
+        [Obsolete("RegisterUnitTestCallback is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
         IUnitTestCallbackRegistration<TInterface> RegisterUnitTestCallback<TInterface>(ResolveCallback<TInterface> unitTestCallback);
 
         /// <summary>

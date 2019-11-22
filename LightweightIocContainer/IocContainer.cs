@@ -115,6 +115,7 @@ namespace LightweightIocContainer
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <param name="unitTestCallback">The <see cref="ResolveCallback{T}"/> for the callback</param>
         /// <returns>The created <see cref="IRegistration"/></returns>
+        [Obsolete("RegisterUnitTestCallback is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
         public IUnitTestCallbackRegistration<TInterface> RegisterUnitTestCallback<TInterface>(ResolveCallback<TInterface> unitTestCallback)
         {
             IUnitTestCallbackRegistration<TInterface> registration = _registrationFactory.RegisterUnitTestCallback(unitTestCallback);
@@ -209,10 +210,13 @@ namespace LightweightIocContainer
 
             T resolvedInstance;
 
+            //TODO: remove this #pragma when IUnitTestCallbackRegistration is removed
+#pragma warning disable 618
             if (registration is IUnitTestCallbackRegistration<T> unitTestCallbackRegistration)
             {
                 resolvedInstance = unitTestCallbackRegistration.UnitTestResolveCallback.Invoke(arguments);
             }
+#pragma warning restore 618
             else if (registration is IRegistrationBase<T> defaultRegistration)
             {
                 if (defaultRegistration.Lifestyle == Lifestyle.Singleton)

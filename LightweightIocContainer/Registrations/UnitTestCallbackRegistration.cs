@@ -12,6 +12,7 @@ namespace LightweightIocContainer.Registrations
     /// A special <see cref="IRegistration"/> that allows to set a <see cref="ResolveCallback{T}"/> as a callback that is called on <see cref="IIocContainer.Resolve{T}()"/>
     /// </summary>
     /// <typeparam name="TInterface"></typeparam>
+    [Obsolete("UnitTestCallbackRegistration is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
     public class UnitTestCallbackRegistration<TInterface> : IUnitTestCallbackRegistration<TInterface>
     {
         /// <summary>

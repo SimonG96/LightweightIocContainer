@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Exceptions;
@@ -179,6 +180,7 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
+        [Obsolete("RegisterUnitTestCallback is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
         public void TestRegisterUnitTestCallback()
         {
             Assert.DoesNotThrow(() => _iocContainer.RegisterUnitTestCallback<ITest>(delegate {return new Test(); }));
@@ -436,6 +438,7 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
+        [Obsolete("RegisterUnitTestCallback is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
         public void TestResolveUnitTestCallbackRegistration()
         {
             ITest callbackTest = new Test();

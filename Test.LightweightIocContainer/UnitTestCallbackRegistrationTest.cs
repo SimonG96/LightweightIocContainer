@@ -2,6 +2,7 @@
 // Created: 2019-10-15
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
+using System;
 using LightweightIocContainer;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Registrations;
@@ -12,6 +13,7 @@ using NUnit.Framework;
 namespace Test.LightweightIocContainer
 {
     [TestFixture]
+    [Obsolete("UnitTestCallbackRegistration is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
     public class UnitTestCallbackRegistrationTest
     {
         private interface ITest
