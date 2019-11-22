@@ -12,7 +12,7 @@ namespace LightweightIocContainer.Interfaces.Installers
     public interface IIocInstaller
     {
         /// <summary>
-        /// Install the needed <see cref="IRegistrationBase"/>s in the given <see cref="IIocContainer"/>
+        /// Install the needed <see cref="IRegistration"/>s in the given <see cref="IIocContainer"/>
         /// </summary>
         /// <param name="container">The current <see cref="IIocContainer"/></param>
         void Install(IIocContainer container);

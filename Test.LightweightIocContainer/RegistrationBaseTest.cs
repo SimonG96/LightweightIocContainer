@@ -13,7 +13,7 @@ using NUnit.Framework;
 namespace Test.LightweightIocContainer
 {
     [TestFixture]
-    public class DefaultRegistrationTest
+    public class RegistrationBaseTest
     {
         #region TestClasses
 
@@ -37,7 +37,7 @@ namespace Test.LightweightIocContainer
         public void TestOnCreate()
         {
             RegistrationFactory registrationFactory = new RegistrationFactory(new Mock<IIocContainer>().Object);
-            IDefaultRegistration<ITest> testRegistration = registrationFactory.Register<ITest, Test>(Lifestyle.Transient).OnCreate(t => t.DoSomething());
+            IRegistrationBase<ITest> testRegistration = registrationFactory.Register<ITest, Test>(Lifestyle.Transient).OnCreate(t => t.DoSomething());
 
             ITest test = new Test();
             

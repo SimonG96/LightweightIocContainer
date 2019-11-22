@@ -10,7 +10,7 @@ namespace LightweightIocContainer.Interfaces.Registrations
     /// The registration that is used to register an abstract typed factory
     /// </summary>
     /// <typeparam name="TFactory">The type of the abstract typed factory</typeparam>
-    public interface ITypedFactoryRegistration<TFactory> : IRegistrationBase
+    public interface ITypedFactoryRegistration<TFactory> : IRegistration
     {
         /// <summary>
         /// The class that contains the implemented abstract factory of this <see cref="ITypedFactoryRegistration{TFactory}"/>

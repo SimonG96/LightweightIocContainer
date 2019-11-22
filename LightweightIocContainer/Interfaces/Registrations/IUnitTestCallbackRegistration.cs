@@ -5,10 +5,10 @@
 namespace LightweightIocContainer.Interfaces.Registrations
 {
     /// <summary>
-    /// A special <see cref="IRegistrationBase"/> that allows to set a <see cref="ResolveCallback{T}"/> as a callback that is called on <see cref="IIocContainer.Resolve{T}()"/>
+    /// A special <see cref="IRegistration"/> that allows to set a <see cref="ResolveCallback{T}"/> as a callback that is called on <see cref="IIocContainer.Resolve{T}()"/>
     /// </summary>
     /// <typeparam name="TInterface"></typeparam>
-    public interface IUnitTestCallbackRegistration<out TInterface> : IRegistrationBase
+    public interface IUnitTestCallbackRegistration<out TInterface> : IRegistration
     {
         /// <summary>
         /// An <see cref="ResolveCallback{T}"/> that is set as a callback that is called on <see cref="IIocContainer.Resolve{T}()"/>

@@ -7,7 +7,7 @@ using LightweightIocContainer.Interfaces.Registrations;
 namespace LightweightIocContainer
 {
     /// <summary>
-    /// The Lifestyles that can be used for a <see cref="IDefaultRegistration{TInterface}"/>
+    /// The Lifestyles that can be used for a <see cref="IRegistrationBase{TInterface}"/>
     /// </summary>
     public enum Lifestyle
     {
