@@ -1,6 +1,6 @@
-﻿// // Author: Simon Gockner
-// // Created: 2019-11-04
-// // Copyright(c) 2019 SimonG. All Rights Reserved.
+﻿// Author: Simon Gockner
+// Created: 2019-11-04
+// Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System;
 
