@@ -60,7 +60,6 @@ or you can use the [`.NET CLI`](https://github.com/SimonG96/LightweightIocContai
 
 ### Demo Project
 
-There is a [demo project][demoProjectLink] available where you can check out how different functions of the Lightweight IOC Container can be used.  
-This demo project is updated with new versions of the Lightweight IOC Container to show the usage of newly implemented functions.
+There is a [demo project][demoProjectLink] available where you can check out how different functions of the Lightweight IOC Container can be used.
 
 [demoProjectLink]: https://github.com/SimonG96/LightweightIocContainer_Example
