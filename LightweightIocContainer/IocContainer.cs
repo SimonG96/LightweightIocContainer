@@ -12,6 +12,7 @@ using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
+using LightweightIocContainer.Interfaces.Registrations.FluentProviders;
 using LightweightIocContainer.Registrations;
 
 namespace LightweightIocContainer
@@ -343,12 +344,12 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
-        /// Update the given arguments with the <see cref="IRegistrationBase{TInterface}.Parameters"/> of the given <see cref="IRegistrationBase{TInterface}"/>
+        /// Update the given arguments with the <see cref="IWithParameters{TInterface}.Parameters"/> of the given <see cref="IRegistrationBase{TInterface}"/>
         /// </summary>
         /// <typeparam name="T">The given <see cref="Type"/></typeparam>
         /// <param name="registration">The <see cref="IRegistrationBase{TInterface}"/> of the given <see cref="Type"/></param>
         /// <param name="arguments">The constructor arguments</param>
-        /// <returns>The argument list updated with the <see cref="IRegistrationBase{TInterface}.Parameters"/></returns>
+        /// <returns>The argument list updated with the <see cref="IWithParameters{TInterface}.Parameters"/></returns>
         private object[] UpdateArgumentsWithRegistrationParameters<T>(IRegistrationBase<T> registration, object[] arguments)
         {
             if (arguments != null && arguments.Any()) //if more arguments were passed to resolve
