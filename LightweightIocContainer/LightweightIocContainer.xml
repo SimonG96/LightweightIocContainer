@@ -4,6 +4,15 @@
         <name>LightweightIocContainer</name>
     </assembly>
     <members>
+        <member name="M:LightweightIocContainer.ActionExtension.Convert``2(System.Action{``1})">
+            <summary>
+            Convert an <see cref="T:System.Action`1"/> to an <see cref="T:System.Action`1"/> of an inherited <see cref="T:System.Type"/>
+            </summary>
+            <typeparam name="T1">The <see cref="T:System.Type"/> of the <see cref="T:System.Action`1"/> to convert to, has to be implemented by <typeparamref name="T2"/></typeparam>
+            <typeparam name="T2">The <see cref="T:System.Type"/> of the given <see cref="T:System.Action`1"/>, has to implement <typeparamref name="T1"/></typeparam>
+            <param name="action">The given <see cref="T:System.Action`1"/> to convert</param>
+            <returns>An <see cref="T:System.Action`1"/> converted from the given <see cref="T:System.Action`1"/></returns>
+        </member>
         <member name="M:LightweightIocContainer.EnumerableExtension.FirstOrGiven``2(System.Collections.Generic.IEnumerable{``0})">
             <summary>
             Returns the first element of a <see cref="T:System.Collections.Generic.IEnumerable`1"/>, or a new instance of a given <see cref="T:System.Type"/> if the <see cref="T:System.Collections.Generic.IEnumerable`1"/> contains no elements
@@ -418,6 +427,55 @@
             </summary>
             <param name="container">The current <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/></param>
         </member>
+        <member name="T:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IOnCreate`1">
+            <summary>
+            Provides an <see cref="M:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IOnCreate`1.OnCreate(System.Action{`0})"/> method to an <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/>
+            </summary>
+            <typeparam name="TInterface">The registered interface</typeparam>
+        </member>
+        <member name="P:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IOnCreate`1.OnCreateAction">
+            <summary>
+            This <see cref="T:System.Action"/> is invoked when an instance of this type is created.
+            <para>Can be set in the <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> by calling <see cref="M:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IOnCreate`1.OnCreate(System.Action{`0})"/></para>
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IOnCreate`1.OnCreate(System.Action{`0})">
+            <summary>
+            Pass an <see cref="T:System.Action`1"/> that will be invoked when an instance of this type is created
+            </summary>
+            <param name="action">The <see cref="T:System.Action`1"/></param>
+            <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></returns>
+        </member>
+        <member name="T:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IWithParameters`1">
+            <summary>
+            Provides a <see cref="M:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IWithParameters`1.WithParameters(System.Object[])"/> method to an <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/>
+            </summary>
+            <typeparam name="TInterface">The registered interface</typeparam>
+        </member>
+        <member name="P:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IWithParameters`1.Parameters">
+            <summary>
+            An <see cref="T:System.Array"/> of parameters that are used to <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
+            <para>Can be set in the <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> by calling <see cref="M:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IWithParameters`1.WithParameters(System.Object[])"/></para>
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IWithParameters`1.WithParameters(System.Object[])">
+            <summary>
+            Pass parameters that will be used to<see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
+            <para>Parameters set with this method are always inserted at the beginning of the argument list if more parameters are given when resolving</para>
+            </summary>
+            <param name="parameters">The parameters</param>
+            <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></returns>
+            <exception cref="T:LightweightIocContainer.Exceptions.InvalidRegistrationException"><see cref="P:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IWithParameters`1.Parameters"/> are already set or no parameters given</exception>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IWithParameters`1.WithParameters(System.ValueTuple{System.Int32,System.Object}[])">
+            <summary>
+            Pass parameters that will be used to<see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
+            <para>Parameters set with this method are inserted at the position in the argument list that is passed with the parameter if more parameters are given when resolving</para>
+            </summary>
+            <param name="parameters">The parameters with their position</param>
+            <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></returns>
+            <exception cref="T:LightweightIocContainer.Exceptions.InvalidRegistrationException"><see cref="P:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IWithParameters`1.Parameters"/> are already set or no parameters given</exception>
+        </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1">
             <summary>
             The <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/> to register a <see cref="T:System.Type"/> for the Interface it implements
@@ -465,43 +523,6 @@
             <summary>
             The Lifestyle of Instances that are created with this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/>
             </summary>
-        </member>
-        <member name="P:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1.OnCreateAction">
-            <summary>
-            This <see cref="T:System.Action`1"/> is invoked when an instance of this type is created.
-            <para>Can be set in the <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> by calling <see cref="M:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1.OnCreate(System.Action{`0})"/></para>
-            </summary>
-        </member>
-        <member name="M:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1.OnCreate(System.Action{`0})">
-            <summary>
-            Pass an <see cref="T:System.Action`1"/> that will be invoked when an instance of this type is created
-            </summary>
-            <param name="action">The <see cref="T:System.Action`1"/></param>
-            <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></returns>
-        </member>
-        <member name="P:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1.Parameters">
-            <summary>
-            An <see cref="T:System.Array"/> of parameters that are used to <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
-            <para>Can be set in the <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> by calling <see cref="M:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1.WithParameters(System.Object[])"/></para>
-            </summary>
-        </member>
-        <member name="M:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1.WithParameters(System.Object[])">
-            <summary>
-            Pass parameters that will be used to<see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
-            <para>Parameters set with this method are always inserted at the beginning of the argument list if more parameters are given when resolving</para>
-            </summary>
-            <param name="parameters">The parameters</param>
-            <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></returns>
-            <exception cref="T:LightweightIocContainer.Exceptions.InvalidRegistrationException"><see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1.Parameters"/> are already set or no parameters given</exception>
-        </member>
-        <member name="M:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1.WithParameters(System.ValueTuple{System.Int32,System.Object}[])">
-            <summary>
-            Pass parameters that will be used to<see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
-            <para>Parameters set with this method are inserted at the position in the argument list that is passed with the parameter if more parameters are given when resolving</para>
-            </summary>
-            <param name="parameters">The parameters with their position</param>
-            <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></returns>
-            <exception cref="T:LightweightIocContainer.Exceptions.InvalidRegistrationException"><see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1.Parameters"/> are already set or no parameters given</exception>
         </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1">
             <summary>
@@ -683,12 +704,12 @@
         </member>
         <member name="M:LightweightIocContainer.IocContainer.UpdateArgumentsWithRegistrationParameters``1(LightweightIocContainer.Interfaces.Registrations.IRegistrationBase{``0},System.Object[])">
             <summary>
-            Update the given arguments with the <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1.Parameters"/> of the given <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/>
+            Update the given arguments with the <see cref="P:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IWithParameters`1.Parameters"/> of the given <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/>
             </summary>
             <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
             <param name="registration">The <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/> of the given <see cref="T:System.Type"/></param>
             <param name="arguments">The constructor arguments</param>
-            <returns>The argument list updated with the <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1.Parameters"/></returns>
+            <returns>The argument list updated with the <see cref="P:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IWithParameters`1.Parameters"/></returns>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.ResolveConstructorArguments(System.Type,System.Object[],System.Collections.Generic.List{System.Type})">
             <summary>
