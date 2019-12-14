@@ -30,6 +30,16 @@ namespace LightweightIocContainer.Interfaces
         IDefaultRegistration<TInterface> Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface;
 
         /// <summary>
+        /// Register multiple interfaces for a <see cref="Type"/> that implements them
+        /// </summary>
+        /// <typeparam name="TInterface1">The base interface to register</typeparam>
+        /// <typeparam name="TInterface2">A second interface to register</typeparam>
+        /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2}"/></returns>
+        IMultipleRegistration<TInterface1, TInterface2> Register<TInterface1, TInterface2, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface2, TInterface1;
+
+        /// <summary>
         /// Register a <see cref="Type"/> without an interface
         /// </summary>
         /// <typeparam name="TImplementation">The <see cref="Type"/> to register</typeparam>
@@ -44,7 +54,7 @@ namespace LightweightIocContainer.Interfaces
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <typeparam name="TScope">The Type of the multiton scope</typeparam>
         /// <returns>The created <see cref="IRegistration"/></returns>
-        IMultitonRegistration<TInterface> Register<TInterface, TImplementation, TScope>() where TImplementation : TInterface;
+        IMultitonRegistration<TInterface> RegisterMultiton<TInterface, TImplementation, TScope>() where TImplementation : TInterface;
 
         /// <summary>
         /// Register an Interface as an abstract typed factory

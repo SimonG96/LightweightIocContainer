@@ -69,6 +69,26 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
+        /// Register multiple interfaces for a <see cref="Type"/> that implements them
+        /// </summary>
+        /// <typeparam name="TInterface1">The base interface to register</typeparam>
+        /// <typeparam name="TInterface2">A second interface to register</typeparam>
+        /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2}"/></returns>
+        public IMultipleRegistration<TInterface1, TInterface2> Register<TInterface1, TInterface2, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface2, TInterface1
+        {
+            IMultipleRegistration<TInterface1, TInterface2> multipleRegistration = _registrationFactory.Register<TInterface1, TInterface2, TImplementation>(lifestyle);
+
+            foreach (var registration in multipleRegistration.Registrations)
+            {
+                Register(registration);
+            }
+
+            return multipleRegistration;
+        }
+
+        /// <summary>
         /// Register a <see cref="Type"/> without an interface
         /// </summary>
         /// <typeparam name="TImplementation">The <see cref="Type"/> to register</typeparam>
@@ -89,9 +109,9 @@ namespace LightweightIocContainer
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <typeparam name="TScope">The Type of the multiton scope</typeparam>
         /// <returns>The created <see cref="IRegistration"/></returns>
-        public IMultitonRegistration<TInterface> Register<TInterface, TImplementation, TScope>() where TImplementation : TInterface
+        public IMultitonRegistration<TInterface> RegisterMultiton<TInterface, TImplementation, TScope>() where TImplementation : TInterface
         {
-            IMultitonRegistration<TInterface> registration = _registrationFactory.Register<TInterface, TImplementation, TScope>();
+            IMultitonRegistration<TInterface> registration = _registrationFactory.RegisterMultiton<TInterface, TImplementation, TScope>();
             Register(registration);
 
             return registration;
@@ -249,14 +269,22 @@ namespace LightweightIocContainer
         /// <returns>An existing or newly created singleton instance of the given <see cref="Type"/></returns>
         private T GetOrCreateSingletonInstance<T>(IRegistrationBase<T> registration, object[] arguments, List<Type> resolveStack)
         {
+            Type type;
+            if (registration is ITypedRegistrationBase<T> typedRegistration)
+                type = typedRegistration.ImplementationType;
+            else if (registration is ISingleTypeRegistration<T> singleTypeRegistration)
+                type = singleTypeRegistration.InterfaceType;
+            else
+                throw new UnknownRegistrationException($"There is no registration {registration.GetType().Name} that can have lifestyle singleton.");
+
             //if a singleton instance exists return it
-            object instance = _singletons.FirstOrDefault(s => s.type == typeof(T)).instance;
+            object instance = _singletons.FirstOrDefault(s => s.type == type).instance;
             if (instance != null)
                 return (T) instance;
 
             //if it doesn't already exist create a new instance and add it to the list
             T newInstance = CreateInstance(registration, arguments, resolveStack);
-            _singletons.Add((typeof(T), newInstance));
+            _singletons.Add((type, newInstance));
 
             return newInstance;
         }
@@ -338,7 +366,8 @@ namespace LightweightIocContainer
             else
                 throw new UnknownRegistrationException($"There is no registration of type {registration.GetType().Name}.");
 
-            registration.OnCreateAction?.Invoke(instance); //TODO: Allow async OnCreateAction?
+            if (registration is IOnCreate<T> onCreateRegistration)
+                onCreateRegistration.OnCreateAction?.Invoke(instance); //TODO: Allow async OnCreateAction?
 
             return instance;
         }
@@ -403,7 +432,7 @@ namespace LightweightIocContainer
             if (!sortedConstructors.Any()) //no public constructor available
                 throw new NoPublicConstructorFoundException(type);
 
-            NoMatchingConstructorFoundException noMatchingConstructorFoundException = null;
+            NoMatchingConstructorFoundException noMatchingConstructorFoundException = null; //TestMe: Is this thrown when a matching constructor is found but first a non matching one is found?
 
             foreach (ConstructorInfo ctor in sortedConstructors)
             {

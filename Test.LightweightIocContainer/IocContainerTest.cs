@@ -166,7 +166,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestRegisterMultiton()
         {
-            Assert.DoesNotThrow(() => _iocContainer.Register<ITest, Test, MultitonScope>());
+            Assert.DoesNotThrow(() => _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>());
         }
 
         [Test]
@@ -271,7 +271,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestResolveMultiton()
         {
-            _iocContainer.Register<ITest, Test, MultitonScope>();
+            _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>();
 
             MultitonScope scope1 = new MultitonScope();
             MultitonScope scope2 = new MultitonScope();
@@ -288,7 +288,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestResolveMultitonNoArgs()
         {
-            _iocContainer.Register<ITest, Test, MultitonScope>();
+            _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>();
 
             MultitonResolveException exception = Assert.Throws<MultitonResolveException>(() => _iocContainer.Resolve<ITest>());
             Assert.AreEqual(typeof(ITest), exception.Type);
@@ -297,7 +297,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestResolveMultitonWrongArgs()
         {
-            _iocContainer.Register<ITest, Test, MultitonScope>();
+            _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>();
 
             MultitonResolveException exception = Assert.Throws<MultitonResolveException>(() => _iocContainer.Resolve<ITest>(new object()));
             Assert.AreEqual(typeof(ITest), exception.Type);
@@ -407,7 +407,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestResolveMultitonFromFactory()
         {
-            _iocContainer.Register<ITest, Test, MultitonScope>();
+            _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>();
             _iocContainer.RegisterFactory<ITestFactory>();
 
             MultitonScope scope1 = new MultitonScope();
@@ -427,7 +427,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestResolveMultitonFromFactoryClearInstances()
         {
-            _iocContainer.Register<ITest, Test, MultitonScope>();
+            _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>();
             _iocContainer.RegisterFactory<ITestFactory>();
 
             MultitonScope scope1 = new MultitonScope();
