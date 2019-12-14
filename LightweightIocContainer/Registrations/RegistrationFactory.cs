@@ -34,6 +34,19 @@ namespace LightweightIocContainer.Registrations
         }
 
         /// <summary>
+        /// Register multiple interfaces for a <see cref="Type"/> that implements them and create a <see cref="IMultipleRegistration{TInterface1,TInterface2}"/>
+        /// </summary>
+        /// <typeparam name="TInterface1">The base interface to register</typeparam>
+        /// <typeparam name="TInterface2">A second interface to register</typeparam>
+        /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2}"/></returns>
+        public IMultipleRegistration<TInterface1, TInterface2> Register<TInterface1, TInterface2, TImplementation>(Lifestyle lifestyle) where TImplementation : TInterface1, TInterface2
+        {
+            return new MultipleRegistration<TInterface1, TInterface2>(typeof(TInterface1), typeof(TInterface2), typeof(TImplementation), lifestyle);
+        }
+
+        /// <summary>
         /// Register a <see cref="Type"/> without an interface and create a <see cref="ISingleTypeRegistration{TInterface}"/>
         /// </summary>
         /// <typeparam name="T">The <see cref="Type"/> to register</typeparam>
@@ -51,7 +64,7 @@ namespace LightweightIocContainer.Registrations
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <typeparam name="TScope">The Type of the multiton scope</typeparam>
         /// <returns>A new created <see cref="IMultitonRegistration{TInterface}"/> with the given parameters</returns>
-        public IMultitonRegistration<TInterface> Register<TInterface, TImplementation, TScope>() where TImplementation : TInterface
+        public IMultitonRegistration<TInterface> RegisterMultiton<TInterface, TImplementation, TScope>() where TImplementation : TInterface
         {
             return new MultitonRegistration<TInterface>(typeof(TInterface), typeof(TImplementation), typeof(TScope));
         }
