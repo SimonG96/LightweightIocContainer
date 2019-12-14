@@ -26,4 +26,20 @@ namespace LightweightIocContainer.Interfaces.Registrations.FluentProviders
         /// <returns>The current instance of this <see cref="IRegistrationBase{TInterface}"/></returns>
         IRegistrationBase<TInterface> OnCreate(Action<TInterface> action);
     }
+
+    /// <summary>
+    /// Provides an <see cref="OnCreate"/> method to an <see cref="IMultipleRegistration{TInterface1,TInterface2}"/>
+    /// </summary>
+    /// <typeparam name="TInterface1">The first registered interface</typeparam>
+    /// <typeparam name="TInterface2">The second registered interface</typeparam>
+    public interface IOnCreate<TInterface1, TInterface2>
+    {
+        /// <summary>
+        /// Pass an <see cref="Action{T}"/> for each interface that will be invoked when instances of the types are created
+        /// </summary>
+        /// <param name="action1">The first <see cref="Action{T}"/></param>
+        /// <param name="action2">The second <see cref="Action{T}"/></param>
+        /// <returns>The current instance of this <see cref="IMultipleRegistration{TInterface1,TInterface2}"/></returns>
+        IMultipleRegistration<TInterface1, TInterface2> OnCreate(Action<TInterface1> action1, Action<TInterface2> action2);
+    }
 }
