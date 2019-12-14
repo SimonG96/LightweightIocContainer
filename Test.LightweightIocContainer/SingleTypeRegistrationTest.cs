@@ -57,5 +57,19 @@ namespace Test.LightweightIocContainer
             IFoo foo = registration.FactoryMethod(iocContainerMock.Object);
             Assert.AreEqual(bar, foo.Bar);
         }
+
+        [Test]
+        public void TestSingleTypeRegistrationResolveSingleton()
+        {
+            IIocContainer container = new IocContainer();
+
+            IBar bar = new Bar();
+            container.Register<IFoo>(Lifestyle.Singleton).WithFactoryMethod(c => new Foo(bar));
+
+            IFoo foo = container.Resolve<IFoo>();
+
+            Assert.IsInstanceOf<Foo>(foo);
+            Assert.AreEqual(bar, foo.Bar);
+        }
     }
 }
