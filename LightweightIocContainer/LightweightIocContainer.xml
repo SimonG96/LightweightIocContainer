@@ -346,6 +346,16 @@
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></param>
             <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
         </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register``3(LightweightIocContainer.Lifestyle)">
+            <summary>
+            Register multiple interfaces for a <see cref="T:System.Type"/> that implements them
+            </summary>
+            <typeparam name="TInterface1">The base interface to register</typeparam>
+            <typeparam name="TInterface2">A second interface to register</typeparam>
+            <typeparam name="TImplementation">The <see cref="T:System.Type"/> that implements both interfaces</typeparam>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultipleRegistration`2"/></returns>
+        </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register``1(LightweightIocContainer.Lifestyle)">
             <summary>
             Register a <see cref="T:System.Type"/> without an interface
@@ -354,7 +364,7 @@
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></param>
             <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
         </member>
-        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register``3">
+        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.RegisterMultiton``3">
             <summary>
             Register an Interface with a Type that implements it as a multiton
             </summary>
@@ -446,6 +456,21 @@
             <param name="action">The <see cref="T:System.Action`1"/></param>
             <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></returns>
         </member>
+        <member name="T:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IOnCreate`2">
+            <summary>
+            Provides an <see cref="M:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IOnCreate`2.OnCreate(System.Action{`0},System.Action{`1})"/> method to an <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultipleRegistration`2"/>
+            </summary>
+            <typeparam name="TInterface1">The first registered interface</typeparam>
+            <typeparam name="TInterface2">The second registered interface</typeparam>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IOnCreate`2.OnCreate(System.Action{`0},System.Action{`1})">
+            <summary>
+            Pass an <see cref="T:System.Action`1"/> for each interface that will be invoked when instances of the types are created
+            </summary>
+            <param name="action1">The first <see cref="T:System.Action`1"/></param>
+            <param name="action2">The second <see cref="T:System.Action`1"/></param>
+            <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultipleRegistration`2"/></returns>
+        </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IWithParameters`1">
             <summary>
             Provides a <see cref="M:LightweightIocContainer.Interfaces.Registrations.FluentProviders.IWithParameters`1.WithParameters(System.Object[])"/> method to an <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/>
@@ -482,9 +507,16 @@
             </summary>
             <typeparam name="TInterface">The <see cref="T:System.Type"/> of the interface</typeparam>
         </member>
-        <member name="P:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1.ImplementationType">
+        <member name="T:LightweightIocContainer.Interfaces.Registrations.IMultipleRegistration`2">
             <summary>
-            The <see cref="T:System.Type"/> that implements the <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/> that is registered with this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/>
+            An <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/> to register multiple interfaces for on implementation type
+            </summary>
+            <typeparam name="TInterface1">The first interface</typeparam>
+            <typeparam name="TInterface2">The second interface</typeparam>
+        </member>
+        <member name="P:LightweightIocContainer.Interfaces.Registrations.IMultipleRegistration`2.Registrations">
+            <summary>
+            A <see cref="T:System.Collections.Generic.List`1"/> of <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>s that are registered within this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultipleRegistration`2"/>
             </summary>
         </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.IMultitonRegistration`1">
@@ -553,6 +585,16 @@
             The class that contains the implemented abstract factory of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedFactoryRegistration`1"/>
             </summary>
         </member>
+        <member name="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase`1">
+            <summary>
+            A <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/> that implements a <see cref="T:System.Type"/>
+            </summary>
+        </member>
+        <member name="P:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase`1.ImplementationType">
+            <summary>
+            The <see cref="T:System.Type"/> that implements the <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/> that is registered with this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/>
+            </summary>
+        </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.IUnitTestCallbackRegistration`1">
             <summary>
             A special <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> that allows to set a <see cref="T:LightweightIocContainer.ResolveCallback`1"/> as a callback that is called on <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/>
@@ -595,6 +637,16 @@
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></param>
             <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
         </member>
+        <member name="M:LightweightIocContainer.IocContainer.Register``3(LightweightIocContainer.Lifestyle)">
+            <summary>
+            Register multiple interfaces for a <see cref="T:System.Type"/> that implements them
+            </summary>
+            <typeparam name="TInterface1">The base interface to register</typeparam>
+            <typeparam name="TInterface2">A second interface to register</typeparam>
+            <typeparam name="TImplementation">The <see cref="T:System.Type"/> that implements both interfaces</typeparam>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultipleRegistration`2"/></returns>
+        </member>
         <member name="M:LightweightIocContainer.IocContainer.Register``1(LightweightIocContainer.Lifestyle)">
             <summary>
             Register a <see cref="T:System.Type"/> without an interface
@@ -603,7 +655,7 @@
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></param>
             <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
         </member>
-        <member name="M:LightweightIocContainer.IocContainer.Register``3">
+        <member name="M:LightweightIocContainer.IocContainer.RegisterMultiton``3">
             <summary>
             Register an Interface with a Type that implements it as a multiton
             </summary>
@@ -773,10 +825,47 @@
             <param name="implementationType">The <see cref="T:System.Type"/> of the implementation</param>
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> of the <see cref="T:LightweightIocContainer.Registrations.RegistrationBase`1"/></param>
         </member>
-        <member name="P:LightweightIocContainer.Registrations.DefaultRegistration`1.ImplementationType">
+        <member name="P:LightweightIocContainer.Registrations.DefaultRegistration`1.OnCreateAction">
             <summary>
-            The <see cref="T:System.Type"/> that implements the <see cref="P:LightweightIocContainer.Registrations.RegistrationBase`1.InterfaceType"/> that is registered with this <see cref="T:LightweightIocContainer.Registrations.RegistrationBase`1"/>
+            This <see cref="T:System.Action`1"/> is invoked when an instance of this type is created.
+            <para>Can be set in the <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> by calling <see cref="M:LightweightIocContainer.Registrations.DefaultRegistration`1.OnCreate(System.Action{`0})"/></para>
             </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Registrations.DefaultRegistration`1.OnCreate(System.Action{`0})">
+            <summary>
+            Pass an <see cref="T:System.Action`1"/> that will be invoked when an instance of this <see cref="T:System.Type"/> is created
+            </summary>
+            <param name="action">The <see cref="T:System.Action`1"/></param>
+            <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></returns>
+        </member>
+        <member name="T:LightweightIocContainer.Registrations.MultipleRegistration`2">
+            <summary>
+            An <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/> to register multiple interfaces for on implementation type
+            </summary>
+            <typeparam name="TInterface1">The first interface</typeparam>
+            <typeparam name="TInterface2">The second interface</typeparam>
+        </member>
+        <member name="M:LightweightIocContainer.Registrations.MultipleRegistration`2.#ctor(System.Type,System.Type,System.Type,LightweightIocContainer.Lifestyle)">
+            <summary>
+            An <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/> to register multiple interfaces for on implementation type
+            </summary>
+            <param name="interfaceType1">The <see cref="T:System.Type"/> of the first interface</param>
+            <param name="interfaceType2">The <see cref="T:System.Type"/> of the second interface</param>
+            <param name="implementationType">The <see cref="T:System.Type"/> of the implementation</param>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> of this <see cref="T:LightweightIocContainer.Registrations.MultipleRegistration`2"/></param>
+        </member>
+        <member name="P:LightweightIocContainer.Registrations.MultipleRegistration`2.Registrations">
+            <summary>
+            A <see cref="T:System.Collections.Generic.List`1"/> of <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>s that are registered within this <see cref="T:LightweightIocContainer.Registrations.MultipleRegistration`2"/>
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Registrations.MultipleRegistration`2.OnCreate(System.Action{`0},System.Action{`1})">
+            <summary>
+            Pass an <see cref="T:System.Action`1"/> for each interface that will be invoked when instances of the types are created
+            </summary>
+            <param name="action1">The first <see cref="T:System.Action`1"/></param>
+            <param name="action2">The second <see cref="T:System.Action`1"/></param>
+            <returns>The current instance of this <see cref="T:LightweightIocContainer.Registrations.MultipleRegistration`2"/></returns>
         </member>
         <member name="T:LightweightIocContainer.Registrations.MultitonRegistration`1">
             <summary>
@@ -825,19 +914,6 @@
             The <see cref="T:LightweightIocContainer.Lifestyle"/> of Instances that are created with this <see cref="T:LightweightIocContainer.Registrations.RegistrationBase`1"/>
             </summary>
         </member>
-        <member name="P:LightweightIocContainer.Registrations.RegistrationBase`1.OnCreateAction">
-            <summary>
-            This <see cref="T:System.Action`1"/> is invoked when an instance of this type is created.
-            <para>Can be set in the <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> by calling <see cref="M:LightweightIocContainer.Registrations.RegistrationBase`1.OnCreate(System.Action{`0})"/></para>
-            </summary>
-        </member>
-        <member name="M:LightweightIocContainer.Registrations.RegistrationBase`1.OnCreate(System.Action{`0})">
-            <summary>
-            Pass an <see cref="T:System.Action`1"/> that will be invoked when an instance of this <see cref="T:System.Type"/> is created
-            </summary>
-            <param name="action">The <see cref="T:System.Action`1"/></param>
-            <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></returns>
-        </member>
         <member name="P:LightweightIocContainer.Registrations.RegistrationBase`1.Parameters">
             <summary>
             An <see cref="T:System.Array"/> of parameters that are used to <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
@@ -876,6 +952,16 @@
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/></param>
             <returns>A new created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`1"/> with the given parameters</returns>
         </member>
+        <member name="M:LightweightIocContainer.Registrations.RegistrationFactory.Register``3(LightweightIocContainer.Lifestyle)">
+            <summary>
+            Register multiple interfaces for a <see cref="T:System.Type"/> that implements them and create a <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultipleRegistration`2"/>
+            </summary>
+            <typeparam name="TInterface1">The base interface to register</typeparam>
+            <typeparam name="TInterface2">A second interface to register</typeparam>
+            <typeparam name="TImplementation">The <see cref="T:System.Type"/> that implements both interfaces</typeparam>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultipleRegistration`2"/></returns>
+        </member>
         <member name="M:LightweightIocContainer.Registrations.RegistrationFactory.Register``1(LightweightIocContainer.Lifestyle)">
             <summary>
             Register a <see cref="T:System.Type"/> without an interface and create a <see cref="T:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1"/>
@@ -884,7 +970,7 @@
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1"/></param>
             <returns>A new created <see cref="T:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1"/> with the given parameters</returns>
         </member>
-        <member name="M:LightweightIocContainer.Registrations.RegistrationFactory.Register``3">
+        <member name="M:LightweightIocContainer.Registrations.RegistrationFactory.RegisterMultiton``3">
             <summary>
             Register an Interface with a Type that implements it as a multiton and create a <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultitonRegistration`1"/>
             </summary>
@@ -959,6 +1045,24 @@
             </summary>
             <exception cref="T:LightweightIocContainer.Exceptions.InvalidFactoryRegistrationException">Factory registration is invalid</exception>
             <exception cref="T:LightweightIocContainer.Exceptions.IllegalAbstractMethodCreationException">Creation of abstract methods are illegal in their current state</exception>
+        </member>
+        <member name="T:LightweightIocContainer.Registrations.TypedRegistrationBase`1">
+            <summary>
+            A <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/> that implements a <see cref="T:System.Type"/>
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Registrations.TypedRegistrationBase`1.#ctor(System.Type,System.Type,LightweightIocContainer.Lifestyle)">
+            <summary>
+            A <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/> that implements a <see cref="T:System.Type"/>
+            </summary>
+            <param name="interfaceType">The <see cref="T:System.Type"/> of the interface</param>
+            <param name="implementationType">The <see cref="T:System.Type"/> of the implementation type</param>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></param>
+        </member>
+        <member name="P:LightweightIocContainer.Registrations.TypedRegistrationBase`1.ImplementationType">
+            <summary>
+            The <see cref="T:System.Type"/> that implements the <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/> that is registered with this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/>
+            </summary>
         </member>
         <member name="T:LightweightIocContainer.Registrations.UnitTestCallbackRegistration`1">
             <summary>
