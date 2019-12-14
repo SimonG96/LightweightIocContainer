@@ -3,6 +3,7 @@
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System;
+using LightweightIocContainer.Interfaces.Registrations.FluentProviders;
 
 namespace LightweightIocContainer.Interfaces.Registrations
 {
@@ -10,11 +11,8 @@ namespace LightweightIocContainer.Interfaces.Registrations
     /// The <see cref="IDefaultRegistration{TInterface}"/> to register a <see cref="Type"/> for the Interface it implements
     /// </summary>
     /// <typeparam name="TInterface">The <see cref="Type"/> of the interface</typeparam>
-    public interface IDefaultRegistration<TInterface> : IRegistrationBase<TInterface>
+    public interface IDefaultRegistration<TInterface> : ITypedRegistrationBase<TInterface>, IOnCreate<TInterface>
     {
-        /// <summary>
-        /// The <see cref="Type"/> that implements the <see cref="IRegistration.InterfaceType"/> that is registered with this <see cref="IRegistrationBase{TInterface}"/>
-        /// </summary>
-        Type ImplementationType { get; }
+        
     }
 }
