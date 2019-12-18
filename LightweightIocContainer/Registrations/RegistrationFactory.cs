@@ -22,15 +22,15 @@ namespace LightweightIocContainer.Registrations
         }
 
         /// <summary>
-        /// Register an Interface with a Type that implements it and create a <see cref="IDefaultRegistration{TInterface}"/>
+        /// Register an Interface with a Type that implements it and create a <see cref="IDefaultRegistration{TInterface,TImplementation}"/>
         /// </summary>
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface}"/></param>
-        /// <returns>A new created <see cref="IDefaultRegistration{TInterface}"/> with the given parameters</returns>
-        public IDefaultRegistration<TInterface> Register<TInterface, TImplementation>(Lifestyle lifestyle) where TImplementation : TInterface
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IDefaultRegistration{TInterface,TImplementation}"/></param>
+        /// <returns>A new created <see cref="IDefaultRegistration{TInterface,TImplementation}"/> with the given parameters</returns>
+        public IDefaultRegistration<TInterface, TImplementation> Register<TInterface, TImplementation>(Lifestyle lifestyle) where TImplementation : TInterface
         {
-            return new DefaultRegistration<TInterface>(typeof(TInterface), typeof(TImplementation), lifestyle);
+            return new DefaultRegistration<TInterface, TImplementation>(typeof(TInterface), typeof(TImplementation), lifestyle);
         }
 
         /// <summary>
@@ -41,9 +41,9 @@ namespace LightweightIocContainer.Registrations
         /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
         /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2}"/></returns>
-        public IMultipleRegistration<TInterface1, TInterface2> Register<TInterface1, TInterface2, TImplementation>(Lifestyle lifestyle) where TImplementation : TInterface1, TInterface2
+        public IMultipleRegistration<TInterface1, TInterface2, TImplementation> Register<TInterface1, TInterface2, TImplementation>(Lifestyle lifestyle) where TImplementation : TInterface1, TInterface2
         {
-            return new MultipleRegistration<TInterface1, TInterface2>(typeof(TInterface1), typeof(TInterface2), typeof(TImplementation), lifestyle);
+            return new MultipleRegistration<TInterface1, TInterface2, TImplementation>(typeof(TInterface1), typeof(TInterface2), typeof(TImplementation), lifestyle);
         }
 
         /// <summary>
@@ -55,9 +55,9 @@ namespace LightweightIocContainer.Registrations
         /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
         /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2,TInterface3}"/></returns>
-        public IMultipleRegistration<TInterface1, TInterface2, TInterface3> Register<TInterface1, TInterface2, TInterface3, TImplementation>(Lifestyle lifestyle) where TImplementation : TInterface1, TInterface2, TInterface3
+        public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TImplementation> Register<TInterface1, TInterface2, TInterface3, TImplementation>(Lifestyle lifestyle) where TImplementation : TInterface1, TInterface2, TInterface3
         {
-            return new MultipleRegistration<TInterface1, TInterface2, TInterface3>(typeof(TInterface1), typeof(TInterface2), typeof(TInterface3), typeof(TImplementation), lifestyle);
+            return new MultipleRegistration<TInterface1, TInterface2, TInterface3, TImplementation>(typeof(TInterface1), typeof(TInterface2), typeof(TInterface3), typeof(TImplementation), lifestyle);
         }
 
         /// <summary>
@@ -70,9 +70,9 @@ namespace LightweightIocContainer.Registrations
         /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
         /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2,TInterface3,TInterface4}"/></returns>
-        public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4> Register<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation>(Lifestyle lifestyle) where TImplementation : TInterface1, TInterface2, TInterface3, TInterface4
+        public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation> Register<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation>(Lifestyle lifestyle) where TImplementation : TInterface1, TInterface2, TInterface3, TInterface4
         {
-            return new MultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4>(typeof(TInterface1), typeof(TInterface2), typeof(TInterface3), typeof(TInterface4), typeof(TImplementation), lifestyle);
+            return new MultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation>(typeof(TInterface1), typeof(TInterface2), typeof(TInterface3), typeof(TInterface4), typeof(TImplementation), lifestyle);
         }
 
         /// <summary>
@@ -86,9 +86,9 @@ namespace LightweightIocContainer.Registrations
         /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
         /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2,TInterface3,TInterface4,TInterface5}"/></returns>
-        public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5> Register<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation>(Lifestyle lifestyle) where TImplementation : TInterface1, TInterface2, TInterface3, TInterface4, TInterface5
+        public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation> Register<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation>(Lifestyle lifestyle) where TImplementation : TInterface1, TInterface2, TInterface3, TInterface4, TInterface5
         {
-            return new MultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5>(typeof(TInterface1), typeof(TInterface2), typeof(TInterface3), typeof(TInterface4), typeof(TInterface5), typeof(TImplementation), lifestyle);
+            return new MultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation>(typeof(TInterface1), typeof(TInterface2), typeof(TInterface3), typeof(TInterface4), typeof(TInterface5), typeof(TImplementation), lifestyle);
         }
 
         /// <summary>
@@ -103,15 +103,15 @@ namespace LightweightIocContainer.Registrations
         }
 
         /// <summary>
-        /// Register an Interface with a Type that implements it as a multiton and create a <see cref="IMultitonRegistration{TInterface}"/>
+        /// Register an Interface with a Type that implements it as a multiton and create a <see cref="IMultitonRegistration{TInterface,TImplementation}"/>
         /// </summary>
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <typeparam name="TScope">The Type of the multiton scope</typeparam>
-        /// <returns>A new created <see cref="IMultitonRegistration{TInterface}"/> with the given parameters</returns>
-        public IMultitonRegistration<TInterface> RegisterMultiton<TInterface, TImplementation, TScope>() where TImplementation : TInterface
+        /// <returns>A new created <see cref="IMultitonRegistration{TInterface,TImplementation}"/> with the given parameters</returns>
+        public IMultitonRegistration<TInterface, TImplementation> RegisterMultiton<TInterface, TImplementation, TScope>() where TImplementation : TInterface
         {
-            return new MultitonRegistration<TInterface>(typeof(TInterface), typeof(TImplementation), typeof(TScope));
+            return new MultitonRegistration<TInterface, TImplementation>(typeof(TInterface), typeof(TImplementation), typeof(TScope));
         }
 
         /// <summary>

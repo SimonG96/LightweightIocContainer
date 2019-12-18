@@ -9,10 +9,11 @@ using LightweightIocContainer.Interfaces.Registrations;
 namespace LightweightIocContainer.Registrations
 {
     /// <summary>
-    /// The base class for every <see cref="IMultipleRegistration{TInterface1,TInterface2}"/> to register multiple interfaces
+    /// The base class for every <see cref="IMultipleRegistration{TInterface1,TInterface2, TImplementation}"/> to register multiple interfaces
     /// </summary>
     /// <typeparam name="TInterface1">The first interface</typeparam>
-    public abstract class MultipleRegistration<TInterface1> : TypedRegistrationBase<TInterface1>, IMultipleRegistration<TInterface1>
+    /// <typeparam name="TImplementation">The implementation</typeparam>
+    public abstract class MultipleRegistration<TInterface1, TImplementation> : TypedRegistrationBase<TInterface1, TImplementation>, IMultipleRegistration<TInterface1, TImplementation> where TImplementation : TInterface1
     {
         /// <summary>
         /// The base class for every <see cref="IMultipleRegistration{TInterface1,TInterface2}"/> to register multiple interfaces
@@ -37,7 +38,8 @@ namespace LightweightIocContainer.Registrations
     /// </summary>
     /// <typeparam name="TInterface1">The first interface</typeparam>
     /// <typeparam name="TInterface2">The second interface</typeparam>
-    public class MultipleRegistration<TInterface1, TInterface2> : MultipleRegistration<TInterface1>, IMultipleRegistration<TInterface1, TInterface2>
+    /// <typeparam name="TImplementation">The implementation</typeparam>
+    public class MultipleRegistration<TInterface1, TInterface2, TImplementation> : MultipleRegistration<TInterface1, TImplementation>, IMultipleRegistration<TInterface1, TInterface2, TImplementation> where TImplementation : TInterface1, TInterface2
     {
         /// <summary>
         /// An <see cref="IRegistrationBase{TInterface}"/> to register multiple interfaces for on implementation type
@@ -51,25 +53,24 @@ namespace LightweightIocContainer.Registrations
         {
             Registrations = new List<IRegistration>() 
             { 
-                new DefaultRegistration<TInterface1>(interfaceType1, implementationType, lifestyle),
-                new DefaultRegistration<TInterface2>(interfaceType2, implementationType, lifestyle)
+                new DefaultRegistration<TInterface1, TImplementation>(interfaceType1, implementationType, lifestyle),
+                new DefaultRegistration<TInterface2, TImplementation>(interfaceType2, implementationType, lifestyle)
             };
         }
 
         /// <summary>
-        /// Pass an <see cref="Action{T}"/> for each interface that will be invoked when instances of the types are created
+        /// Pass an <see cref="Action{T}"/> that will be invoked when an instance of this type is created
         /// </summary>
-        /// <param name="action1">The first <see cref="Action{T}"/></param>
-        /// <param name="action2">The second <see cref="Action{T}"/></param>
-        /// <returns>The current instance of this <see cref="MultipleRegistration{TInterface1,TInterface2}"/></returns>
-        public IMultipleRegistration<TInterface1, TInterface2> OnCreate(Action<TInterface1> action1, Action<TInterface2> action2)
+        /// <param name="action">The <see cref="Action{T}"/></param>
+        /// <returns>The current instance of this <see cref="ITypedRegistrationBase{TInterface,TImplementation}"/></returns>
+        public override ITypedRegistrationBase<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
         {
             foreach (var registration in Registrations)
             {
-                if (registration is IDefaultRegistration<TInterface2> interface2Registration)
-                    interface2Registration.OnCreate(action2);
-                else if (registration is IDefaultRegistration<TInterface1> interface1Registration)
-                    interface1Registration.OnCreate(action1);
+                if (registration is IDefaultRegistration<TInterface2, TImplementation> interface2Registration)
+                    interface2Registration.OnCreate(action);
+                else if (registration is IDefaultRegistration<TInterface1, TImplementation> interface1Registration)
+                    interface1Registration.OnCreate(action);
             }
 
             return this;
@@ -82,7 +83,8 @@ namespace LightweightIocContainer.Registrations
     /// <typeparam name="TInterface1">The first interface</typeparam>
     /// <typeparam name="TInterface2">The second interface</typeparam>
     /// <typeparam name="TInterface3">The third interface</typeparam>
-    public class MultipleRegistration<TInterface1, TInterface2, TInterface3> : MultipleRegistration<TInterface1>, IMultipleRegistration<TInterface1, TInterface2, TInterface3>
+    /// <typeparam name="TImplementation">The implementation</typeparam>
+    public class MultipleRegistration<TInterface1, TInterface2, TInterface3, TImplementation> : MultipleRegistration<TInterface1, TImplementation>, IMultipleRegistration<TInterface1, TInterface2, TInterface3, TImplementation> where TImplementation : TInterface3, TInterface2, TInterface1
     {
         /// <summary>
         /// An <see cref="IRegistrationBase{TInterface}"/> to register multiple interfaces for on implementation type
@@ -97,29 +99,27 @@ namespace LightweightIocContainer.Registrations
         {
             Registrations = new List<IRegistration>()
             {
-                new DefaultRegistration<TInterface1>(interfaceType1, implementationType, lifestyle),
-                new DefaultRegistration<TInterface2>(interfaceType2, implementationType, lifestyle),
-                new DefaultRegistration<TInterface3>(interfaceType3, implementationType, lifestyle)
+                new DefaultRegistration<TInterface1, TImplementation>(interfaceType1, implementationType, lifestyle),
+                new DefaultRegistration<TInterface2, TImplementation>(interfaceType2, implementationType, lifestyle),
+                new DefaultRegistration<TInterface3, TImplementation>(interfaceType3, implementationType, lifestyle)
             };
         }
 
         /// <summary>
-        /// Pass an <see cref="Action{T}"/> for each interface that will be invoked when instances of the types are created
+        /// Pass an <see cref="Action{T}"/> that will be invoked when an instance of this type is created
         /// </summary>
-        /// <param name="action1">The first <see cref="Action{T}"/></param>
-        /// <param name="action2">The second <see cref="Action{T}"/></param>
-        /// <param name="action3">The third <see cref="Action{T}"/></param>
-        /// <returns>The current instance of this <see cref="MultipleRegistration{TInterface1,TInterface2}"/></returns>
-        public IMultipleRegistration<TInterface1, TInterface2, TInterface3> OnCreate(Action<TInterface1> action1, Action<TInterface2> action2, Action<TInterface3> action3)
+        /// <param name="action">The <see cref="Action{T}"/></param>
+        /// <returns>The current instance of this <see cref="ITypedRegistrationBase{TInterface,TImplementation}"/></returns>
+        public override ITypedRegistrationBase<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
         {
             foreach (var registration in Registrations)
             {
-                if (registration is IDefaultRegistration<TInterface3> interface3Registration)
-                    interface3Registration.OnCreate(action3);
-                else if (registration is IDefaultRegistration<TInterface2> interface2Registration)
-                    interface2Registration.OnCreate(action2);
-                else if (registration is IDefaultRegistration<TInterface1> interface1Registration)
-                    interface1Registration.OnCreate(action1);
+                if (registration is IDefaultRegistration<TInterface3, TImplementation> interface3Registration)
+                    interface3Registration.OnCreate(action);
+                else if (registration is IDefaultRegistration<TInterface2, TImplementation> interface2Registration)
+                    interface2Registration.OnCreate(action);
+                else if (registration is IDefaultRegistration<TInterface1, TImplementation> interface1Registration)
+                    interface1Registration.OnCreate(action);
             }
 
             return this;
@@ -133,7 +133,8 @@ namespace LightweightIocContainer.Registrations
     /// <typeparam name="TInterface2">The second interface</typeparam>
     /// <typeparam name="TInterface3">The third interface</typeparam>
     /// <typeparam name="TInterface4">The fourth interface</typeparam>
-    public class MultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4> : MultipleRegistration<TInterface1>, IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4>
+    /// <typeparam name="TImplementation">The implementation</typeparam>
+    public class MultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation> : MultipleRegistration<TInterface1, TImplementation>, IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation> where TImplementation : TInterface4, TInterface3, TInterface2, TInterface1
     {
         /// <summary>
         /// An <see cref="IRegistrationBase{TInterface}"/> to register multiple interfaces for on implementation type
@@ -149,33 +150,30 @@ namespace LightweightIocContainer.Registrations
         {
             Registrations = new List<IRegistration>()
             {
-                new DefaultRegistration<TInterface1>(interfaceType1, implementationType, lifestyle),
-                new DefaultRegistration<TInterface2>(interfaceType2, implementationType, lifestyle),
-                new DefaultRegistration<TInterface3>(interfaceType3, implementationType, lifestyle),
-                new DefaultRegistration<TInterface4>(interfaceType4, implementationType, lifestyle)
+                new DefaultRegistration<TInterface1, TImplementation>(interfaceType1, implementationType, lifestyle),
+                new DefaultRegistration<TInterface2, TImplementation>(interfaceType2, implementationType, lifestyle),
+                new DefaultRegistration<TInterface3, TImplementation>(interfaceType3, implementationType, lifestyle),
+                new DefaultRegistration<TInterface4, TImplementation>(interfaceType4, implementationType, lifestyle)
             };
         }
 
         /// <summary>
-        /// Pass an <see cref="Action{T}"/> for each interface that will be invoked when instances of the types are created
+        /// Pass an <see cref="Action{T}"/> that will be invoked when an instance of this type is created
         /// </summary>
-        /// <param name="action1">The first <see cref="Action{T}"/></param>
-        /// <param name="action2">The second <see cref="Action{T}"/></param>
-        /// <param name="action3">The third <see cref="Action{T}"/></param>
-        /// <param name="action4">The fourth <see cref="Action{T}"/></param>
-        /// <returns>The current instance of this <see cref="MultipleRegistration{TInterface1,TInterface2}"/></returns>
-        public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4> OnCreate(Action<TInterface1> action1, Action<TInterface2> action2, Action<TInterface3> action3, Action<TInterface4> action4)
+        /// <param name="action">The <see cref="Action{T}"/></param>
+        /// <returns>The current instance of this <see cref="ITypedRegistrationBase{TInterface,TImplementation}"/></returns>
+        public override ITypedRegistrationBase<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
         {
             foreach (var registration in Registrations)
             {
-                if (registration is IDefaultRegistration<TInterface4> interface4Registration)
-                    interface4Registration.OnCreate(action4);
-                else if (registration is IDefaultRegistration<TInterface3> interface3Registration)
-                    interface3Registration.OnCreate(action3);
-                else if (registration is IDefaultRegistration<TInterface2> interface2Registration)
-                    interface2Registration.OnCreate(action2);
-                else if (registration is IDefaultRegistration<TInterface1> interface1Registration)
-                    interface1Registration.OnCreate(action1);
+                if (registration is IDefaultRegistration<TInterface4, TImplementation> interface4Registration)
+                    interface4Registration.OnCreate(action);
+                else if (registration is IDefaultRegistration<TInterface3, TImplementation> interface3Registration)
+                    interface3Registration.OnCreate(action);
+                else if (registration is IDefaultRegistration<TInterface2, TImplementation> interface2Registration)
+                    interface2Registration.OnCreate(action);
+                else if (registration is IDefaultRegistration<TInterface1, TImplementation> interface1Registration)
+                    interface1Registration.OnCreate(action);
             }
 
             return this;
@@ -190,7 +188,8 @@ namespace LightweightIocContainer.Registrations
     /// <typeparam name="TInterface3">The third interface</typeparam>
     /// <typeparam name="TInterface4">The fourth interface</typeparam>
     /// <typeparam name="TInterface5">The fifth interface</typeparam>
-    public class MultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5> : MultipleRegistration<TInterface1>, IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5>
+    /// <typeparam name="TImplementation">The implementation</typeparam>
+    public class MultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation> : MultipleRegistration<TInterface1, TImplementation>, IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation> where TImplementation : TInterface5, TInterface4, TInterface3, TInterface2, TInterface1
     {
         /// <summary>
         /// An <see cref="IRegistrationBase{TInterface}"/> to register multiple interfaces for on implementation type
@@ -207,37 +206,33 @@ namespace LightweightIocContainer.Registrations
         {
             Registrations = new List<IRegistration>()
             {
-                new DefaultRegistration<TInterface1>(interfaceType1, implementationType, lifestyle),
-                new DefaultRegistration<TInterface2>(interfaceType2, implementationType, lifestyle),
-                new DefaultRegistration<TInterface3>(interfaceType3, implementationType, lifestyle),
-                new DefaultRegistration<TInterface4>(interfaceType4, implementationType, lifestyle),
-                new DefaultRegistration<TInterface5>(interfaceType5, implementationType, lifestyle)
+                new DefaultRegistration<TInterface1, TImplementation>(interfaceType1, implementationType, lifestyle),
+                new DefaultRegistration<TInterface2, TImplementation>(interfaceType2, implementationType, lifestyle),
+                new DefaultRegistration<TInterface3, TImplementation>(interfaceType3, implementationType, lifestyle),
+                new DefaultRegistration<TInterface4, TImplementation>(interfaceType4, implementationType, lifestyle),
+                new DefaultRegistration<TInterface5, TImplementation>(interfaceType5, implementationType, lifestyle)
             };
         }
 
         /// <summary>
-        /// Pass an <see cref="Action{T}"/> for each interface that will be invoked when instances of the types are created
+        /// Pass an <see cref="Action{T}"/> that will be invoked when an instance of this type is created
         /// </summary>
-        /// <param name="action1">The first <see cref="Action{T}"/></param>
-        /// <param name="action2">The second <see cref="Action{T}"/></param>
-        /// <param name="action3">The third <see cref="Action{T}"/></param>
-        /// <param name="action4">The fourth <see cref="Action{T}"/></param>
-        /// <param name="action5">The fifth <see cref="Action{T}"/></param>
-        /// <returns>The current instance of this <see cref="MultipleRegistration{TInterface1,TInterface2}"/></returns>
-        public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5> OnCreate(Action<TInterface1> action1, Action<TInterface2> action2, Action<TInterface3> action3, Action<TInterface4> action4, Action<TInterface5> action5)
+        /// <param name="action">The <see cref="Action{T}"/></param>
+        /// <returns>The current instance of this <see cref="ITypedRegistrationBase{TInterface,TImplementation}"/></returns>
+        public override ITypedRegistrationBase<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
         {
             foreach (var registration in Registrations)
             {
-                if (registration is IDefaultRegistration<TInterface5> interface5Registration)
-                    interface5Registration.OnCreate(action5);
-                else if (registration is IDefaultRegistration<TInterface4> interface4Registration)
-                    interface4Registration.OnCreate(action4);
-                else if (registration is IDefaultRegistration<TInterface3> interface3Registration)
-                    interface3Registration.OnCreate(action3);
-                else if (registration is IDefaultRegistration<TInterface2> interface2Registration)
-                    interface2Registration.OnCreate(action2);
-                else if (registration is IDefaultRegistration<TInterface1> interface1Registration)
-                    interface1Registration.OnCreate(action1);
+                if (registration is IDefaultRegistration<TInterface5, TImplementation> interface5Registration)
+                    interface5Registration.OnCreate(action);
+                else if (registration is IDefaultRegistration<TInterface4, TImplementation> interface4Registration)
+                    interface4Registration.OnCreate(action);
+                else if (registration is IDefaultRegistration<TInterface3, TImplementation> interface3Registration)
+                    interface3Registration.OnCreate(action);
+                else if (registration is IDefaultRegistration<TInterface2, TImplementation> interface2Registration)
+                    interface2Registration.OnCreate(action);
+                else if (registration is IDefaultRegistration<TInterface1, TImplementation> interface1Registration)
+                    interface1Registration.OnCreate(action);
             }
 
             return this;

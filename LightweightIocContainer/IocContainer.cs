@@ -60,9 +60,9 @@ namespace LightweightIocContainer
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
         /// <returns>The created <see cref="IRegistration"/></returns>
-        public IDefaultRegistration<TInterface> Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface
+        public IDefaultRegistration<TInterface, TImplementation> Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface
         {
-            IDefaultRegistration<TInterface> registration = _registrationFactory.Register<TInterface, TImplementation>(lifestyle);
+            IDefaultRegistration<TInterface, TImplementation> registration = _registrationFactory.Register<TInterface, TImplementation>(lifestyle);
             Register(registration);
 
             return registration;
@@ -76,9 +76,9 @@ namespace LightweightIocContainer
         /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
         /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2}"/></returns>
-        public IMultipleRegistration<TInterface1, TInterface2> Register<TInterface1, TInterface2, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface2, TInterface1
+        public IMultipleRegistration<TInterface1, TInterface2, TImplementation> Register<TInterface1, TInterface2, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface2, TInterface1
         {
-            IMultipleRegistration<TInterface1, TInterface2> multipleRegistration = _registrationFactory.Register<TInterface1, TInterface2, TImplementation>(lifestyle);
+            IMultipleRegistration<TInterface1, TInterface2, TImplementation> multipleRegistration = _registrationFactory.Register<TInterface1, TInterface2, TImplementation>(lifestyle);
             Register(multipleRegistration);
 
             return multipleRegistration;
@@ -93,9 +93,9 @@ namespace LightweightIocContainer
         /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
         /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2,TInterface3}"/></returns>
-        public IMultipleRegistration<TInterface1, TInterface2, TInterface3> Register<TInterface1, TInterface2, TInterface3, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface3, TInterface2, TInterface1
+        public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TImplementation> Register<TInterface1, TInterface2, TInterface3, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface3, TInterface2, TInterface1
         {
-            IMultipleRegistration<TInterface1, TInterface2, TInterface3> multipleRegistration =
+            IMultipleRegistration<TInterface1, TInterface2, TInterface3, TImplementation> multipleRegistration =
                 _registrationFactory.Register<TInterface1, TInterface2, TInterface3, TImplementation>(lifestyle);
             Register(multipleRegistration);
 
@@ -112,9 +112,9 @@ namespace LightweightIocContainer
         /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
         /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2,TInterface3,TInterface4}"/></returns>
-        public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4> Register<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface4, TInterface3, TInterface2, TInterface1
+        public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation> Register<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface4, TInterface3, TInterface2, TInterface1
         {
-            IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4> multipleRegistration =
+            IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation> multipleRegistration =
                 _registrationFactory.Register<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation>(lifestyle);
             Register(multipleRegistration);
 
@@ -132,9 +132,9 @@ namespace LightweightIocContainer
         /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
         /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2,TInterface3,TInterface4,TInterface5}"/></returns>
-        public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5> Register<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface5, TInterface4, TInterface3, TInterface2, TInterface1
+        public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation> Register<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface5, TInterface4, TInterface3, TInterface2, TInterface1
         {
-            IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5> multipleRegistration =
+            IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation> multipleRegistration =
                 _registrationFactory.Register<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation>(lifestyle);
             Register(multipleRegistration);
 
@@ -162,9 +162,9 @@ namespace LightweightIocContainer
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <typeparam name="TScope">The Type of the multiton scope</typeparam>
         /// <returns>The created <see cref="IRegistration"/></returns>
-        public IMultitonRegistration<TInterface> RegisterMultiton<TInterface, TImplementation, TScope>() where TImplementation : TInterface
+        public IMultitonRegistration<TInterface, TImplementation> RegisterMultiton<TInterface, TImplementation, TScope>() where TImplementation : TInterface
         {
-            IMultitonRegistration<TInterface> registration = _registrationFactory.RegisterMultiton<TInterface, TImplementation, TScope>();
+            IMultitonRegistration<TInterface, TImplementation> registration = _registrationFactory.RegisterMultiton<TInterface, TImplementation, TScope>();
             Register(registration);
 
             return registration;
@@ -203,7 +203,7 @@ namespace LightweightIocContainer
         /// </summary>
         /// <param name="registration">The given <see cref="IRegistration"/></param>
         /// <exception cref="MultipleRegistrationException">The <see cref="Type"/> is already registered in this <see cref="IocContainer"/></exception>
-        private void Register(IRegistration registration)
+        private void Register(IRegistration registration) //FixMe: Don't allow lifestyle.multiton without iMultitonRegistration
         {
             //if type is already registered
             if (_registrations.Any(r => r.InterfaceType == registration.InterfaceType))
@@ -213,11 +213,12 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
-        /// Register all <see cref="IMultipleRegistration{TInterface1}.Registrations"/> from an <see cref="IMultipleRegistration{TInterface1}"/>
+        /// Register all <see cref="IMultipleRegistration{TInterface1,TImplementation}.Registrations"/> from an <see cref="IMultipleRegistration{TInterface1,TImplementation}"/>
         /// </summary>
         /// <typeparam name="TInterface1">The <see cref="Type"/> of the first registered interface</typeparam>
-        /// <param name="multipleRegistration">The <see cref="IMultipleRegistration{TInterface1}"/></param>
-        private void Register<TInterface1>(IMultipleRegistration<TInterface1> multipleRegistration)
+        /// <typeparam name="TImplementation">The <see cref="Type"/> of the registered implementation</typeparam>
+        /// <param name="multipleRegistration">The <see cref="IMultipleRegistration{TInterface1,TImplementation}"/></param>
+        private void Register<TInterface1, TImplementation>(IMultipleRegistration<TInterface1, TImplementation> multipleRegistration) where TImplementation : TInterface1
         {
             foreach (var registration in multipleRegistration.Registrations)
             {
@@ -411,7 +412,7 @@ namespace LightweightIocContainer
                 arguments = UpdateArgumentsWithRegistrationParameters(registration, arguments);
 
             T instance;
-            if (registration is IDefaultRegistration<T> defaultRegistration)
+            if (registration is ITypedRegistrationBase<T> defaultRegistration)
             {
                 arguments = ResolveConstructorArguments(defaultRegistration.ImplementationType, arguments, resolveStack);
                 instance = (T) Activator.CreateInstance(defaultRegistration.ImplementationType, arguments);
@@ -432,7 +433,7 @@ namespace LightweightIocContainer
             else
                 throw new UnknownRegistrationException($"There is no registration of type {registration.GetType().Name}.");
 
-            if (registration is IOnCreate<T> onCreateRegistration)
+            if (registration is IOnCreate onCreateRegistration)
                 onCreateRegistration.OnCreateAction?.Invoke(instance); //TODO: Allow async OnCreateAction?
 
             return instance;
@@ -445,7 +446,7 @@ namespace LightweightIocContainer
         /// <param name="registration">The <see cref="IRegistrationBase{TInterface}"/> of the given <see cref="Type"/></param>
         /// <param name="arguments">The constructor arguments</param>
         /// <returns>The argument list updated with the <see cref="IWithParameters{TInterface}.Parameters"/></returns>
-        private object[] UpdateArgumentsWithRegistrationParameters<T>(IRegistrationBase<T> registration, object[] arguments)
+        private object[] UpdateArgumentsWithRegistrationParameters<T>(IWithParameters<T> registration, object[] arguments)
         {
             if (arguments != null && arguments.Any()) //if more arguments were passed to resolve
             {

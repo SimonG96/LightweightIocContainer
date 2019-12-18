@@ -11,7 +11,8 @@ namespace LightweightIocContainer.Registrations
     /// The registration that is used to register a multiton
     /// </summary>
     /// <typeparam name="TInterface">The registered interface</typeparam>
-    public class MultitonRegistration<TInterface> : DefaultRegistration<TInterface>, IMultitonRegistration<TInterface>
+    /// <typeparam name="TImplementation">The registered implementation</typeparam>
+    public class MultitonRegistration<TInterface, TImplementation> : DefaultRegistration<TInterface, TImplementation>, IMultitonRegistration<TInterface, TImplementation> where TImplementation : TInterface
     {
         /// <summary>
         /// The registration that is used to register a multiton
