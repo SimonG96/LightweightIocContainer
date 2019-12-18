@@ -40,6 +40,42 @@ namespace LightweightIocContainer.Interfaces
         IMultipleRegistration<TInterface1, TInterface2> Register<TInterface1, TInterface2, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface2, TInterface1;
 
         /// <summary>
+        /// Register multiple interfaces for a <see cref="Type"/> that implements them
+        /// </summary>
+        /// <typeparam name="TInterface1">The base interface to register</typeparam>
+        /// <typeparam name="TInterface2">A second interface to register</typeparam>
+        /// <typeparam name="TInterface3">A third interface to register</typeparam>
+        /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2,TInterface3}"/></returns>
+        IMultipleRegistration<TInterface1, TInterface2, TInterface3> Register<TInterface1, TInterface2, TInterface3, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface3, TInterface2, TInterface1;
+
+        /// <summary>
+        /// Register multiple interfaces for a <see cref="Type"/> that implements them
+        /// </summary>
+        /// <typeparam name="TInterface1">The base interface to register</typeparam>
+        /// <typeparam name="TInterface2">A second interface to register</typeparam>
+        /// <typeparam name="TInterface3">A third interface to register</typeparam>
+        /// <typeparam name="TInterface4">A fourth interface to register</typeparam>
+        /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2,TInterface3,TInterface4}"/></returns>
+        IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4> Register<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface4, TInterface3, TInterface2, TInterface1;
+
+        /// <summary>
+        /// Register multiple interfaces for a <see cref="Type"/> that implements them
+        /// </summary>
+        /// <typeparam name="TInterface1">The base interface to register</typeparam>
+        /// <typeparam name="TInterface2">A second interface to register</typeparam>
+        /// <typeparam name="TInterface3">A third interface to register</typeparam>
+        /// <typeparam name="TInterface4">A fourth interface to register</typeparam>
+        /// <typeparam name="TInterface5">A fifth interface to register</typeparam>
+        /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2,TInterface3,TInterface4,TInterface5}"/></returns>
+        IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5> Register<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface5, TInterface4, TInterface3, TInterface2, TInterface1;
+
+        /// <summary>
         /// Register a <see cref="Type"/> without an interface
         /// </summary>
         /// <typeparam name="TImplementation">The <see cref="Type"/> to register</typeparam>
