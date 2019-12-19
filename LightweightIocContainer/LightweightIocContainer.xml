@@ -587,7 +587,7 @@
         </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.IMultitonRegistration`1">
             <summary>
-            A non generic base <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultitonRegistration`1"/>
+            A base <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultitonRegistration`1"/> without implementation
             </summary>
         </member>
         <member name="P:LightweightIocContainer.Interfaces.Registrations.IMultitonRegistration`1.Scope">
@@ -657,12 +657,12 @@
             The class that contains the implemented abstract factory of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedFactoryRegistration`1"/>
             </summary>
         </member>
-        <member name="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase">
+        <member name="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase`1">
             <summary>
-            A base non generic <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase"/>
+            A base <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase`1"/> without implementation
             </summary>
         </member>
-        <member name="P:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase.ImplementationType">
+        <member name="P:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase`1.ImplementationType">
             <summary>
             The <see cref="T:System.Type"/> that implements the <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/> that is registered with this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/>
             </summary>
