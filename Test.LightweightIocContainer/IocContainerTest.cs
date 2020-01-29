@@ -183,6 +183,12 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
+        public void TestInvalidMultitonRegistration()
+        {
+            Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Register<ITest, Test>(Lifestyle.Multiton));
+        }
+
+        [Test]
         public void TestRegisterFactory()
         {
             Assert.DoesNotThrow(() => _iocContainer.RegisterFactory<ITestFactory>());

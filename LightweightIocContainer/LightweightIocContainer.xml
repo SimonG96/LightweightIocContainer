@@ -527,6 +527,16 @@
             <typeparam name="TInterface">The <see cref="T:System.Type"/> of the interface</typeparam>
             <typeparam name="TImplementation">The <see cref="T:System.Type"/> of the implementation</typeparam>
         </member>
+        <member name="T:LightweightIocContainer.Interfaces.Registrations.ILifestyleProvider">
+            <summary>
+            Provides a <see cref="T:LightweightIocContainer.Lifestyle"/> to an <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>
+            </summary>
+        </member>
+        <member name="P:LightweightIocContainer.Interfaces.Registrations.ILifestyleProvider.Lifestyle">
+            <summary>
+            The Lifestyle of Instances that are created with this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>
+            </summary>
+        </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.IMultipleRegistration`2">
             <summary>
             The base interface for every <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultipleRegistration`3"/> to register multiple interfaces
@@ -577,6 +587,11 @@
             <typeparam name="TInterface5">The fifth interface</typeparam>
             <typeparam name="TImplementation">The implementation</typeparam>
         </member>
+        <member name="T:LightweightIocContainer.Interfaces.Registrations.IMultitonRegistration">
+            <summary>
+            Non generic <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultitonRegistration`1"/>
+            </summary>
+        </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.IMultitonRegistration`1">
             <summary>
             A base <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultitonRegistration`1"/> without implementation
@@ -614,11 +629,6 @@
             The <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/> that is used to register an Interface
             </summary>
             <typeparam name="TInterface">The registered Interface</typeparam>
-        </member>
-        <member name="P:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1.Lifestyle">
-            <summary>
-            The Lifestyle of Instances that are created with this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/>
-            </summary>
         </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1">
             <summary>

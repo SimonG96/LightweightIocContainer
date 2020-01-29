@@ -10,11 +10,8 @@ namespace LightweightIocContainer.Interfaces.Registrations
     /// The <see cref="IRegistrationBase{TInterface}"/> that is used to register an Interface
     /// </summary>
     /// <typeparam name="TInterface">The registered Interface</typeparam>
-    public interface IRegistrationBase<TInterface> : IRegistration, IWithParameters<TInterface>
+    public interface IRegistrationBase<TInterface> : IRegistration, ILifestyleProvider, IWithParameters<TInterface>
     {
-        /// <summary>
-        /// The Lifestyle of Instances that are created with this <see cref="IRegistrationBase{TInterface}"/>
-        /// </summary>
-        Lifestyle Lifestyle { get; }
+        
     }
 }

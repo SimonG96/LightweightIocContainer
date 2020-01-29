@@ -188,11 +188,15 @@ namespace LightweightIocContainer
         /// </summary>
         /// <param name="registration">The given <see cref="IRegistration"/></param>
         /// <exception cref="MultipleRegistrationException">The <see cref="Type"/> is already registered in this <see cref="IocContainer"/></exception>
-        private void Register(IRegistration registration) //FixMe: Don't allow lifestyle.multiton without iMultitonRegistration
+        private void Register(IRegistration registration)
         {
             //if type is already registered
             if (_registrations.Any(r => r.InterfaceType == registration.InterfaceType))
                 throw new MultipleRegistrationException(registration.InterfaceType);
+
+            //don't allow lifestyle.multiton without iMultitonRegistration
+            if (registration is ILifestyleProvider lifestyleProvider && lifestyleProvider.Lifestyle == Lifestyle.Multiton && !(registration is IMultitonRegistration))
+                throw new InvalidRegistrationException("Can't register a type as Lifestyle.Multiton without a scope (Registration is not of type IMultitonRegistration).");
 
             _registrations.Add(registration);
         }
