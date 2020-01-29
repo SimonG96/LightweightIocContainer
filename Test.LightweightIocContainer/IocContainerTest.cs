@@ -83,6 +83,20 @@ namespace Test.LightweightIocContainer
         }
 
         [UsedImplicitly]
+        private class TestMultipleConstructors : ITest
+        {
+            public TestMultipleConstructors(string name, bool success)
+            {
+
+            }
+
+            public TestMultipleConstructors(string name)
+            {
+
+            }
+        }
+
+        [UsedImplicitly]
         private class TestByte : ITest
         {
             [UsedImplicitly]
@@ -320,6 +334,13 @@ namespace Test.LightweightIocContainer
             _iocContainer.Register<ITest, TestConstructor>();
             NoMatchingConstructorFoundException exception = Assert.Throws<NoMatchingConstructorFoundException>(() => _iocContainer.Resolve<ITest>());
             Assert.AreEqual(typeof(TestConstructor), exception.Type);
+        }
+
+        [Test]
+        public void TestResolveNoMatchingConstructorNotThrownWrongly()
+        {
+            _iocContainer.Register<ITest, TestMultipleConstructors>();
+            Assert.DoesNotThrow(() => _iocContainer.Resolve<ITest>("Name"));
         }
 
         [Test]

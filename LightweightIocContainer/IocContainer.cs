@@ -499,7 +499,7 @@ namespace LightweightIocContainer
             if (!sortedConstructors.Any()) //no public constructor available
                 throw new NoPublicConstructorFoundException(type);
 
-            NoMatchingConstructorFoundException noMatchingConstructorFoundException = null; //TestMe: Is this thrown when a matching constructor is found but first a non matching one is found?
+            NoMatchingConstructorFoundException noMatchingConstructorFoundException = null;
 
             foreach (ConstructorInfo ctor in sortedConstructors)
             {
