@@ -1,4 +1,3 @@
-using System;
 using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Exceptions;
@@ -207,13 +206,6 @@ namespace Test.LightweightIocContainer
         public void TestRegisterFactoryClearMultitonsNonGeneric()
         {
             Assert.Throws<IllegalAbstractMethodCreationException>(() => _iocContainer.RegisterFactory<ITestFactoryNonGenericClear>());
-        }
-
-        [Test]
-        [Obsolete("RegisterUnitTestCallback is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
-        public void TestRegisterUnitTestCallback()
-        {
-            Assert.DoesNotThrow(() => _iocContainer.RegisterUnitTestCallback<ITest>(delegate {return new Test(); }));
         }
 
         [Test]
@@ -472,18 +464,6 @@ namespace Test.LightweightIocContainer
             Assert.AreNotSame(resolvedTest1, resolvedTest4);
             Assert.AreNotSame(resolvedTest2, resolvedTest4);
             Assert.AreNotSame(resolvedTest3, resolvedTest5);
-        }
-
-        [Test]
-        [Obsolete("RegisterUnitTestCallback is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
-        public void TestResolveUnitTestCallbackRegistration()
-        {
-            ITest callbackTest = new Test();
-
-            _iocContainer.RegisterUnitTestCallback(delegate { return callbackTest; });
-            ITest test = _iocContainer.Resolve<ITest>();
-
-            Assert.AreEqual(callbackTest, test);
         }
 
         [Test]

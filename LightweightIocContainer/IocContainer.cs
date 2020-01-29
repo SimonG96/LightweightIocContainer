@@ -184,21 +184,6 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
-        /// Register an Interface with an <see cref="ResolveCallback{T}"/> as a callback that is called when <see cref="Resolve{T}()"/> is called
-        /// </summary>
-        /// <typeparam name="TInterface">The Interface to register</typeparam>
-        /// <param name="unitTestCallback">The <see cref="ResolveCallback{T}"/> for the callback</param>
-        /// <returns>The created <see cref="IRegistration"/></returns>
-        [Obsolete("RegisterUnitTestCallback is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
-        public IUnitTestCallbackRegistration<TInterface> RegisterUnitTestCallback<TInterface>(ResolveCallback<TInterface> unitTestCallback)
-        {
-            IUnitTestCallbackRegistration<TInterface> registration = _registrationFactory.RegisterUnitTestCallback(unitTestCallback);
-            Register(registration);
-
-            return registration;
-        }
-
-        /// <summary>
         /// Add the <see cref="IRegistration"/> to the the <see cref="IocContainer"/>
         /// </summary>
         /// <param name="registration">The given <see cref="IRegistration"/></param>
@@ -298,14 +283,7 @@ namespace LightweightIocContainer
 
             T resolvedInstance;
 
-            //TODO: remove this #pragma when IUnitTestCallbackRegistration is removed
-#pragma warning disable 618
-            if (registration is IUnitTestCallbackRegistration<T> unitTestCallbackRegistration)
-            {
-                resolvedInstance = unitTestCallbackRegistration.UnitTestResolveCallback.Invoke(arguments);
-            }
-#pragma warning restore 618
-            else if (registration is IRegistrationBase<T> defaultRegistration)
+            if (registration is IRegistrationBase<T> defaultRegistration)
             {
                 if (defaultRegistration.Lifestyle == Lifestyle.Singleton)
                     resolvedInstance = GetOrCreateSingletonInstance(defaultRegistration, arguments, resolveStack);

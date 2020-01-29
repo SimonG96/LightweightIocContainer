@@ -123,11 +123,5 @@ namespace LightweightIocContainer.Registrations
         {
             return new TypedFactoryRegistration<TFactory>(typeof(TFactory), _iocContainer);
         }
-
-        [Obsolete("RegisterUnitTestCallback is deprecated, use `WithFactoryMethod()` from ISingleTypeRegistration instead.")]
-        public IUnitTestCallbackRegistration<TInterface> RegisterUnitTestCallback<TInterface>(ResolveCallback<TInterface> unitTestResolveCallback)
-        {
-            return new UnitTestCallbackRegistration<TInterface>(typeof(TInterface), unitTestResolveCallback);
-        }
     }
 }

@@ -416,14 +416,6 @@
             <typeparam name="TFactory">The abstract typed factory to register</typeparam>
             <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
         </member>
-        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.RegisterUnitTestCallback``1(LightweightIocContainer.ResolveCallback{``0})">
-            <summary>
-            Register an Interface with an <see cref="T:LightweightIocContainer.ResolveCallback`1"/> as a callback that is called when <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/> is called
-            </summary>
-            <typeparam name="TInterface">The Interface to register</typeparam>
-            <param name="unitTestCallback">The <see cref="T:LightweightIocContainer.ResolveCallback`1"/> for the callback</param>
-            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
-        </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1">
             <summary>
             Gets an instance of the given <see cref="T:System.Type"/>
@@ -672,17 +664,6 @@
             A <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/> that implements a <see cref="T:System.Type"/>
             </summary>
         </member>
-        <member name="T:LightweightIocContainer.Interfaces.Registrations.IUnitTestCallbackRegistration`1">
-            <summary>
-            A special <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> that allows to set a <see cref="T:LightweightIocContainer.ResolveCallback`1"/> as a callback that is called on <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/>
-            </summary>
-            <typeparam name="TInterface"></typeparam>
-        </member>
-        <member name="P:LightweightIocContainer.Interfaces.Registrations.IUnitTestCallbackRegistration`1.UnitTestResolveCallback">
-            <summary>
-            An <see cref="T:LightweightIocContainer.ResolveCallback`1"/> that is set as a callback that is called on <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/>
-            </summary>
-        </member>
         <member name="T:LightweightIocContainer.InternalResolvePlaceholder">
             <summary>
             An internal placeholder that is used during the resolving process
@@ -782,14 +763,6 @@
             Register an Interface as an abstract typed factory
             </summary>
             <typeparam name="TFactory">The abstract typed factory to register</typeparam>
-            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
-        </member>
-        <member name="M:LightweightIocContainer.IocContainer.RegisterUnitTestCallback``1(LightweightIocContainer.ResolveCallback{``0})">
-            <summary>
-            Register an Interface with an <see cref="T:LightweightIocContainer.ResolveCallback`1"/> as a callback that is called when <see cref="M:LightweightIocContainer.IocContainer.Resolve``1"/> is called
-            </summary>
-            <typeparam name="TInterface">The Interface to register</typeparam>
-            <param name="unitTestCallback">The <see cref="T:LightweightIocContainer.ResolveCallback`1"/> for the callback</param>
             <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.Register(LightweightIocContainer.Interfaces.Registrations.IRegistration)">
@@ -1321,34 +1294,6 @@
             </summary>
             <param name="action">The <see cref="T:System.Action`1"/></param>
             <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase`2"/></returns>
-        </member>
-        <member name="T:LightweightIocContainer.Registrations.UnitTestCallbackRegistration`1">
-            <summary>
-            A special <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> that allows to set a <see cref="T:LightweightIocContainer.ResolveCallback`1"/> as a callback that is called on <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/>
-            </summary>
-            <typeparam name="TInterface"></typeparam>
-        </member>
-        <member name="M:LightweightIocContainer.Registrations.UnitTestCallbackRegistration`1.#ctor(System.Type,LightweightIocContainer.ResolveCallback{`0})">
-            <summary>
-            A special <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> that allows to set a <see cref="T:LightweightIocContainer.ResolveCallback`1"/> as a callback that is called on <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/>
-            </summary>
-            <param name="interfaceType">The <see cref="T:System.Type"/> of the interface</param>
-            <param name="unitTestResolveCallback">The <see cref="T:LightweightIocContainer.ResolveCallback`1"/> that is set as a callback</param>
-        </member>
-        <member name="P:LightweightIocContainer.Registrations.UnitTestCallbackRegistration`1.Name">
-            <summary>
-            The name of the <see cref="T:LightweightIocContainer.Registrations.UnitTestCallbackRegistration`1"/>
-            </summary>
-        </member>
-        <member name="P:LightweightIocContainer.Registrations.UnitTestCallbackRegistration`1.InterfaceType">
-            <summary>
-            The <see cref="T:System.Type"/> of the Interface that is registered with this <see cref="T:LightweightIocContainer.Registrations.UnitTestCallbackRegistration`1"/>
-            </summary>
-        </member>
-        <member name="P:LightweightIocContainer.Registrations.UnitTestCallbackRegistration`1.UnitTestResolveCallback">
-            <summary>
-            An <see cref="T:LightweightIocContainer.ResolveCallback`1"/> that is set as a callback that is called on <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/>
-            </summary>
         </member>
         <member name="T:LightweightIocContainer.ResolveCallback`1">
             <summary>
