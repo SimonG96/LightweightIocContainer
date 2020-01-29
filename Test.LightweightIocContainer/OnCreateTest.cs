@@ -3,7 +3,6 @@
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System;
-using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Registrations;
@@ -23,16 +22,6 @@ namespace Test.LightweightIocContainer
             void DoSomething();
         }
 
-        private interface IFoo
-        {
-
-        }
-
-        private interface IBar
-        {
-
-        }
-
         private class Test : ITest
         {
             public void DoSomething()
@@ -41,27 +30,13 @@ namespace Test.LightweightIocContainer
             }
         }
 
-        [UsedImplicitly]
-        private class Foo : IFoo
-        {
-            public Foo(IBar bar, ITest test)
-            {
-
-            }
-        }
-
-        private class Bar : IBar
-        {
-
-        }
-
         #endregion
 
         [Test]
         public void TestOnCreate()
         {
             RegistrationFactory registrationFactory = new RegistrationFactory(new Mock<IIocContainer>().Object);
-            IDefaultRegistration<ITest> testRegistration = (IDefaultRegistration<ITest>) registrationFactory.Register<ITest, Test>(Lifestyle.Transient).OnCreate(t => t.DoSomething());
+            ITypedRegistrationBase<ITest, Test> testRegistration = registrationFactory.Register<ITest, Test>(Lifestyle.Transient).OnCreate(t => t.DoSomething());
 
             Test test = new Test();
 
