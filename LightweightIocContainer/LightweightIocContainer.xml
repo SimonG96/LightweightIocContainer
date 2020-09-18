@@ -1305,11 +1305,6 @@
             <param name="action">The <see cref="T:System.Action`1"/></param>
             <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase`2"/></returns>
         </member>
-        <member name="T:LightweightIocContainer.ResolveCallback`1">
-            <summary>
-            The resolve callback delegate
-            </summary>
-        </member>
         <member name="M:LightweightIocContainer.TypeExtension.GetDefault(System.Type)">
             <summary>
             Returns the default value for a given <see cref="T:System.Type"/>
