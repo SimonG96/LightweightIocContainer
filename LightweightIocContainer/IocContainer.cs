@@ -68,6 +68,14 @@ namespace LightweightIocContainer
             return registration;
         }
 
+        public IOpenGenericRegistration Register(Type tInterface, Type tImplementation, Lifestyle lifestyle = Lifestyle.Transient)
+        {
+            IOpenGenericRegistration registration = _registrationFactory.Register(tInterface, tImplementation, lifestyle);	
+            Register(registration);	
+
+            return registration;
+        }
+
         /// <summary>
         /// Register multiple interfaces for a <see cref="Type"/> that implements them
         /// </summary>
@@ -246,20 +254,7 @@ namespace LightweightIocContainer
         /// <exception cref="InternalResolveException">Could not find function <see cref="ResolveInternal{T}"/></exception>
         private object Resolve(Type type, object[] arguments, List<Type> resolveStack)
         {
-            MethodInfo resolveMethod = typeof(IocContainer).GetMethod(nameof(ResolveInternal), BindingFlags.NonPublic | BindingFlags.Instance);
-            MethodInfo genericResolveMethod = resolveMethod?.MakeGenericMethod(type);
-
-            if (genericResolveMethod == null)
-                throw new InternalResolveException($"Could not find function {nameof(ResolveInternal)}");
-
-            try //exceptions thrown by methods called with invoke are wrapped into another exception, the exception thrown by the invoked method can be returned by `Exception.GetBaseException()`
-            {
-                return genericResolveMethod.Invoke(this, new object[] { arguments, resolveStack });
-            }
-            catch (Exception ex)
-            {
-                throw ex.GetBaseException();
-            }
+            return GenericMethodCaller.Call(this, nameof(ResolveInternal), type, BindingFlags.NonPublic | BindingFlags.Instance, arguments, resolveStack);
         }
 
         /// <summary>
@@ -299,6 +294,10 @@ namespace LightweightIocContainer
             else if (registration is ITypedFactoryRegistration<T> typedFactoryRegistration)
             {
                 resolvedInstance = typedFactoryRegistration.Factory.Factory;
+            }
+            else if (registration is IOpenGenericRegistration openGenericRegistration)
+            {
+                
             }
             else
                 throw new UnknownRegistrationException($"There is no registration of type {registration.GetType().Name}.");

@@ -33,6 +33,11 @@ namespace LightweightIocContainer.Registrations
             return new DefaultRegistration<TInterface, TImplementation>(typeof(TInterface), typeof(TImplementation), lifestyle);
         }
 
+        public IOpenGenericRegistration Register(Type tInterface, Type tImplementation, Lifestyle lifestyle)	
+        {	
+            return new OpenGenericRegistration(tInterface, tImplementation, lifestyle);
+        }
+        
         /// <summary>
         /// Register multiple interfaces for a <see cref="Type"/> that implements them and create a <see cref="IMultipleRegistration{TInterface1,TInterface2}"/>
         /// </summary>
