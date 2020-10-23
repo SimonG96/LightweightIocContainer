@@ -826,7 +826,7 @@
             <exception cref="T:LightweightIocContainer.Exceptions.TypeNotRegisteredException">The given <see cref="T:System.Type"/> is not registered in this <see cref="T:LightweightIocContainer.IocContainer"/></exception>
             <exception cref="T:LightweightIocContainer.Exceptions.UnknownRegistrationException">The registration for the given <see cref="T:System.Type"/> has an unknown <see cref="T:System.Type"/></exception>
         </member>
-        <member name="M:LightweightIocContainer.IocContainer.GetOrCreateSingletonInstance``1(LightweightIocContainer.Interfaces.Registrations.IRegistrationBase{``0},System.Object[],System.Collections.Generic.List{System.Type})">
+        <member name="M:LightweightIocContainer.IocContainer.GetOrCreateSingletonInstance``1(LightweightIocContainer.Interfaces.Registrations.IRegistration,System.Object[],System.Collections.Generic.List{System.Type})">
             <summary>
             Gets or creates a singleton instance of a given <see cref="T:System.Type"/>
             </summary>
@@ -848,7 +848,7 @@
             <exception cref="T:LightweightIocContainer.Exceptions.MultitonResolveException">No arguments given</exception>
             <exception cref="T:LightweightIocContainer.Exceptions.MultitonResolveException">Scope argument not given</exception>
         </member>
-        <member name="M:LightweightIocContainer.IocContainer.CreateInstance``1(LightweightIocContainer.Interfaces.Registrations.IRegistrationBase{``0},System.Object[],System.Collections.Generic.List{System.Type})">
+        <member name="M:LightweightIocContainer.IocContainer.CreateInstance``1(LightweightIocContainer.Interfaces.Registrations.IRegistration,System.Object[],System.Collections.Generic.List{System.Type})">
             <summary>
             Creates an instance of a given <see cref="T:System.Type"/>
             </summary>
