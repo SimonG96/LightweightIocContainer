@@ -3,6 +3,7 @@
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using LightweightIocContainer;
 using NUnit.Framework;
 
@@ -27,6 +28,7 @@ namespace Test.LightweightIocContainer
 
 
         [Test]
+        [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local")]
         public void TestFirstOrGivenNoPredicateEmpty()
         {
             List<ListObject> list = new List<ListObject>();
@@ -51,6 +53,7 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
+        [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local")]
         public void TestFirstOrGivenPredicateEmpty()
         {
             List<ListObject> list = new List<ListObject>();

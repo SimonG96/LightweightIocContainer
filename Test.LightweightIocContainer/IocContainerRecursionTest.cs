@@ -141,6 +141,7 @@ namespace Test.LightweightIocContainer
             _iocContainer.Register<IC, C>();
 
             IA a = _iocContainer.Resolve<IA>();
+            Assert.IsNotNull(a);
         }
 
         [Test]

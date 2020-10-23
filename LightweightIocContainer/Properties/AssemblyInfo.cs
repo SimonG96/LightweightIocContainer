@@ -5,7 +5,3 @@
 using System.Runtime.CompilerServices;
 
 [assembly:InternalsVisibleTo("Test.LightweightIocContainer")]
-
-namespace LightweightIocContainer.Properties
-{
-}
