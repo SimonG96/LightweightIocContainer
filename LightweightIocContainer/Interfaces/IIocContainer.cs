@@ -29,8 +29,14 @@ namespace LightweightIocContainer.Interfaces
         /// <returns>The created <see cref="IRegistration"/></returns>
         IDefaultRegistration<TInterface, TImplementation> Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface;
 
-        IOpenGenericRegistration RegisterOpenGenerics(Type tInterface, Type tImplementation,
-            Lifestyle lifestyle = Lifestyle.Transient);
+        /// <summary>
+        /// Register an open generic Interface with an open generic Type that implements it
+        /// </summary>
+        /// <param name="tInterface">The open generic Interface to register</param>
+        /// <param name="tImplementation">The open generic Type that implements the interface</param>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IOpenGenericRegistration"/></param>
+        /// <returns>The created <see cref="IRegistration"/></returns>
+        IOpenGenericRegistration RegisterOpenGenerics(Type tInterface, Type tImplementation, Lifestyle lifestyle = Lifestyle.Transient);
 
         /// <summary>
         /// Register multiple interfaces for a <see cref="Type"/> that implements them

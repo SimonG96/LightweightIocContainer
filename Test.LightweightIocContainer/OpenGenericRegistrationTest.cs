@@ -2,6 +2,7 @@
 // Created: 2020-09-18
 // Copyright(c) 2020 SimonG. All Rights Reserved.
 
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Exceptions;
@@ -16,6 +17,7 @@ namespace Test.LightweightIocContainer
         private IIocContainer _iocContainer;
         
         [UsedImplicitly]
+        [SuppressMessage("ReSharper", "UnusedTypeParameter")]
         public interface ITest<T>
         {
             

@@ -86,6 +86,17 @@
             The constructor that does not match
             </summary>
         </member>
+        <member name="T:LightweightIocContainer.Exceptions.GenericMethodNotFoundException">
+            <summary>
+            Could not find generic method
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Exceptions.GenericMethodNotFoundException.#ctor(System.String)">
+            <summary>
+            Could not find generic method
+            </summary>
+            <param name="functionName">The name of the generic method</param>
+        </member>
         <member name="T:LightweightIocContainer.Exceptions.IllegalAbstractMethodCreationException">
             <summary>
             The creation of the abstract method is illegal in its current state
@@ -274,6 +285,24 @@
             The implemented abstract typed factory/>
             </summary>
         </member>
+        <member name="T:LightweightIocContainer.GenericMethodCaller">
+            <summary>
+            Helper class to call a generic method without generic type parameters 
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.GenericMethodCaller.Call(System.Object,System.String,System.Type,System.Reflection.BindingFlags,System.Object[])">
+            <summary>
+            Call a generic method without generic type parameters
+            </summary>
+            <param name="caller">The caller of the method</param>
+            <param name="functionName">The name of the method to call</param>
+            <param name="genericParameter">The generic parameter as <see cref="T:System.Type"/> parameter</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> to find the method</param>
+            <param name="parameters">The parameters of the method</param>
+            <returns>The result of invoking the method</returns>
+            <exception cref="T:LightweightIocContainer.Exceptions.GenericMethodNotFoundException">Could not find the generic method</exception>
+            <exception cref="T:System.Exception">Any <see cref="T:System.Exception"/> thrown after invoking the generic method</exception>
+        </member>
         <member name="T:LightweightIocContainer.Installers.AssemblyInstaller">
             <summary>
             An <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> that installs all <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/>s for its given <see cref="T:System.Reflection.Assembly"/>
@@ -344,6 +373,15 @@
             <typeparam name="TInterface">The Interface to register</typeparam>
             <typeparam name="TImplementation">The Type that implements the interface</typeparam>
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.RegisterOpenGenerics(System.Type,System.Type,LightweightIocContainer.Lifestyle)">
+            <summary>
+            Register an open generic Interface with an open generic Type that implements it
+            </summary>
+            <param name="tInterface">The open generic Interface to register</param>
+            <param name="tImplementation">The open generic Type that implements the interface</param>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IOpenGenericRegistration"/></param>
             <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
         </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register``3(LightweightIocContainer.Lifestyle)">
@@ -609,6 +647,16 @@
             <typeparam name="TInterface">The registered interface</typeparam>
             <typeparam name="TImplementation">The registered implementation</typeparam>
         </member>
+        <member name="T:LightweightIocContainer.Interfaces.Registrations.IOpenGenericRegistration">
+            <summary>
+            <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> for open generic types
+            </summary>
+        </member>
+        <member name="P:LightweightIocContainer.Interfaces.Registrations.IOpenGenericRegistration.ImplementationType">
+            <summary>
+            The <see cref="T:System.Type"/> that implements the <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/> that is registered with this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IOpenGenericRegistration"/>
+            </summary>
+        </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.IRegistration">
             <summary>
             The base registration that is used to register an Interface
@@ -704,6 +752,17 @@
             <typeparam name="TImplementation">The Type that implements the interface</typeparam>
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/></param>
             <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.RegisterOpenGenerics(System.Type,System.Type,LightweightIocContainer.Lifestyle)">
+            <summary>
+            Register an open generic Interface with an open generic Type that implements it
+            </summary>
+            <param name="tInterface">The open generic Interface to register</param>
+            <param name="tImplementation">The open generic Type that implements the interface</param>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IOpenGenericRegistration"/></param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
+            <exception cref="T:LightweightIocContainer.Exceptions.InvalidRegistrationException">Function can only be used to register open generic types</exception>
+            <exception cref="T:LightweightIocContainer.Exceptions.InvalidRegistrationException">Can't register a multiton with open generic registration</exception>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.Register``3(LightweightIocContainer.Lifestyle)">
             <summary>
@@ -1076,6 +1135,39 @@
         <member name="P:LightweightIocContainer.Registrations.MultitonRegistration`2.Scope">
             <summary>
             The <see cref="T:System.Type"/> of the multiton scope
+            </summary>
+        </member>
+        <member name="T:LightweightIocContainer.Registrations.OpenGenericRegistration">
+            <summary>
+            <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> for open generic types
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Registrations.OpenGenericRegistration.#ctor(System.Type,System.Type,LightweightIocContainer.Lifestyle)">
+            <summary>
+            <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> for open generic types
+            </summary>
+            <param name="interfaceType">The <see cref="T:System.Type"/> of the interface</param>
+            <param name="implementationType">The <see cref="T:System.Type"/> of the implementation type</param>
+            <param name="lifestyle">The <see cref="P:LightweightIocContainer.Registrations.OpenGenericRegistration.Lifestyle"/> of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IOpenGenericRegistration"/></param>
+        </member>
+        <member name="P:LightweightIocContainer.Registrations.OpenGenericRegistration.Name">
+            <summary>
+            The name of the <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>
+            </summary>
+        </member>
+        <member name="P:LightweightIocContainer.Registrations.OpenGenericRegistration.InterfaceType">
+            <summary>
+            The <see cref="T:System.Type"/> of the Interface that is registered with this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>
+            </summary>
+        </member>
+        <member name="P:LightweightIocContainer.Registrations.OpenGenericRegistration.ImplementationType">
+            <summary>
+            The <see cref="T:System.Type"/> that implements the <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/> that is registered with this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IOpenGenericRegistration"/>
+            </summary>
+        </member>
+        <member name="P:LightweightIocContainer.Registrations.OpenGenericRegistration.Lifestyle">
+            <summary>
+            The Lifestyle of Instances that are created with this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>
             </summary>
         </member>
         <member name="T:LightweightIocContainer.Registrations.RegistrationBase`1">

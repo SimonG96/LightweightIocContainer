@@ -68,6 +68,15 @@ namespace LightweightIocContainer
             return registration;
         }
 
+        /// <summary>
+        /// Register an open generic Interface with an open generic Type that implements it
+        /// </summary>
+        /// <param name="tInterface">The open generic Interface to register</param>
+        /// <param name="tImplementation">The open generic Type that implements the interface</param>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IOpenGenericRegistration"/></param>
+        /// <returns>The created <see cref="IRegistration"/></returns>
+        /// <exception cref="InvalidRegistrationException">Function can only be used to register open generic types</exception>
+        /// <exception cref="InvalidRegistrationException">Can't register a multiton with open generic registration</exception>
         public IOpenGenericRegistration RegisterOpenGenerics(Type tInterface, Type tImplementation, Lifestyle lifestyle = Lifestyle.Transient)
         {
             if (!tInterface.ContainsGenericParameters)
