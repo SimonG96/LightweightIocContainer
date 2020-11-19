@@ -611,7 +611,11 @@ namespace LightweightIocContainer
         /// <typeparam name="T">The <see cref="Type"/> to clear the multiton instances</typeparam>
         public void ClearMultitonInstances<T>()
         {
-            var multitonInstance = _multitons.FirstOrDefault(m => m.type == typeof(T));
+            IRegistration registration = FindRegistration<T>();
+            if (!(registration is IMultitonRegistration<T> multitonRegistration))
+                return;
+            
+            var multitonInstance = _multitons.FirstOrDefault(m => m.type == multitonRegistration.ImplementationType);
 
             //it is allowed to clear a non existing multiton instance (don't throw an exception)
             if (multitonInstance == default)
