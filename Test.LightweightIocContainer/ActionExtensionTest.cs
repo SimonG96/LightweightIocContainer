@@ -11,8 +11,6 @@ namespace Test.LightweightIocContainer
     [TestFixture]
     public class ActionExtensionTest
     {
-        #region TestClasses
-
         private interface IBar
         {
             void Throw();
@@ -25,13 +23,9 @@ namespace Test.LightweightIocContainer
 
         private class Foo : IFoo
         {
-            public void Throw()
-            {
-                throw new Exception();
-            }
+            public void Throw() => throw new Exception();
         }
-
-        #endregion TestClasses
+        
 
         [Test]
         public void TestConvert()

@@ -18,10 +18,8 @@ namespace LightweightIocContainer.Exceptions
         /// <param name="constructor">The constructor that does not match</param>
         /// <param name="exception">The inner exception</param>
         public ConstructorNotMatchingException(ConstructorInfo constructor, Exception exception)
-            : base($"Constructor {constructor} does not match the given or resolvable arguments.", exception)
-        {
+            : base($"Constructor {constructor} does not match the given or resolvable arguments.", exception) =>
             Constructor = constructor;
-        }
 
         /// <summary>
         /// The constructor that does not match

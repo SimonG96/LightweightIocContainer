@@ -14,8 +14,6 @@ namespace Test.LightweightIocContainer
     [TestFixture]
     public class IocContainerRecursionTest
     {
-        #region TestClassesCircularDependency
-
         [UsedImplicitly]
         public interface IFoo
         {
@@ -44,10 +42,6 @@ namespace Test.LightweightIocContainer
             }
         }
 
-        #endregion TestClassesCircularDependency
-
-        #region TestClassesNonCircularDependency
-        
         [UsedImplicitly]
         public interface IA
         {
@@ -71,6 +65,7 @@ namespace Test.LightweightIocContainer
         {
             public A(IB b, IC c)
             {
+                
             }
         }
 
@@ -79,6 +74,7 @@ namespace Test.LightweightIocContainer
         {
             public B(IC c)
             {
+                
             }
         }
 
@@ -88,23 +84,14 @@ namespace Test.LightweightIocContainer
 
         }
 
-        #endregion TestClassesNonCircularDependency
-
-
 
         private IIocContainer _iocContainer;
 
         [SetUp]
-        public void SetUp()
-        {
-            _iocContainer = new IocContainer();
-        }
+        public void SetUp() => _iocContainer = new IocContainer();
 
         [TearDown]
-        public void TearDown()
-        {
-            _iocContainer.Dispose();
-        }
+        public void TearDown() => _iocContainer.Dispose();
 
         [Test]
         public void TestCircularDependencies()

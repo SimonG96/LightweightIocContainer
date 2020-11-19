@@ -17,10 +17,8 @@ namespace LightweightIocContainer.Exceptions
         /// <param name="message">The exception message</param>
         /// <param name="type">The <see cref="System.Type"/> of the multiton that's responsible for the exception</param>
         public MultitonResolveException(string message, Type type)
-            : base(message)
-        {
+            : base(message) =>
             Type = type;
-        }
 
         /// <summary>
         /// The <see cref="System.Type"/> of the multiton that's responsible for the exception

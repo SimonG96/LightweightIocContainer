@@ -20,10 +20,8 @@ namespace LightweightIocContainer.Registrations
         /// <param name="interfaceType">The <see cref="Type"/> of the interface or <see cref="Type"/></param>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> of the <see cref="RegistrationBase{TInterface}"/></param>
         public SingleTypeRegistration(Type interfaceType, Lifestyle lifestyle)
-            : base(interfaceType, lifestyle)
-        {
+            : base(interfaceType, lifestyle) =>
             Name = $"{InterfaceType.Name}, Lifestyle: {Lifestyle.ToString()}";
-        }
 
         /// <summary>
         /// <see cref="Func{T,TResult}"/> that is invoked instead of creating an instance of this <see cref="Type"/> the default way

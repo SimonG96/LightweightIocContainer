@@ -15,8 +15,6 @@ namespace Test.LightweightIocContainer
     [TestFixture]
     public class OnCreateTest
     {
-        #region TestClasses
-
         private interface ITest
         {
             void DoSomething();
@@ -24,14 +22,10 @@ namespace Test.LightweightIocContainer
 
         private class Test : ITest
         {
-            public void DoSomething()
-            {
-                throw new Exception();
-            }
+            public void DoSomething() => throw new Exception();
         }
 
-        #endregion
-
+        
         [Test]
         public void TestOnCreate()
         {

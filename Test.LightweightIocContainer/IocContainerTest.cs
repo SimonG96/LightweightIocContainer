@@ -11,9 +11,6 @@ namespace Test.LightweightIocContainer
     [TestFixture]
     public class IocContainerTest
     {
-        #region TestClasses
-        //some of the test classes have to be public to allow the implementation of the factory
-
         public interface ITest
         {
 
@@ -101,10 +98,7 @@ namespace Test.LightweightIocContainer
             [UsedImplicitly]
             private readonly byte _id;
 
-            public TestByte(byte id)
-            {
-                _id = id;
-            }
+            public TestByte(byte id) => _id = id;
         }
 
         [UsedImplicitly]
@@ -118,23 +112,14 @@ namespace Test.LightweightIocContainer
 
         }
 
-        #endregion TestClasses
-
 
         private IIocContainer _iocContainer;
 
         [SetUp]
-        public void SetUp()
-        {
-            _iocContainer = new IocContainer();
-        }
-
+        public void SetUp() => _iocContainer = new IocContainer();
 
         [TearDown]
-        public void TearDown()
-        {
-            _iocContainer.Dispose();
-        }
+        public void TearDown() => _iocContainer.Dispose();
 
 
         [Test]
@@ -165,34 +150,19 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
-        public void TestRegister()
-        {
-            Assert.DoesNotThrow(() => _iocContainer.Register<ITest, Test>());
-        }
+        public void TestRegister() => Assert.DoesNotThrow(() => _iocContainer.Register<ITest, Test>());
 
         [Test]
-        public void TestRegisterTypeWithoutInterface()
-        {
-            Assert.DoesNotThrow(() => _iocContainer.Register<Test>());
-        }
+        public void TestRegisterTypeWithoutInterface() => Assert.DoesNotThrow(() => _iocContainer.Register<Test>());
 
         [Test]
-        public void TestRegisterMultiton()
-        {
-            Assert.DoesNotThrow(() => _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>());
-        }
+        public void TestRegisterMultiton() => Assert.DoesNotThrow(() => _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>());
 
         [Test]
-        public void TestInvalidMultitonRegistration()
-        {
-            Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Register<ITest, Test>(Lifestyle.Multiton));
-        }
+        public void TestInvalidMultitonRegistration() => Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Register<ITest, Test>(Lifestyle.Multiton));
 
         [Test]
-        public void TestRegisterFactory()
-        {
-            Assert.DoesNotThrow(() => _iocContainer.RegisterFactory<ITestFactory>());
-        }
+        public void TestRegisterFactory() => Assert.DoesNotThrow(() => _iocContainer.RegisterFactory<ITestFactory>());
 
         [Test]
         public void TestRegisterMultiple()
@@ -203,16 +173,10 @@ namespace Test.LightweightIocContainer
         }
 
         [Test]
-        public void TestRegisterFactoryWithoutCreate()
-        {
-            Assert.Throws<InvalidFactoryRegistrationException>(() => _iocContainer.RegisterFactory<ITestFactoryNoCreate>());
-        }
+        public void TestRegisterFactoryWithoutCreate() => Assert.Throws<InvalidFactoryRegistrationException>(() => _iocContainer.RegisterFactory<ITestFactoryNoCreate>());
 
         [Test]
-        public void TestRegisterFactoryClearMultitonsNonGeneric()
-        {
-            Assert.Throws<IllegalAbstractMethodCreationException>(() => _iocContainer.RegisterFactory<ITestFactoryNonGenericClear>());
-        }
+        public void TestRegisterFactoryClearMultitonsNonGeneric() => Assert.Throws<IllegalAbstractMethodCreationException>(() => _iocContainer.RegisterFactory<ITestFactoryNonGenericClear>());
 
         [Test]
         public void TestResolveNotRegistered()

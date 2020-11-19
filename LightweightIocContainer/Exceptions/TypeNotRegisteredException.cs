@@ -17,10 +17,8 @@ namespace LightweightIocContainer.Exceptions
         /// </summary>
         /// <param name="type">The unregistered <see cref="System.Type"/></param>
         public TypeNotRegisteredException(Type type)
-            : base($"Type {type.Name} is not registered in this IocContainer.")
-        {
+            : base($"Type {type.Name} is not registered in this IocContainer.") =>
             Type = type;
-        }
 
         /// <summary>
         /// The unregistered <see cref="System.Type"/>

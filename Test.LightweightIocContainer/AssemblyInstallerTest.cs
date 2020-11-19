@@ -19,14 +19,9 @@ namespace Test.LightweightIocContainer
     [TestFixture]
     public class AssemblyInstallerTest
     {
-        #region TestClasses
-
         private class TestInstaller : IIocInstaller
         {
-            public void Install(IIocContainer container)
-            {
-                container.Register<Mock<IRegistration>>();
-            }
+            public void Install(IIocContainer container) => container.Register<Mock<IRegistration>>();
         }
 
         [UsedImplicitly]
@@ -35,8 +30,7 @@ namespace Test.LightweightIocContainer
 
         }
 
-        #endregion TestClasses
-
+        
         [Test]
         public void TestInstall()
         {

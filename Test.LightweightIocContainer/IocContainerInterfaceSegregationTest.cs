@@ -3,6 +3,7 @@
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System;
+using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Interfaces;
 using NUnit.Framework;
@@ -12,10 +13,9 @@ namespace Test.LightweightIocContainer
     [TestFixture]
     public class IocContainerInterfaceSegregationTest
     {
-        #region TestClasses
-
         private interface IBar
         {
+            
         }
 
         private interface IFoo
@@ -24,39 +24,33 @@ namespace Test.LightweightIocContainer
         }
         private interface IAnotherBar
         {
+            
         }
 
         private interface IAnotherFoo
         {
+            
         }
 
         private interface IAnotherOne
         {
+            
         }
 
+        [UsedImplicitly]
         private class Foo : IFoo, IBar, IAnotherFoo, IAnotherBar, IAnotherOne
         {
-            public void ThrowFoo()
-            {
-                throw new Exception("Foo");
-            }
+            public void ThrowFoo() => throw new Exception("Foo");
         }
 
-        #endregion TestClasses
 
         private IIocContainer _container;
 
         [SetUp]
-        public void SetUp()
-        {
-            _container = new IocContainer();
-        }
+        public void SetUp() => _container = new IocContainer();
 
         [TearDown]
-        public void TearDown()
-        {
-            _container.Dispose();
-        }
+        public void TearDown() => _container.Dispose();
 
         [Test]
         public void TestRegistrationOnCreate2()

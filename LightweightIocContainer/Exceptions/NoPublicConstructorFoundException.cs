@@ -16,10 +16,8 @@ namespace LightweightIocContainer.Exceptions
         /// </summary>
         /// <param name="type">The <see cref="Type"/> with no public constructor</param>
         public NoPublicConstructorFoundException(Type type)
-            : base($"No public constructor for {type} found.")
-        {
+            : base($"No public constructor for {type} found.") =>
             Type = type;
-        }
 
         /// <summary>
         /// The <see cref="Type"/> with no public constructor

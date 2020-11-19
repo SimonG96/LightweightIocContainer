@@ -22,11 +22,7 @@ namespace LightweightIocContainer.Exceptions
             : base($"No matching constructor for {type} found.")
         {
             Type = type;
-
-            if (exceptions == null)
-                InnerExceptions = new List<Exception>();
-            else
-                InnerExceptions = exceptions.OfType<Exception>().ToList();
+            InnerExceptions = exceptions == null ? new List<Exception>() : exceptions.OfType<Exception>().ToList();
         }
 
 
@@ -39,9 +35,6 @@ namespace LightweightIocContainer.Exceptions
         /// Add an inner exception to the <see cref="IocContainerException.InnerExceptions"/>
         /// </summary>
         /// <param name="exception">The <see cref="ConstructorNotMatchingException"/></param>
-        public void AddInnerException(ConstructorNotMatchingException exception)
-        {
-            InnerExceptions.Add(exception);
-        }
+        public void AddInnerException(ConstructorNotMatchingException exception) => InnerExceptions.Add(exception);
     }
 }

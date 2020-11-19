@@ -21,9 +21,7 @@ namespace LightweightIocContainer.Registrations
         /// <param name="implementationType">The <see cref="Type"/> of the implementation</param>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> of the <see cref="RegistrationBase{TInterface}"/></param>
         public DefaultRegistration(Type interfaceType, Type implementationType, Lifestyle lifestyle)
-            : base(interfaceType, implementationType, lifestyle)
-        {
+            : base(interfaceType, implementationType, lifestyle) =>
             Name = $"{InterfaceType.Name}, {ImplementationType.Name}, Lifestyle: {Lifestyle.ToString()}";
-        }
     }
 }

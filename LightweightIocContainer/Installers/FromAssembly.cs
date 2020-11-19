@@ -27,9 +27,6 @@ namespace LightweightIocContainer.Installers
         /// </summary>
         /// <param name="assembly">The given <see cref="Assembly"/></param>
         /// <returns>A new <see cref="IAssemblyInstaller"/> with the given <see cref="Assembly"/></returns>
-        public static IAssemblyInstaller Instance(Assembly assembly)
-        {
-            return new AssemblyInstaller(assembly);
-        }
+        public static IAssemblyInstaller Instance(Assembly assembly) => new AssemblyInstaller(assembly);
     }
 }

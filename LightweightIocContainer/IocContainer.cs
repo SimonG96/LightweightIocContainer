@@ -32,11 +32,7 @@ namespace LightweightIocContainer
         /// <summary>
         /// The main container that carries all the <see cref="IRegistration"/>s and can resolve all the types you'll ever want
         /// </summary>
-        public IocContainer()
-        {
-            _registrationFactory = new RegistrationFactory(this);
-        }
-
+        public IocContainer() => _registrationFactory = new RegistrationFactory(this);
 
         /// <summary>
         /// Install the given installers for the current <see cref="IocContainer"/>
@@ -259,10 +255,7 @@ namespace LightweightIocContainer
         /// </summary>
         /// <typeparam name="T">The given <see cref="Type"/></typeparam>
         /// <returns>An instance of the given <see cref="Type"/></returns>
-        public T Resolve<T>()
-        {
-            return ResolveInternal<T>(null);
-        }
+        public T Resolve<T>() => ResolveInternal<T>(null);
 
         /// <summary>
         /// Gets an instance of the given <see cref="Type"/>
@@ -270,10 +263,7 @@ namespace LightweightIocContainer
         /// <typeparam name="T">The given <see cref="Type"/></typeparam>
         /// <param name="arguments">The constructor arguments</param>
         /// <returns>An instance of the given <see cref="Type"/></returns>
-        public T Resolve<T>(params object[] arguments)
-        {
-            return ResolveInternal<T>(arguments);
-        }
+        public T Resolve<T>(params object[] arguments) => ResolveInternal<T>(arguments);
 
         /// <summary>
         /// Gets an instance of the given <see cref="Type"/>
@@ -283,10 +273,8 @@ namespace LightweightIocContainer
         /// <param name="resolveStack">The current resolve stack</param>
         /// <returns>An instance of the given <see cref="Type"/></returns>
         /// <exception cref="InternalResolveException">Could not find function <see cref="ResolveInternal{T}"/></exception>
-        private object Resolve(Type type, object[] arguments, List<Type> resolveStack)
-        {
-            return GenericMethodCaller.Call(this, nameof(ResolveInternal), type, BindingFlags.NonPublic | BindingFlags.Instance, arguments, resolveStack);
-        }
+        private object Resolve(Type type, object[] arguments, List<Type> resolveStack) => 
+            GenericMethodCaller.Call(this, nameof(ResolveInternal), type, BindingFlags.NonPublic | BindingFlags.Instance, arguments, resolveStack);
 
         /// <summary>
         /// Gets an instance of a given registered <see cref="Type"/>
@@ -582,9 +570,7 @@ namespace LightweightIocContainer
                 }
                 catch (Exception ex)
                 {
-                    if (noMatchingConstructorFoundException == null)
-                        noMatchingConstructorFoundException = new NoMatchingConstructorFoundException(type);
-
+                    noMatchingConstructorFoundException ??= new NoMatchingConstructorFoundException(type);
                     noMatchingConstructorFoundException.AddInnerException(new ConstructorNotMatchingException(ctor, ex));
                 }
             }

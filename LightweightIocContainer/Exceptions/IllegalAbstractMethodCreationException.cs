@@ -17,10 +17,8 @@ namespace LightweightIocContainer.Exceptions
         /// <param name="message">The exception message</param>
         /// <param name="method">The method that is illegal to create</param>
         public IllegalAbstractMethodCreationException(string message, MethodInfo method)
-            : base(message)
-        {
+            : base(message) =>
             Method = method;
-        }
 
         /// <summary>
         /// The Method whose creation is illegal

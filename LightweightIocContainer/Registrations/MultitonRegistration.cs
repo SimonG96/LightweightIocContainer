@@ -21,10 +21,8 @@ namespace LightweightIocContainer.Registrations
         /// <param name="implementationType">The <see cref="Type"/> of the Implementation</param>
         /// <param name="scope">The <see cref="Type"/> of the Multiton Scope</param>
         public MultitonRegistration(Type interfaceType, Type implementationType, Type scope)
-            : base(interfaceType, implementationType, Lifestyle.Multiton)
-        {
+            : base(interfaceType, implementationType, Lifestyle.Multiton) =>
             Scope = scope;
-        }
 
         /// <summary>
         /// The <see cref="Type"/> of the multiton scope

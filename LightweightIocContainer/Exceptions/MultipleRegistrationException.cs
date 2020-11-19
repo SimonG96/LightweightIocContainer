@@ -17,10 +17,8 @@ namespace LightweightIocContainer.Exceptions
         /// </summary>
         /// <param name="type">The <see cref="System.Type"/> that is already registered in this <see cref="IIocContainer"/></param>
         public MultipleRegistrationException(Type type)
-            : base($"Type {type.Name} is already registered in this IocContainer.")
-        {
+            : base($"Type {type.Name} is already registered in this IocContainer.") =>
             Type = type;
-        }
 
         /// <summary>
         /// The registered <see cref="System.Type"/>

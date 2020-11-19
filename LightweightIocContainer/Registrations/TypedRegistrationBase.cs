@@ -21,10 +21,8 @@ namespace LightweightIocContainer.Registrations
         /// <param name="implementationType">The <see cref="Type"/> of the implementation type</param>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> of this <see cref="IRegistrationBase{TInterface}"/></param>
         protected TypedRegistrationBase(Type interfaceType, Type implementationType, Lifestyle lifestyle)
-            : base(interfaceType, lifestyle)
-        {
+            : base(interfaceType, lifestyle) =>
             ImplementationType = implementationType;
-        }
 
         /// <summary>
         /// The <see cref="Type"/> that implements the <see cref="IRegistration.InterfaceType"/> that is registered with this <see cref="IRegistrationBase{TInterface}"/>

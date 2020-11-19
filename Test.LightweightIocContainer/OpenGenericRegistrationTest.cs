@@ -60,11 +60,11 @@ namespace Test.LightweightIocContainer
         }
         
         [Test]
-        public void TestRegisterOpenGenericTypeAsMultitonThrowsException() 
-            => Assert.Throws<InvalidRegistrationException>(() => _iocContainer.RegisterOpenGenerics(typeof(ITest<>), typeof(Test<>), Lifestyle.Multiton));
+        public void TestRegisterOpenGenericTypeAsMultitonThrowsException() => 
+            Assert.Throws<InvalidRegistrationException>(() => _iocContainer.RegisterOpenGenerics(typeof(ITest<>), typeof(Test<>), Lifestyle.Multiton));
 
         [Test]
-        public void TestRegisterNonOpenGenericTypeWithOpenGenericsFunctionThrowsException() 
-            => Assert.Throws<InvalidRegistrationException>(() => _iocContainer.RegisterOpenGenerics(typeof(int), typeof(int)));
+        public void TestRegisterNonOpenGenericTypeWithOpenGenericsFunctionThrowsException() =>
+            Assert.Throws<InvalidRegistrationException>(() => _iocContainer.RegisterOpenGenerics(typeof(int), typeof(int)));
     }
 }

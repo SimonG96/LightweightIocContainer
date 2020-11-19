@@ -12,8 +12,6 @@ namespace Test.LightweightIocContainer
     [TestFixture]
     public class EnumerableExtensionTest
     {
-        #region TestClasses
-
         private class ListObject
         {
             public int Index { get; set; }
@@ -23,8 +21,6 @@ namespace Test.LightweightIocContainer
         {
 
         }
-
-        #endregion TestClasses
 
 
         [Test]

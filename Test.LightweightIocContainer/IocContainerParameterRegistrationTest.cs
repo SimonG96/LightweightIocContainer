@@ -13,8 +13,6 @@ namespace Test.LightweightIocContainer
     // ReSharper disable MemberHidesStaticFromOuterClass
     public class IocContainerParameterRegistrationTest
     {
-        #region TestClasses
-
         [UsedImplicitly]
         public interface IA
         {
@@ -61,6 +59,7 @@ namespace Test.LightweightIocContainer
         {
             public B(IC c)
             {
+                
             }
         }
 
@@ -87,22 +86,14 @@ namespace Test.LightweightIocContainer
             public IC C { get; }
         }
 
-        #endregion TestClasses
-
+        
         private IIocContainer _iocContainer;
 
         [SetUp]
-        public void SetUp()
-        {
-            _iocContainer = new IocContainer();
-        }
-
+        public void SetUp() => _iocContainer = new IocContainer();
 
         [TearDown]
-        public void TearDown()
-        {
-            _iocContainer.Dispose();
-        }
+        public void TearDown() => _iocContainer.Dispose();
 
 
         [Test]

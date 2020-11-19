@@ -37,13 +37,8 @@ namespace LightweightIocContainer.Exceptions
         /// <param name="message">The message of the <see cref="Exception"/></param>
         /// <param name="innerException">The inner <see cref="Exception"/></param>
         protected IocContainerException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-            InnerExceptions = new List<Exception>()
-            {
-                innerException
-            };
-        }
+            : base(message, innerException) =>
+            InnerExceptions = new List<Exception>() {innerException};
 
         /// <summary>
         /// The inner exceptions of the <see cref="IocContainerException"/>

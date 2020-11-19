@@ -16,8 +16,6 @@ namespace Test.LightweightIocContainer
     [TestFixture]
     public class RegistrationBaseTest
     {
-        #region TestClasses
-
         private interface ITest
         {
 
@@ -51,8 +49,6 @@ namespace Test.LightweightIocContainer
         {
 
         }
-
-        #endregion
 
 
         [Test]
