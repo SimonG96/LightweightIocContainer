@@ -6,14 +6,14 @@
     <Copyright>Copyright(c) 2019 SimonG. All Rights Reserved.</Copyright>
     <Description>A lightweight IOC Container that is powerful enough to do all the things you need it to do.</Description>
     <RepositoryUrl>https://github.com/SimonG96/LightweightIocContainer</RepositoryUrl>
-    <PackageLicenseUrl></PackageLicenseUrl>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>default</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/SimonG96/LightweightIocContainer</PackageProjectUrl>
     <Version>2.2.0-beta</Version>
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
-    <FileVersion>2.2.0.0</FileVersion>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageVersion>3.0.0-beta</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">

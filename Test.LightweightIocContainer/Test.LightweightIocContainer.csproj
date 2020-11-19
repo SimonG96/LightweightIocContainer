@@ -8,6 +8,10 @@
     <Version>2.2.0-beta</Version>
 
     <Authors>SimonG</Authors>
+
+    <LangVersion>default</LangVersion>
+
+    <PackageVersion>3.0.0-beta</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
