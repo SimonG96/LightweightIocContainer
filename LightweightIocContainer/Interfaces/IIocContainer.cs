@@ -101,6 +101,14 @@ namespace LightweightIocContainer.Interfaces
         /// <returns>The created <see cref="IRegistration"/></returns>
         IMultitonRegistration<TInterface, TImplementation> RegisterMultiton<TInterface, TImplementation, TScope>() where TImplementation : TInterface;
 
+        /// <summary>
+        /// Register multiple interfaces for a <see cref="Type"/> that implements them as a multiton
+        /// </summary>
+        /// <typeparam name="TInterface1">The base interface to register</typeparam>
+        /// <typeparam name="TInterface2">A second interface to register</typeparam>
+        /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
+        /// <typeparam name="TScope">The Type of the multiton scope</typeparam>
+        /// <returns>The created <see cref="IRegistration"/></returns>
         IMultipleMultitonRegistration<TInterface1, TInterface2, TImplementation> RegisterMultiton<TInterface1, TInterface2, TImplementation, TScope>() where TImplementation : TInterface1, TInterface2;
 
         /// <summary>

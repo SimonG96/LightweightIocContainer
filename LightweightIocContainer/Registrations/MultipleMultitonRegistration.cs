@@ -8,8 +8,21 @@ using LightweightIocContainer.Interfaces.Registrations;
 
 namespace LightweightIocContainer.Registrations
 {
+    /// <summary>
+    /// An <see cref="IRegistrationBase{TInterface}"/> to register multiple interfaces for on implementation type that implements them as a multiton
+    /// </summary>
+    /// <typeparam name="TInterface1">The first interface</typeparam>
+    /// <typeparam name="TInterface2">The second interface</typeparam>
+    /// <typeparam name="TImplementation">The implementation</typeparam>
     public class MultipleMultitonRegistration<TInterface1, TInterface2, TImplementation> : MultitonRegistration<TInterface1, TImplementation>, IMultipleMultitonRegistration<TInterface1, TInterface2, TImplementation> where TImplementation : TInterface1, TInterface2
     {
+        /// <summary>
+        /// An <see cref="IRegistrationBase{TInterface}"/> to register multiple interfaces for on implementation type that implements them as a multiton
+        /// </summary>
+        /// <param name="interfaceType1">The <see cref="Type"/> of the first interface</param>
+        /// <param name="interfaceType2">The <see cref="Type"/> of the second interface</param>
+        /// <param name="implementationType">The <see cref="Type"/> of the implementation</param>
+        /// <param name="scope">The <see cref="Type"/> of the multiton scope</param>
         public MultipleMultitonRegistration(Type interfaceType1, Type interfaceType2, Type implementationType, Type scope)
             : base(interfaceType1, implementationType, scope)
         {
@@ -20,8 +33,16 @@ namespace LightweightIocContainer.Registrations
             };
         }
 
+        /// <summary>
+        /// A <see cref="List{T}"/> of <see cref="IRegistration"/>s that are registered within this <see cref="IMultipleRegistration{TInterface1,TImplementation}"/>
+        /// </summary>
         public List<IRegistration> Registrations { get; }
 
+        /// <summary>
+        /// Pass an <see cref="Action{T}"/> that will be invoked when an instance of this type is created
+        /// </summary>
+        /// <param name="action">The <see cref="Action{T}"/></param>
+        /// <returns>The current instance of this <see cref="ITypedRegistrationBase{TInterface,TImplementation}"/></returns>
         public override ITypedRegistrationBase<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
         {
             foreach (var registration in Registrations)
