@@ -193,6 +193,14 @@ namespace LightweightIocContainer
             return registration;
         }
 
+        public IMultipleMultitonRegistration<TInterface1, TInterface2, TImplementation> RegisterMultiton<TInterface1, TInterface2, TImplementation, TScope>() where TImplementation : TInterface1, TInterface2
+        {
+            IMultipleMultitonRegistration<TInterface1, TInterface2, TImplementation> registration = _registrationFactory.RegisterMultiton<TInterface1, TInterface2, TImplementation, TScope>();
+            Register(registration);
+
+            return registration;
+        }
+
         /// <summary>
         /// Register an Interface as an abstract typed factory
         /// </summary>
@@ -377,7 +385,7 @@ namespace LightweightIocContainer
                 throw new MultitonResolveException($"Can not resolve multiton without the first argument being the scope (should be of type {registration.Scope}).", typeof(T));
 
             //if a multiton for the given scope exists return it
-            var instances = _multitons.FirstOrDefault(m => m.type == typeof(T) && m.scope == registration.Scope).instances; //get instances for the given type and scope
+            var instances = _multitons.FirstOrDefault(m => m.type == registration.ImplementationType && m.scope == registration.Scope).instances; //get instances for the given type and scope (use implementation type to resolve the correct instance for multiple multiton registrations as well)
             if (instances != null)
             {
                 if (instances.TryGetValue(scopeArgument, out object instance))
@@ -394,7 +402,7 @@ namespace LightweightIocContainer
             ConditionalWeakTable<object, object> weakTable = new ConditionalWeakTable<object, object>();
             weakTable.Add(scopeArgument, newInstance);
             
-            _multitons.Add((typeof(T), registration.Scope, weakTable));
+            _multitons.Add((registration.ImplementationType, registration.Scope, weakTable));
 
             return newInstance;
         }
