@@ -1293,6 +1293,15 @@
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`2"/></param>
             <returns>A new created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IDefaultRegistration`2"/> with the given parameters</returns>
         </member>
+        <member name="M:LightweightIocContainer.Registrations.RegistrationFactory.Register(System.Type,System.Type,LightweightIocContainer.Lifestyle)">
+            <summary>
+            Register an open generic Interface with an open generic Type that implements it and create a <see cref="T:LightweightIocContainer.Interfaces.Registrations.IOpenGenericRegistration"/>
+            </summary>
+            <param name="tInterface">The open generic Interface to register</param>
+            <param name="tImplementation">The open generic Type that implements the interface</param>
+            <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> for this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IOpenGenericRegistration"/></param>
+            <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IOpenGenericRegistration"/></returns>
+        </member>
         <member name="M:LightweightIocContainer.Registrations.RegistrationFactory.Register``3(LightweightIocContainer.Lifestyle)">
             <summary>
             Register multiple interfaces for a <see cref="T:System.Type"/> that implements them and create a <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultipleRegistration`2"/>
