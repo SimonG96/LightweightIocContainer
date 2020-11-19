@@ -17,7 +17,7 @@ namespace LightweightIocContainer.Interfaces.Registrations
     /// <summary>
     /// A base <see cref="IMultitonRegistration{TInterface}"/> without implementation
     /// </summary>
-    public interface IMultitonRegistration<TInterface> : IRegistrationBase<TInterface>, IMultitonRegistration
+    public interface IMultitonRegistration<TInterface> : ITypedRegistrationBase<TInterface>, IMultitonRegistration
     {
         /// <summary>
         /// The <see cref="Type"/> of the multiton scope
