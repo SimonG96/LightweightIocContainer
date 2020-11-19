@@ -101,6 +101,8 @@ namespace LightweightIocContainer.Interfaces
         /// <returns>The created <see cref="IRegistration"/></returns>
         IMultitonRegistration<TInterface, TImplementation> RegisterMultiton<TInterface, TImplementation, TScope>() where TImplementation : TInterface;
 
+        IMultipleMultitonRegistration<TInterface1, TInterface2, TImplementation> RegisterMultiton<TInterface1, TInterface2, TImplementation, TScope>() where TImplementation : TInterface1, TInterface2;
+
         /// <summary>
         /// Register an Interface as an abstract typed factory
         /// </summary>
