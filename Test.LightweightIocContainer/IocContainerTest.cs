@@ -211,6 +211,16 @@ namespace Test.LightweightIocContainer
             _iocContainer.Register<ITest>();
             Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Resolve<ITest>());
         }
+        
+        [Test]
+        public void TestResolveImplementationRegisteredWithInterface()
+        {
+            _iocContainer.Register<ITest, Test>();
+
+            Test resolvedTest = _iocContainer.Resolve<Test>();
+            
+            Assert.IsInstanceOf<Test>(resolvedTest);
+        }
 
         [Test]
         public void TestResolveWithParams()

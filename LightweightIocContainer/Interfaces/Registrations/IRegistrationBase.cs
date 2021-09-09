@@ -7,10 +7,18 @@ using LightweightIocContainer.Interfaces.Registrations.FluentProviders;
 namespace LightweightIocContainer.Interfaces.Registrations
 {
     /// <summary>
+    /// A base <see cref="IRegistrationBase"/> without generic interface
+    /// </summary>
+    public interface IRegistrationBase : IRegistration, ILifestyleProvider
+    {
+        
+    }
+    
+    /// <summary>
     /// The <see cref="IRegistrationBase{TInterface}"/> that is used to register an Interface
     /// </summary>
     /// <typeparam name="TInterface">The registered Interface</typeparam>
-    public interface IRegistrationBase<TInterface> : IRegistration, ILifestyleProvider, IWithParameters<TInterface>
+    public interface IRegistrationBase<TInterface> : IRegistrationBase, IWithParameters<TInterface>
     {
         
     }

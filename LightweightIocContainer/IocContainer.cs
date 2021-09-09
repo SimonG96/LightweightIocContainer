@@ -301,7 +301,7 @@ namespace LightweightIocContainer
 
             T resolvedInstance;
 
-            if (registration is IRegistrationBase<T> defaultRegistration)
+            if (registration is IRegistrationBase defaultRegistration)
             {
                 if (defaultRegistration.Lifestyle == Lifestyle.Singleton)
                     resolvedInstance = GetOrCreateSingletonInstance<T>(defaultRegistration, arguments, resolveStack);
@@ -413,11 +413,11 @@ namespace LightweightIocContainer
         /// <returns>A newly created instance of the given <see cref="Type"/></returns>
         private T CreateInstance<T>(IRegistration registration, object[] arguments, List<Type> resolveStack)
         {
-            if (registration is IWithParameters<T> registrationWithParameters && registrationWithParameters.Parameters != null)
+            if (registration is IWithParameters<T> { Parameters: { } } registrationWithParameters)
                 arguments = UpdateArgumentsWithRegistrationParameters(registrationWithParameters, arguments);
 
             T instance;
-            if (registration is ITypedRegistrationBase<T> defaultRegistration)
+            if (registration is ITypedRegistrationBase defaultRegistration)
             {
                 arguments = ResolveConstructorArguments(defaultRegistration.ImplementationType, arguments, resolveStack);
                 instance = (T) Activator.CreateInstance(defaultRegistration.ImplementationType, arguments);
@@ -585,6 +585,10 @@ namespace LightweightIocContainer
         private IRegistration FindRegistration<T>()
         {
             IRegistration registration = _registrations.FirstOrDefault(r => r.InterfaceType == typeof(T));
+            if (registration != null)
+                return registration;
+
+            registration = _registrations.OfType<ITypedRegistrationBase>().FirstOrDefault(r => r.ImplementationType == typeof(T));
             if (registration != null)
                 return registration;
             

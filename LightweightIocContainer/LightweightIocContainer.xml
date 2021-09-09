@@ -690,6 +690,11 @@
             The <see cref="T:System.Type"/> of the Interface that is registered with this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>
             </summary>
         </member>
+        <member name="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase">
+            <summary>
+            A base <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/> without generic interface
+            </summary>
+        </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1">
             <summary>
             The <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/> that is used to register an Interface
@@ -725,14 +730,19 @@
             The class that contains the implemented abstract factory of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedFactoryRegistration`1"/>
             </summary>
         </member>
-        <member name="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase`1">
+        <member name="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase">
             <summary>
-            A base <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase`1"/> without implementation
+            A base <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase"/> without generic interface and implementation
             </summary>
         </member>
-        <member name="P:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase`1.ImplementationType">
+        <member name="P:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase.ImplementationType">
             <summary>
             The <see cref="T:System.Type"/> that implements the <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/> that is registered with this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase`1"/>
+            </summary>
+        </member>
+        <member name="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase`1">
+            <summary>
+            A base <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase`1"/> without generic implementation
             </summary>
         </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistrationBase`2">

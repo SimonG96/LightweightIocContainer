@@ -8,14 +8,22 @@ using LightweightIocContainer.Interfaces.Registrations.FluentProviders;
 namespace LightweightIocContainer.Interfaces.Registrations
 {
     /// <summary>
-    /// A base <see cref="ITypedRegistrationBase{TInterface}"/> without implementation
+    /// A base <see cref="ITypedRegistrationBase"/> without generic interface and implementation
     /// </summary>
-    public interface ITypedRegistrationBase<TInterface> : IRegistrationBase<TInterface>
+    public interface ITypedRegistrationBase : IRegistrationBase
     {
         /// <summary>
         /// The <see cref="Type"/> that implements the <see cref="IRegistration.InterfaceType"/> that is registered with this <see cref="IRegistrationBase{TInterface}"/>
         /// </summary>
         Type ImplementationType { get; }
+    }
+    
+    /// <summary>
+    /// A base <see cref="ITypedRegistrationBase{TInterface}"/> without generic implementation
+    /// </summary>
+    public interface ITypedRegistrationBase<TInterface> : IRegistrationBase<TInterface>, ITypedRegistrationBase
+    {
+       
     }
 
     /// <summary>
