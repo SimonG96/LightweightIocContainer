@@ -1,16 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.1;net45</TargetFrameworks>
-
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <IsPackable>false</IsPackable>
-
     <Version>2.2.0-beta</Version>
-
     <Authors>SimonG</Authors>
-
     <LangVersion>default</LangVersion>
-
     <PackageVersion>3.0.0-beta</PackageVersion>
   </PropertyGroup>
 
