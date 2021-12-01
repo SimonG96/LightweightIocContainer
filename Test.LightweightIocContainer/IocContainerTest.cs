@@ -11,33 +11,9 @@ namespace Test.LightweightIocContainer
     [TestFixture]
     public class IocContainerTest
     {
-        public interface ITest
+        private interface ITest
         {
 
-        }
-
-        [UsedImplicitly]
-        public interface ITestFactory
-        {
-            ITest Create();
-            ITest Create(string name);
-            ITest Create(MultitonScope scope);
-            ITest CreateTest(string name = null);
-            ITest Create(byte id);
-
-            void ClearMultitonInstance<T>();
-        }
-
-        private interface ITestFactoryNoCreate
-        {
-            
-        }
-
-        private interface ITestFactoryNonGenericClear
-        {
-            ITest Create();
-
-            void ClearMultitonInstance();
         }
 
         private interface IFoo
@@ -93,21 +69,12 @@ namespace Test.LightweightIocContainer
         }
 
         [UsedImplicitly]
-        private class TestByte : ITest
-        {
-            [UsedImplicitly]
-            private readonly byte _id;
-
-            public TestByte(byte id) => _id = id;
-        }
-
-        [UsedImplicitly]
         private class Foo : IFoo
         {
 
         }
 
-        public class MultitonScope
+        private class MultitonScope
         {
 
         }
@@ -162,21 +129,12 @@ namespace Test.LightweightIocContainer
         public void TestInvalidMultitonRegistration() => Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Register<ITest, Test>(Lifestyle.Multiton));
 
         [Test]
-        public void TestRegisterFactory() => Assert.DoesNotThrow(() => _iocContainer.RegisterFactory<ITestFactory>());
-
-        [Test]
         public void TestRegisterMultiple()
         {
             _iocContainer.Register<ITest, Test>();
             MultipleRegistrationException exception = Assert.Throws<MultipleRegistrationException>(() => _iocContainer.Register<ITest, TestConstructor>());
             Assert.AreEqual(typeof(ITest), exception.Type);
         }
-
-        [Test]
-        public void TestRegisterFactoryWithoutCreate() => Assert.Throws<InvalidFactoryRegistrationException>(() => _iocContainer.RegisterFactory<ITestFactoryNoCreate>());
-
-        [Test]
-        public void TestRegisterFactoryClearMultitonsNonGeneric() => Assert.Throws<IllegalAbstractMethodCreationException>(() => _iocContainer.RegisterFactory<ITestFactoryNonGenericClear>());
 
         [Test]
         public void TestResolveNotRegistered()
@@ -321,129 +279,6 @@ namespace Test.LightweightIocContainer
             _iocContainer.Register<ITest, TestPrivateConstructor>();
             NoPublicConstructorFoundException exception = Assert.Throws<NoPublicConstructorFoundException>(() => _iocContainer.Resolve<ITest>());
             Assert.AreEqual(typeof(TestPrivateConstructor), exception.Type);
-        }
-
-        [Test]
-        public void TestResolveFactory()
-        {
-            _iocContainer.Register<ITest, Test>();
-            _iocContainer.RegisterFactory<ITestFactory>();
-
-            ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
-
-            Assert.IsInstanceOf<ITestFactory>(testFactory);
-        }
-
-        [Test]
-        public void TestResolveFromFactory()
-        {
-            _iocContainer.Register<ITest, Test>();
-            _iocContainer.RegisterFactory<ITestFactory>();
-
-            ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
-            ITest createdTest = testFactory.Create();
-
-            Assert.IsInstanceOf<Test>(createdTest);
-        }
-
-        [Test]
-        public void TestResolveFromFactoryWithParams()
-        {
-            _iocContainer.Register<ITest, TestConstructor>();
-            _iocContainer.Register<Test, Test>(); //this registration is abnormal and should only be used in unit tests
-            _iocContainer.RegisterFactory<ITestFactory>();
-
-            ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
-            ITest createdTest = testFactory.Create("Test");
-
-            Assert.IsInstanceOf<TestConstructor>(createdTest);
-        }
-
-        [Test]
-        public void TestResolveFromFactoryWithDefaultParamCreate()
-        {
-            _iocContainer.Register<ITest, TestConstructor>();
-            _iocContainer.Register<Test, Test>(); //this registration is abnormal and should only be used in unit tests
-            _iocContainer.RegisterFactory<ITestFactory>();
-
-            ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
-            ITest createdTest = testFactory.CreateTest();
-
-            Assert.IsInstanceOf<TestConstructor>(createdTest);
-        }
-
-        [Test]
-        public void TestResolveFromFactoryWithDefaultParamCtor()
-        {
-            _iocContainer.Register<ITest, TestConstructor>();
-            _iocContainer.Register<Test, Test>(); //this registration is abnormal and should only be used in unit tests
-            _iocContainer.RegisterFactory<ITestFactory>();
-
-            ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
-            ITest createdTest = testFactory.Create();
-
-            Assert.IsInstanceOf<TestConstructor>(createdTest);
-        }
-
-        [Test]
-        public void TestResolveFromFactoryWithByte()
-        {
-            _iocContainer.Register<ITest, TestByte>();
-            _iocContainer.RegisterFactory<ITestFactory>();
-
-            ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
-            ITest createdTest = testFactory.Create(1);
-
-            Assert.IsInstanceOf<TestByte>(createdTest);
-        }
-
-        [Test]
-        public void TestResolveMultitonFromFactory()
-        {
-            _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>();
-            _iocContainer.RegisterFactory<ITestFactory>();
-
-            MultitonScope scope1 = new MultitonScope();
-            MultitonScope scope2 = new MultitonScope();
-
-            ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
-
-            ITest resolvedTest1 = testFactory.Create(scope1);
-            ITest resolvedTest2 = testFactory.Create(scope1);
-            ITest resolvedTest3 = testFactory.Create(scope2);
-
-            Assert.AreSame(resolvedTest1, resolvedTest2);
-            Assert.AreNotSame(resolvedTest1, resolvedTest3);
-            Assert.AreNotSame(resolvedTest2, resolvedTest3);
-        }
-
-        [Test]
-        public void TestResolveMultitonFromFactoryClearInstances()
-        {
-            _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>();
-            _iocContainer.RegisterFactory<ITestFactory>();
-
-            MultitonScope scope1 = new MultitonScope();
-            MultitonScope scope2 = new MultitonScope();
-
-            ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
-
-            ITest resolvedTest1 = testFactory.Create(scope1);
-            ITest resolvedTest2 = testFactory.Create(scope1);
-            ITest resolvedTest3 = testFactory.Create(scope2);
-
-            Assert.AreSame(resolvedTest1, resolvedTest2);
-            Assert.AreNotSame(resolvedTest1, resolvedTest3);
-            Assert.AreNotSame(resolvedTest2, resolvedTest3);
-
-            testFactory.ClearMultitonInstance<ITest>();
-
-            ITest resolvedTest4 = testFactory.Create(scope1);
-            ITest resolvedTest5 = testFactory.Create(scope2);
-
-            Assert.AreNotSame(resolvedTest1, resolvedTest4);
-            Assert.AreNotSame(resolvedTest2, resolvedTest4);
-            Assert.AreNotSame(resolvedTest3, resolvedTest5);
         }
 
         [Test]

@@ -5,7 +5,7 @@
 using System;
 using LightweightIocContainer.Interfaces.Installers;
 
-namespace LightweightIocContainer.Interfaces.Registrations.FluentProviders
+namespace LightweightIocContainer.Interfaces.Registrations.Fluent
 {
     /// <summary>
     /// Provides an <see cref="OnCreateAction"/> to the generic <see cref="IOnCreate{TInterface, TImplementation}"/>
@@ -30,7 +30,7 @@ namespace LightweightIocContainer.Interfaces.Registrations.FluentProviders
         /// Pass an <see cref="Action{T}"/> that will be invoked when an instance of this type is created
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/></param>
-        /// <returns>The current instance of this <see cref="ITypedRegistrationBase{TInterface,TImplementation}"/></returns>
-        ITypedRegistrationBase<TInterface, TImplementation> OnCreate(Action<TImplementation> action);
+        /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
+        ITypedRegistration<TInterface, TImplementation> OnCreate(Action<TImplementation> action);
     }
 }

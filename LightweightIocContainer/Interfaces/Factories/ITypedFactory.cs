@@ -4,11 +4,16 @@
 
 namespace LightweightIocContainer.Interfaces.Factories
 {
+    public interface ITypedFactory
+    {
+        
+    }
+    
     /// <summary>
     /// Class to help implement an abstract typed factory
     /// </summary>
     /// <typeparam name="TFactory">The type of the abstract factory</typeparam>
-    public interface ITypedFactory<TFactory>
+    public interface ITypedFactory<TFactory> : ITypedFactory
     {
         /// <summary>
         /// The implemented abstract typed factory

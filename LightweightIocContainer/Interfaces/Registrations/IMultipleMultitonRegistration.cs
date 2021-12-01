@@ -5,7 +5,7 @@
 namespace LightweightIocContainer.Interfaces.Registrations
 {
     /// <summary>
-    /// An <see cref="IRegistrationBase{TInterface}"/> to register multiple interfaces for on implementation type that implements them as a multiton
+    /// An <see cref="IRegistration"/> to register multiple interfaces for on implementation type that implements them as a multiton
     /// </summary>
     /// <typeparam name="TInterface1">The first interface</typeparam>
     /// <typeparam name="TInterface2">The second interface</typeparam>

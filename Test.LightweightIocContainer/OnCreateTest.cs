@@ -29,8 +29,8 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestOnCreate()
         {
-            RegistrationFactory registrationFactory = new RegistrationFactory(new Mock<IIocContainer>().Object);
-            ITypedRegistrationBase<ITest, Test> testRegistration = registrationFactory.Register<ITest, Test>(Lifestyle.Transient).OnCreate(t => t.DoSomething());
+            RegistrationFactory registrationFactory = new RegistrationFactory(new Mock<IocContainer>().Object);
+            ITypedRegistration<ITest, Test> testRegistration = registrationFactory.Register<ITest, Test>(Lifestyle.Transient).OnCreate(t => t.DoSomething());
 
             Test test = new Test();
 

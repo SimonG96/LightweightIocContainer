@@ -10,9 +10,10 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
+using LightweightIocContainer.Interfaces.Factories;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
-using LightweightIocContainer.Interfaces.Registrations.FluentProviders;
+using LightweightIocContainer.Interfaces.Registrations.Fluent;
 using LightweightIocContainer.Registrations;
 
 namespace LightweightIocContainer
@@ -56,9 +57,9 @@ namespace LightweightIocContainer
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
         /// <returns>The created <see cref="IRegistration"/></returns>
-        public IDefaultRegistration<TInterface, TImplementation> Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface
+        public ITypedRegistration<TInterface, TImplementation> Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface
         {
-            IDefaultRegistration<TInterface, TImplementation> registration = _registrationFactory.Register<TInterface, TImplementation>(lifestyle);
+            ITypedRegistration<TInterface, TImplementation> registration = _registrationFactory.Register<TInterface, TImplementation>(lifestyle);
             Register(registration);
 
             return registration;
@@ -210,13 +211,7 @@ namespace LightweightIocContainer
         /// </summary>
         /// <typeparam name="TFactory">The abstract typed factory to register</typeparam>
         /// <returns>The created <see cref="IRegistration"/></returns>
-        public ITypedFactoryRegistration<TFactory> RegisterFactory<TFactory>()
-        {
-            ITypedFactoryRegistration<TFactory> registration = _registrationFactory.RegisterFactory<TFactory>();
-            Register(registration);
-
-            return registration;
-        }
+        internal void RegisterFactory<TFactory>(ITypedFactory<TFactory> factory) => Register(_registrationFactory.RegisterFactory(factory));
 
         /// <summary>
         /// Add the <see cref="IRegistration"/> to the the <see cref="IocContainer"/>
@@ -255,7 +250,7 @@ namespace LightweightIocContainer
         /// </summary>
         /// <typeparam name="T">The given <see cref="Type"/></typeparam>
         /// <returns>An instance of the given <see cref="Type"/></returns>
-        public T Resolve<T>() => ResolveInternal<T>(null);
+        public virtual T Resolve<T>() => ResolveInternal<T>(null);
 
         /// <summary>
         /// Gets an instance of the given <see cref="Type"/>
@@ -305,21 +300,14 @@ namespace LightweightIocContainer
             {
                 if (defaultRegistration.Lifestyle == Lifestyle.Singleton)
                     resolvedInstance = GetOrCreateSingletonInstance<T>(defaultRegistration, arguments, resolveStack);
-                else if (defaultRegistration is IMultitonRegistration<T> multitonRegistration && defaultRegistration.Lifestyle == Lifestyle.Multiton)
-                    resolvedInstance = GetOrCreateMultitonInstance(multitonRegistration, arguments, resolveStack);
+                else if (defaultRegistration is IMultitonRegistration multitonRegistration && defaultRegistration.Lifestyle == Lifestyle.Multiton)
+                    resolvedInstance = GetOrCreateMultitonInstance<T>(multitonRegistration, arguments, resolveStack);
                 else
                     resolvedInstance = CreateInstance<T>(defaultRegistration, arguments, resolveStack);
             }
             else if (registration is ITypedFactoryRegistration<T> typedFactoryRegistration)
             {
                 resolvedInstance = typedFactoryRegistration.Factory.Factory;
-            }
-            else if (registration is IOpenGenericRegistration openGenericRegistration)
-            {
-                if (openGenericRegistration.Lifestyle == Lifestyle.Singleton)
-                    resolvedInstance = GetOrCreateSingletonInstance<T>(openGenericRegistration, arguments, resolveStack);
-                else
-                    resolvedInstance = CreateInstance<T>(openGenericRegistration, arguments, resolveStack);
             }
             else
                 throw new UnknownRegistrationException($"There is no registration of type {registration.GetType().Name}.");
@@ -340,12 +328,10 @@ namespace LightweightIocContainer
         private T GetOrCreateSingletonInstance<T>(IRegistration registration, object[] arguments, List<Type> resolveStack)
         {
             Type type;
-            if (registration is ITypedRegistrationBase<T> typedRegistration)
+            if (registration is ITypedRegistration typedRegistration)
                 type = typedRegistration.ImplementationType;
             else if (registration is ISingleTypeRegistration<T> singleTypeRegistration)
                 type = singleTypeRegistration.InterfaceType;
-            else if (registration is IOpenGenericRegistration openGenericRegistration)
-                type = openGenericRegistration.ImplementationType;
             else
                 throw new UnknownRegistrationException($"There is no registration {registration.GetType().Name} that can have lifestyle singleton.");
 
@@ -371,7 +357,7 @@ namespace LightweightIocContainer
         /// <returns>An existing or newly created multiton instance of the given <see cref="Type"/></returns>
         /// <exception cref="MultitonResolveException">No arguments given</exception>
         /// <exception cref="MultitonResolveException">Scope argument not given</exception>
-        private T GetOrCreateMultitonInstance<T>(IMultitonRegistration<T> registration, object[] arguments, List<Type> resolveStack)
+        private T GetOrCreateMultitonInstance<T>(IMultitonRegistration registration, object[] arguments, List<Type> resolveStack)
         {
             if (arguments == null || !arguments.Any())
                 throw new MultitonResolveException("Can not resolve multiton without arguments.", typeof(T));
@@ -413,11 +399,20 @@ namespace LightweightIocContainer
         /// <returns>A newly created instance of the given <see cref="Type"/></returns>
         private T CreateInstance<T>(IRegistration registration, object[] arguments, List<Type> resolveStack)
         {
-            if (registration is IWithParameters<T> { Parameters: { } } registrationWithParameters)
+            if (registration is IWithParameters { Parameters: { } } registrationWithParameters)
                 arguments = UpdateArgumentsWithRegistrationParameters(registrationWithParameters, arguments);
 
             T instance;
-            if (registration is ITypedRegistrationBase defaultRegistration)
+            if (registration is IOpenGenericRegistration openGenericRegistration)
+            {
+                arguments = ResolveConstructorArguments(openGenericRegistration.ImplementationType, arguments, resolveStack);
+                
+                //create generic implementation type from generic arguments of T
+                Type genericImplementationType = openGenericRegistration.ImplementationType.MakeGenericType(typeof(T).GenericTypeArguments);
+
+                instance = (T) Activator.CreateInstance(genericImplementationType, arguments);
+            }
+            else if (registration is ITypedRegistration defaultRegistration)
             {
                 arguments = ResolveConstructorArguments(defaultRegistration.ImplementationType, arguments, resolveStack);
                 instance = (T) Activator.CreateInstance(defaultRegistration.ImplementationType, arguments);
@@ -435,15 +430,6 @@ namespace LightweightIocContainer
                 else //factory method set to create the instance
                     instance = singleTypeRegistration.FactoryMethod(this);
             }
-            else if (registration is IOpenGenericRegistration openGenericRegistration)
-            {
-                arguments = ResolveConstructorArguments(openGenericRegistration.ImplementationType, arguments, resolveStack);
-                
-                //create generic implementation type from generic arguments of T
-                Type genericImplementationType = openGenericRegistration.ImplementationType.MakeGenericType(typeof(T).GenericTypeArguments);
-
-                instance = (T) Activator.CreateInstance(genericImplementationType, arguments);
-            }
             else
                 throw new UnknownRegistrationException($"There is no registration of type {registration.GetType().Name}.");
 
@@ -456,11 +442,10 @@ namespace LightweightIocContainer
         /// <summary>
         /// Update the given arguments with the <see cref="IWithParameters{TInterface}.Parameters"/> of the given <see cref="IRegistrationBase{TInterface}"/>
         /// </summary>
-        /// <typeparam name="T">The given <see cref="Type"/></typeparam>
         /// <param name="registration">The <see cref="IRegistrationBase{TInterface}"/> of the given <see cref="Type"/></param>
         /// <param name="arguments">The constructor arguments</param>
         /// <returns>The argument list updated with the <see cref="IWithParameters{TInterface}.Parameters"/></returns>
-        private object[] UpdateArgumentsWithRegistrationParameters<T>(IWithParameters<T> registration, object[] arguments)
+        private object[] UpdateArgumentsWithRegistrationParameters(IWithParameters registration, object[] arguments)
         {
             if (arguments != null && arguments.Any()) //if more arguments were passed to resolve
             {
@@ -588,7 +573,7 @@ namespace LightweightIocContainer
             if (registration != null)
                 return registration;
 
-            registration = _registrations.OfType<ITypedRegistrationBase>().FirstOrDefault(r => r.ImplementationType == typeof(T));
+            registration = _registrations.OfType<ITypedRegistration>().FirstOrDefault(r => r.ImplementationType == typeof(T));
             if (registration != null)
                 return registration;
             
@@ -610,7 +595,7 @@ namespace LightweightIocContainer
         public void ClearMultitonInstances<T>()
         {
             IRegistration registration = FindRegistration<T>();
-            if (!(registration is IMultitonRegistration<T> multitonRegistration))
+            if (!(registration is IMultitonRegistration multitonRegistration))
                 return;
             
             var multitonInstance = _multitons.FirstOrDefault(m => m.type == multitonRegistration.ImplementationType);

@@ -3,16 +3,17 @@
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System;
+using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
-using LightweightIocContainer.Interfaces.Registrations.FluentProviders;
+using LightweightIocContainer.Interfaces.Registrations.Fluent;
 
 namespace LightweightIocContainer.Registrations
 {
     /// <summary>
     /// A <see cref="IRegistrationBase{TInterface}"/> that implements a <see cref="Type"/>
     /// </summary>
-    public abstract class TypedRegistrationBase<TInterface, TImplementation> : RegistrationBase<TInterface>, ITypedRegistrationBase<TInterface, TImplementation> where TImplementation : TInterface
+    public class TypedRegistration<TInterface, TImplementation> : RegistrationBase, ITypedRegistration<TInterface, TImplementation> where TImplementation : TInterface
     {
         /// <summary>
         /// A <see cref="IRegistrationBase{TInterface}"/> that implements a <see cref="Type"/>
@@ -20,8 +21,9 @@ namespace LightweightIocContainer.Registrations
         /// <param name="interfaceType">The <see cref="Type"/> of the interface</param>
         /// <param name="implementationType">The <see cref="Type"/> of the implementation type</param>
         /// <param name="lifestyle">The <see cref="Lifestyle"/> of this <see cref="IRegistrationBase{TInterface}"/></param>
-        protected TypedRegistrationBase(Type interfaceType, Type implementationType, Lifestyle lifestyle)
-            : base(interfaceType, lifestyle) =>
+        /// <param name="container">The current instance of the <see cref="IIocContainer"/></param>
+        public TypedRegistration(Type interfaceType, Type implementationType, Lifestyle lifestyle, IocContainer container)
+            : base(interfaceType, lifestyle, container) =>
             ImplementationType = implementationType;
 
         /// <summary>
@@ -39,8 +41,8 @@ namespace LightweightIocContainer.Registrations
         /// Pass an <see cref="Action{T}"/> that will be invoked when an instance of this type is created
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/></param>
-        /// <returns>The current instance of this <see cref="ITypedRegistrationBase{TInterface,TImplementation}"/></returns>
-        public virtual ITypedRegistrationBase<TInterface, TImplementation> OnCreate(Action<TImplementation> action)
+        /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
+        public virtual ITypedRegistration<TInterface, TImplementation> OnCreate(Action<TImplementation> action)
         {
             OnCreateAction = a => action((TImplementation) a);
             return this;

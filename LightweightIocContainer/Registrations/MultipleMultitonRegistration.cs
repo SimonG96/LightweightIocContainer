@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Registrations;
 
 namespace LightweightIocContainer.Registrations
@@ -23,13 +24,14 @@ namespace LightweightIocContainer.Registrations
         /// <param name="interfaceType2">The <see cref="Type"/> of the second interface</param>
         /// <param name="implementationType">The <see cref="Type"/> of the implementation</param>
         /// <param name="scope">The <see cref="Type"/> of the multiton scope</param>
-        public MultipleMultitonRegistration(Type interfaceType1, Type interfaceType2, Type implementationType, Type scope)
-            : base(interfaceType1, implementationType, scope)
+        /// <param name="container">The current instance of the <see cref="IIocContainer"/></param>
+        public MultipleMultitonRegistration(Type interfaceType1, Type interfaceType2, Type implementationType, Type scope, IocContainer container)
+            : base(interfaceType1, implementationType, scope, container)
         {
             Registrations = new List<IRegistration>()
             {
-                new MultitonRegistration<TInterface1, TImplementation>(interfaceType1, implementationType, scope),
-                new MultitonRegistration<TInterface2, TImplementation>(interfaceType2, implementationType, scope)
+                new MultitonRegistration<TInterface1, TImplementation>(interfaceType1, implementationType, scope, container),
+                new MultitonRegistration<TInterface2, TImplementation>(interfaceType2, implementationType, scope, container)
             };
         }
 
@@ -42,8 +44,8 @@ namespace LightweightIocContainer.Registrations
         /// Pass an <see cref="Action{T}"/> that will be invoked when an instance of this type is created
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/></param>
-        /// <returns>The current instance of this <see cref="ITypedRegistrationBase{TInterface,TImplementation}"/></returns>
-        public override ITypedRegistrationBase<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
+        /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
+        public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
         {
             foreach (var registration in Registrations)
             {

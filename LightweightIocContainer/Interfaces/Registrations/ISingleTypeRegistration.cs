@@ -7,10 +7,10 @@ using System;
 namespace LightweightIocContainer.Interfaces.Registrations
 {
     /// <summary>
-    /// The <see cref="IRegistrationBase{TInterface}"/> to register either only an interface or only a <see cref="Type"/>
+    /// The <see cref="IRegistration"/> to register either only an interface or only a <see cref="Type"/>
     /// </summary>
-    /// <typeparam name="T">The <see cref="Type"/> of the <see cref="IRegistrationBase{TInterface}"/></typeparam>
-    public interface ISingleTypeRegistration<T> : IRegistrationBase<T>
+    /// <typeparam name="T">The <see cref="Type"/> of the <see cref="IRegistration"/></typeparam>
+    public interface ISingleTypeRegistration<T> : IRegistrationBase
     {
         /// <summary>
         /// <see cref="Func{T,TResult}"/> that is invoked instead of creating an instance of this <see cref="Type"/> the default way
@@ -21,7 +21,7 @@ namespace LightweightIocContainer.Interfaces.Registrations
         /// Pass a <see cref="Func{T,TResult}"/> that will be invoked instead of creating an instance of this <see cref="Type"/> the default way
         /// </summary>
         /// <param name="factoryMethod">The <see cref="Func{T,TResult}"/></param>
-        /// <returns>The current instance of this <see cref="IRegistrationBase{TInterface}"/></returns>
+        /// <returns>The current instance of this <see cref="IRegistration"/></returns>
         ISingleTypeRegistration<T> WithFactoryMethod(Func<IIocContainer, T> factoryMethod);
     }
 }

@@ -45,7 +45,7 @@ namespace Test.LightweightIocContainer
         {
             IBar bar = new Bar();
 
-            Mock<IIocContainer> iocContainerMock = new Mock<IIocContainer>();
+            Mock<IocContainer> iocContainerMock = new();
             iocContainerMock.Setup(c => c.Resolve<IBar>()).Returns(bar);
 
             RegistrationFactory registrationFactory = new RegistrationFactory(iocContainerMock.Object);
