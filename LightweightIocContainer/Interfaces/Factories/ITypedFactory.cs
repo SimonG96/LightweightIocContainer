@@ -4,6 +4,9 @@
 
 namespace LightweightIocContainer.Interfaces.Factories
 {
+    /// <summary>
+    /// Non-generic <see cref="ITypedFactory{TFactory}"/>
+    /// </summary>
     public interface ITypedFactory
     {
         

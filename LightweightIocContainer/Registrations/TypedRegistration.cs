@@ -11,23 +11,23 @@ using LightweightIocContainer.Interfaces.Registrations.Fluent;
 namespace LightweightIocContainer.Registrations
 {
     /// <summary>
-    /// A <see cref="IRegistrationBase{TInterface}"/> that implements a <see cref="Type"/>
+    /// A <see cref="IRegistrationBase"/> that implements a <see cref="Type"/>
     /// </summary>
     public class TypedRegistration<TInterface, TImplementation> : RegistrationBase, ITypedRegistration<TInterface, TImplementation> where TImplementation : TInterface
     {
         /// <summary>
-        /// A <see cref="IRegistrationBase{TInterface}"/> that implements a <see cref="Type"/>
+        /// A <see cref="IRegistrationBase"/> that implements a <see cref="Type"/>
         /// </summary>
         /// <param name="interfaceType">The <see cref="Type"/> of the interface</param>
         /// <param name="implementationType">The <see cref="Type"/> of the implementation type</param>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> of this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> of this <see cref="IRegistrationBase"/></param>
         /// <param name="container">The current instance of the <see cref="IIocContainer"/></param>
         public TypedRegistration(Type interfaceType, Type implementationType, Lifestyle lifestyle, IocContainer container)
             : base(interfaceType, lifestyle, container) =>
             ImplementationType = implementationType;
 
         /// <summary>
-        /// The <see cref="Type"/> that implements the <see cref="IRegistration.InterfaceType"/> that is registered with this <see cref="IRegistrationBase{TInterface}"/>
+        /// The <see cref="Type"/> that implements the <see cref="IRegistration.InterfaceType"/> that is registered with this <see cref="IRegistrationBase"/>
         /// </summary>
         public Type ImplementationType { get; }
 

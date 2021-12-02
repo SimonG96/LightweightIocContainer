@@ -49,6 +49,9 @@ namespace LightweightIocContainer.Registrations
         /// </summary>
         public object[] Parameters { get; private set; }
         
+        /// <summary>
+        /// The Factory added with the <see cref="WithFactory{TFactory}"/> method
+        /// </summary>
         public ITypedFactory Factory { get; private set; }
 
         /// <summary>
@@ -99,6 +102,11 @@ namespace LightweightIocContainer.Registrations
             return this;
         }
 
+        /// <summary>
+        /// Register an abstract typed factory for the <see cref="IRegistrationBase"/> 
+        /// </summary>
+        /// <typeparam name="TFactory">The type of the abstract typed factory</typeparam>
+        /// <returns>The current instance of this <see cref="IRegistrationBase"/></returns>
         public IRegistrationBase WithFactory<TFactory>()
         {
             TypedFactory<TFactory> factory = new(_container);
@@ -109,6 +117,12 @@ namespace LightweightIocContainer.Registrations
             return this;
         }
 
+        /// <summary>
+        /// Register a custom implemented factory for the <see cref="IRegistrationBase"/>
+        /// </summary>
+        /// <typeparam name="TFactoryInterface">The type of the interface for the custom factory</typeparam>
+        /// <typeparam name="TFactoryImplementation">The type of the implementation for the custom factory</typeparam>
+        /// <returns>The current instance of this <see cref="IRegistrationBase"/></returns>
         public IRegistrationBase WithFactory<TFactoryInterface, TFactoryImplementation>() where TFactoryImplementation : TFactoryInterface
         {
             Factory = new CustomTypedFactory();

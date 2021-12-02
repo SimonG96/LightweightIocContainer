@@ -55,7 +55,7 @@ namespace LightweightIocContainer
         /// </summary>
         /// <typeparam name="TInterface">The Interface to register</typeparam>
         /// <typeparam name="TImplementation">The Type that implements the interface</typeparam>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase"/></param>
         /// <returns>The created <see cref="IRegistration"/></returns>
         public ITypedRegistration<TInterface, TImplementation> Register<TInterface, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface
         {
@@ -94,7 +94,7 @@ namespace LightweightIocContainer
         /// <typeparam name="TInterface1">The base interface to register</typeparam>
         /// <typeparam name="TInterface2">A second interface to register</typeparam>
         /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase"/></param>
         /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2}"/></returns>
         public IMultipleRegistration<TInterface1, TInterface2, TImplementation> Register<TInterface1, TInterface2, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface2, TInterface1
         {
@@ -111,7 +111,7 @@ namespace LightweightIocContainer
         /// <typeparam name="TInterface2">A second interface to register</typeparam>
         /// <typeparam name="TInterface3">A third interface to register</typeparam>
         /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase"/></param>
         /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2,TInterface3}"/></returns>
         public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TImplementation> Register<TInterface1, TInterface2, TInterface3, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface3, TInterface2, TInterface1
         {
@@ -130,7 +130,7 @@ namespace LightweightIocContainer
         /// <typeparam name="TInterface3">A third interface to register</typeparam>
         /// <typeparam name="TInterface4">A fourth interface to register</typeparam>
         /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase"/></param>
         /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2,TInterface3,TInterface4}"/></returns>
         public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation> Register<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface4, TInterface3, TInterface2, TInterface1
         {
@@ -150,7 +150,7 @@ namespace LightweightIocContainer
         /// <typeparam name="TInterface4">A fourth interface to register</typeparam>
         /// <typeparam name="TInterface5">A fifth interface to register</typeparam>
         /// <typeparam name="TImplementation">The <see cref="Type"/> that implements both interfaces</typeparam>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase"/></param>
         /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2,TInterface3,TInterface4,TInterface5}"/></returns>
         public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation> Register<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface5, TInterface4, TInterface3, TInterface2, TInterface1
         {
@@ -165,7 +165,7 @@ namespace LightweightIocContainer
         /// Register a <see cref="Type"/> without an interface
         /// </summary>
         /// <typeparam name="TImplementation">The <see cref="Type"/> to register</typeparam>
-        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase{TInterface}"/></param>
+        /// <param name="lifestyle">The <see cref="Lifestyle"/> for this <see cref="IRegistrationBase"/></param>
         /// <returns>The created <see cref="IRegistration"/></returns>
         public ISingleTypeRegistration<TImplementation> Register<TImplementation>(Lifestyle lifestyle = Lifestyle.Transient)
         {
@@ -440,11 +440,11 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
-        /// Update the given arguments with the <see cref="IWithParameters{TInterface}.Parameters"/> of the given <see cref="IRegistrationBase{TInterface}"/>
+        /// Update the given arguments with the <see cref="IWithParameters.Parameters"/> of the given <see cref="IRegistrationBase"/>
         /// </summary>
-        /// <param name="registration">The <see cref="IRegistrationBase{TInterface}"/> of the given <see cref="Type"/></param>
+        /// <param name="registration">The <see cref="IRegistrationBase"/> of the given <see cref="Type"/></param>
         /// <param name="arguments">The constructor arguments</param>
-        /// <returns>The argument list updated with the <see cref="IWithParameters{TInterface}.Parameters"/></returns>
+        /// <returns>The argument list updated with the <see cref="IWithParameters.Parameters"/></returns>
         private object[] UpdateArgumentsWithRegistrationParameters(IWithParameters registration, object[] arguments)
         {
             if (arguments != null && arguments.Any()) //if more arguments were passed to resolve

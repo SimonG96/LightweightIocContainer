@@ -6,6 +6,9 @@ using LightweightIocContainer.Interfaces.Factories;
 
 namespace LightweightIocContainer.Factories
 {
+    /// <summary>
+    /// <see cref="ITypedFactory"/> implementation for custom implemented factories
+    /// </summary>
     public class CustomTypedFactory : ITypedFactory
     {
         

@@ -20,7 +20,7 @@ namespace LightweightIocContainer.Interfaces.Registrations.Fluent
     }
 
     /// <summary>
-    /// Provides an <see cref="OnCreate"/> method to an <see cref="IRegistrationBase{TInterface}"/>
+    /// Provides an <see cref="OnCreate"/> method to an <see cref="IRegistrationBase"/>
     /// </summary>
     /// <typeparam name="TInterface">The registered interface</typeparam>
     /// <typeparam name="TImplementation">The registered implementation</typeparam>

@@ -24,7 +24,7 @@ namespace LightweightIocContainer.Interfaces.Registrations.Fluent
         /// <para>Parameters set with this method are always inserted at the beginning of the argument list if more parameters are given when resolving</para>
         /// </summary>
         /// <param name="parameters">The parameters</param>
-        /// <returns>The current instance of this <see cref="IRegistrationBase{TInterface}"/></returns>
+        /// <returns>The current instance of this <see cref="IRegistrationBase"/></returns>
         /// <exception cref="InvalidRegistrationException"><see cref="Parameters"/> are already set or no parameters given</exception>
         IRegistrationBase WithParameters(params object[] parameters);
 
@@ -33,7 +33,7 @@ namespace LightweightIocContainer.Interfaces.Registrations.Fluent
         /// <para>Parameters set with this method are inserted at the position in the argument list that is passed with the parameter if more parameters are given when resolving</para>
         /// </summary>
         /// <param name="parameters">The parameters with their position</param>
-        /// <returns>The current instance of this <see cref="IRegistrationBase{TInterface}"/></returns>
+        /// <returns>The current instance of this <see cref="IRegistrationBase"/></returns>
         /// <exception cref="InvalidRegistrationException"><see cref="Parameters"/> are already set or no parameters given</exception>
         IRegistrationBase WithParameters(params (int index, object parameter)[] parameters);
     }
