@@ -7,17 +7,9 @@ using System;
 namespace LightweightIocContainer.Interfaces.Registrations
 {
     /// <summary>
-    /// Non generic <see cref="IMultitonRegistration{TInterface}"/>
+    /// Non generic <see cref="IMultipleRegistration{TInterface1,TImplementation}"/>
     /// </summary>
-    public interface IMultitonRegistration
-    {
-
-    }
-
-    /// <summary>
-    /// A base <see cref="IMultitonRegistration{TInterface}"/> without implementation
-    /// </summary>
-    public interface IMultitonRegistration<TInterface> : ITypedRegistrationBase<TInterface>, IMultitonRegistration
+    public interface IMultitonRegistration : ITypedRegistration
     {
         /// <summary>
         /// The <see cref="Type"/> of the multiton scope
@@ -30,7 +22,7 @@ namespace LightweightIocContainer.Interfaces.Registrations
     /// </summary>
     /// <typeparam name="TInterface">The registered interface</typeparam>
     /// <typeparam name="TImplementation">The registered implementation</typeparam>
-    public interface IMultitonRegistration<TInterface, TImplementation> : IMultitonRegistration<TInterface>, IDefaultRegistration<TInterface, TImplementation> where TImplementation : TInterface
+    public interface IMultitonRegistration<TInterface, TImplementation> : IMultitonRegistration, ITypedRegistration<TInterface, TImplementation> where TImplementation : TInterface
     {
         
     }

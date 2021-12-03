@@ -11,7 +11,7 @@ namespace LightweightIocContainer.Interfaces.Registrations
     /// </summary>
     /// <typeparam name="TInterface1">The first interface</typeparam>
     /// <typeparam name="TImplementation">The implementation</typeparam>
-    public interface IMultipleRegistration<TInterface1, TImplementation> : ITypedRegistrationBase<TInterface1, TImplementation> where TImplementation : TInterface1
+    public interface IMultipleRegistration<TInterface1, TImplementation> : ITypedRegistration<TInterface1, TImplementation> where TImplementation : TInterface1
     {
         /// <summary>
         /// A <see cref="List{T}"/> of <see cref="IRegistration"/>s that are registered within this <see cref="IMultipleRegistration{TInterface1,TImplementation}"/>
@@ -20,7 +20,7 @@ namespace LightweightIocContainer.Interfaces.Registrations
     }
 
     /// <summary>
-    /// An <see cref="IRegistrationBase{TInterface}"/> to register multiple interfaces for on implementation type
+    /// An <see cref="IRegistration"/> to register multiple interfaces for on implementation type
     /// </summary>
     /// <typeparam name="TInterface1">The first interface</typeparam>
     /// <typeparam name="TInterface2">The second interface</typeparam>
@@ -31,7 +31,7 @@ namespace LightweightIocContainer.Interfaces.Registrations
     }
 
     /// <summary>
-    /// An <see cref="IRegistrationBase{TInterface}"/> to register multiple interfaces for on implementation type
+    /// An <see cref="IRegistration"/> to register multiple interfaces for on implementation type
     /// </summary>
     /// <typeparam name="TInterface1">The first interface</typeparam>
     /// <typeparam name="TInterface2">The second interface</typeparam>
@@ -43,7 +43,7 @@ namespace LightweightIocContainer.Interfaces.Registrations
     }
 
     /// <summary>
-    /// An <see cref="IRegistrationBase{TInterface}"/> to register multiple interfaces for on implementation type
+    /// An <see cref="IRegistration"/> to register multiple interfaces for on implementation type
     /// </summary>
     /// <typeparam name="TInterface1">The first interface</typeparam>
     /// <typeparam name="TInterface2">The second interface</typeparam>
@@ -56,7 +56,7 @@ namespace LightweightIocContainer.Interfaces.Registrations
     }
 
     /// <summary>
-    /// An <see cref="IRegistrationBase{TInterface}"/> to register multiple interfaces for on implementation type
+    /// An <see cref="IRegistration"/> to register multiple interfaces for on implementation type
     /// </summary>
     /// <typeparam name="TInterface1">The first interface</typeparam>
     /// <typeparam name="TInterface2">The second interface</typeparam>
