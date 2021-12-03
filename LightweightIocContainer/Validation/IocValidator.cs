@@ -17,8 +17,6 @@ namespace LightweightIocContainer.Validation
         private readonly IocContainer _iocContainer;
         private readonly List<(Type type, object parameter)> _parameters;
 
-        private List<Exception> _validationExceptions;
-
         /// <summary>
         /// Validator for your <see cref="IocContainer"/> to check if everything can be resolved with your current setup
         /// </summary>
@@ -43,6 +41,8 @@ namespace LightweightIocContainer.Validation
         /// </summary>
         public void Validate()
         {
+            List<Exception> validationExceptions = new();
+            
             foreach (var registration in _iocContainer.Registrations)
             {
                 if (registration is IWithFactory { Factory: { } } withFactoryRegistration)
@@ -56,17 +56,17 @@ namespace LightweightIocContainer.Validation
                                 .FirstOrDefault(p => parameterType.IsInstanceOfType(p.parameter))
                             select definedParameter == default ? parameterType.GetDefault() : definedParameter.parameter).ToArray())
                         .ToList()
-                        .ForEach(p => TryResolve(registration.InterfaceType, p));
+                        .ForEach(p => TryResolve(registration.InterfaceType, p, validationExceptions));
                 }
                 else
-                    TryResolve(registration.InterfaceType);
+                    TryResolve(registration.InterfaceType, null, validationExceptions);
             }
 
-            if (_validationExceptions != null)
-                throw new AggregateException("Validation failed.", _validationExceptions);
+            if (validationExceptions.Any())
+                throw new AggregateException("Validation failed.", validationExceptions);
         }
 
-        private void TryResolve(Type type, object[] arguments = null)
+        private void TryResolve(Type type, object[] arguments, List<Exception> validationExceptions)
         {
             try
             {
@@ -74,8 +74,7 @@ namespace LightweightIocContainer.Validation
             }
             catch (Exception exception)
             {
-                _validationExceptions ??= new List<Exception>();
-                _validationExceptions.Add(exception);
+                validationExceptions.Add(exception);
             }
         }
     }
