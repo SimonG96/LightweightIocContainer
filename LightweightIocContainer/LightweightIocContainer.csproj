@@ -35,6 +35,7 @@
   <ItemGroup>
     <Folder Include="Factories\" />
     <Folder Include="Interfaces\Factories\" />
+    <Folder Include="Validation" />
   </ItemGroup>
 
   <ItemGroup>

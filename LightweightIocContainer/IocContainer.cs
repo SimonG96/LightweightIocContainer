@@ -25,15 +25,19 @@ namespace LightweightIocContainer
     {
         private readonly RegistrationFactory _registrationFactory;
 
-        private readonly List<IRegistration> _registrations = new List<IRegistration>();
         private readonly List<(Type type, object instance)> _singletons = new List<(Type, object)>();
         private readonly List<(Type type, Type scope, ConditionalWeakTable<object, object> instances)> _multitons = new List<(Type, Type, ConditionalWeakTable<object, object>)>();
-
 
         /// <summary>
         /// The main container that carries all the <see cref="IRegistration"/>s and can resolve all the types you'll ever want
         /// </summary>
-        public IocContainer() => _registrationFactory = new RegistrationFactory(this);
+        public IocContainer()
+        {
+            _registrationFactory = new RegistrationFactory(this);
+            Registrations = new List<IRegistration>();
+        }
+
+        internal List<IRegistration> Registrations { get; }
 
         /// <summary>
         /// Install the given installers for the current <see cref="IocContainer"/>
@@ -221,14 +225,14 @@ namespace LightweightIocContainer
         private void Register(IRegistration registration)
         {
             //if type is already registered
-            if (_registrations.Any(r => r.InterfaceType == registration.InterfaceType))
+            if (Registrations.Any(r => r.InterfaceType == registration.InterfaceType))
                 throw new MultipleRegistrationException(registration.InterfaceType);
 
             //don't allow lifestyle.multiton without iMultitonRegistration
             if (registration is ILifestyleProvider lifestyleProvider && lifestyleProvider.Lifestyle == Lifestyle.Multiton && !(registration is IMultitonRegistration))
                 throw new InvalidRegistrationException("Can't register a type as Lifestyle.Multiton without a scope (Registration is not of type IMultitonRegistration).");
 
-            _registrations.Add(registration);
+            Registrations.Add(registration);
         }
 
         /// <summary>
@@ -268,7 +272,7 @@ namespace LightweightIocContainer
         /// <param name="resolveStack">The current resolve stack</param>
         /// <returns>An instance of the given <see cref="Type"/></returns>
         /// <exception cref="InternalResolveException">Could not find function <see cref="ResolveInternal{T}"/></exception>
-        private object Resolve(Type type, object[] arguments, List<Type> resolveStack) => 
+        internal object Resolve(Type type, object[] arguments, List<Type> resolveStack) => 
             GenericMethodCaller.Call(this, nameof(ResolveInternal), type, BindingFlags.NonPublic | BindingFlags.Instance, arguments, resolveStack);
 
         /// <summary>
@@ -569,11 +573,11 @@ namespace LightweightIocContainer
         [CanBeNull]
         private IRegistration FindRegistration<T>()
         {
-            IRegistration registration = _registrations.FirstOrDefault(r => r.InterfaceType == typeof(T));
+            IRegistration registration = Registrations.FirstOrDefault(r => r.InterfaceType == typeof(T));
             if (registration != null)
                 return registration;
 
-            registration = _registrations.OfType<ITypedRegistration>().FirstOrDefault(r => r.ImplementationType == typeof(T));
+            registration = Registrations.OfType<ITypedRegistration>().FirstOrDefault(r => r.ImplementationType == typeof(T));
             if (registration != null)
                 return registration;
             
@@ -581,7 +585,7 @@ namespace LightweightIocContainer
             if (!typeof(T).GenericTypeArguments.Any())
                 return null;
             
-            List<IRegistration> openGenericRegistrations = _registrations.Where(r => r.InterfaceType.ContainsGenericParameters).ToList();
+            List<IRegistration> openGenericRegistrations = Registrations.Where(r => r.InterfaceType.ContainsGenericParameters).ToList();
             if (!openGenericRegistrations.Any())
                 return null;
 
@@ -619,7 +623,7 @@ namespace LightweightIocContainer
         /// </summary>
         public void Dispose()
         {
-            _registrations.Clear();
+            Registrations.Clear();
             _singletons.Clear();
             _multitons.Clear();
         }

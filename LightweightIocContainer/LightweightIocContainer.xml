@@ -274,7 +274,7 @@
             </summary>
             <param name="message">The exception message</param>
         </member>
-        <member name="T:LightweightIocContainer.Factories.CustomTypedFactory">
+        <member name="T:LightweightIocContainer.Factories.CustomTypedFactory`1">
             <summary>
             <see cref="T:LightweightIocContainer.Interfaces.Factories.ITypedFactory"/> implementation for custom implemented factories
             </summary>
@@ -302,6 +302,16 @@
             </summary>
             <exception cref="T:LightweightIocContainer.Exceptions.InvalidFactoryRegistrationException">Factory registration is invalid</exception>
             <exception cref="T:LightweightIocContainer.Exceptions.IllegalAbstractMethodCreationException">Creation of abstract methods are illegal in their current state</exception>
+        </member>
+        <member name="T:LightweightIocContainer.Factories.TypedFactoryBase`1">
+            <summary>
+            Base class for the <see cref="T:LightweightIocContainer.Interfaces.Factories.ITypedFactory"/>
+            </summary>
+        </member>
+        <member name="P:LightweightIocContainer.Factories.TypedFactoryBase`1.CreateMethods">
+            <summary>
+            The create methods of this <see cref="T:LightweightIocContainer.Interfaces.Factories.ITypedFactory"/>
+            </summary>
         </member>
         <member name="T:LightweightIocContainer.GenericMethodCaller">
             <summary>
@@ -364,6 +374,11 @@
         <member name="T:LightweightIocContainer.Interfaces.Factories.ITypedFactory">
             <summary>
             Non-generic <see cref="T:LightweightIocContainer.Interfaces.Factories.ITypedFactory`1"/>
+            </summary>
+        </member>
+        <member name="P:LightweightIocContainer.Interfaces.Factories.ITypedFactory.CreateMethods">
+            <summary>
+            The create methods of this <see cref="T:LightweightIocContainer.Interfaces.Factories.ITypedFactory"/>
             </summary>
         </member>
         <member name="T:LightweightIocContainer.Interfaces.Factories.ITypedFactory`1">
@@ -1477,6 +1492,30 @@
             </summary>
             <param name="type">The given <see cref="T:System.Type"/></param>
             <returns>The default value for the given <see cref="T:System.Type"/></returns>
+        </member>
+        <member name="T:LightweightIocContainer.Validation.IocValidator">
+            <summary>
+            Validator for your <see cref="T:LightweightIocContainer.IocContainer"/> to check if everything can be resolved with your current setup
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Validation.IocValidator.#ctor(LightweightIocContainer.IocContainer)">
+            <summary>
+            Validator for your <see cref="T:LightweightIocContainer.IocContainer"/> to check if everything can be resolved with your current setup
+            </summary>
+            <param name="iocContainer">The <see cref="T:LightweightIocContainer.IocContainer"/></param>
+        </member>
+        <member name="M:LightweightIocContainer.Validation.IocValidator.AddParameter``2(``1)">
+            <summary>
+            Add parameters that can't be default for your type to be created successfully
+            </summary>
+            <param name="parameter">The new value of the parameter</param>
+            <typeparam name="TInterface">The <see cref="T:System.Type"/> of your registered interface</typeparam>
+            <typeparam name="TParameter">The <see cref="T:System.Type"/> of your <paramref name="parameter"></paramref></typeparam>
+        </member>
+        <member name="M:LightweightIocContainer.Validation.IocValidator.Validate">
+            <summary>
+            Validates your given <see cref="T:LightweightIocContainer.IocContainer"/> and checks if everything can be resolved with the current setup
+            </summary>
         </member>
     </members>
 </doc>
