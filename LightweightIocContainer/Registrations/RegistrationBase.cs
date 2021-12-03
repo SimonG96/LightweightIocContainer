@@ -125,7 +125,7 @@ namespace LightweightIocContainer.Registrations
         /// <returns>The current instance of this <see cref="IRegistrationBase"/></returns>
         public IRegistrationBase WithFactory<TFactoryInterface, TFactoryImplementation>() where TFactoryImplementation : TFactoryInterface
         {
-            Factory = new CustomTypedFactory();
+            Factory = new CustomTypedFactory<TFactoryInterface>();
             _container.Register<TFactoryInterface, TFactoryImplementation>();
 
             return this;

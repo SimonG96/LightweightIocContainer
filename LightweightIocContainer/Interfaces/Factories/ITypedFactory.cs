@@ -2,6 +2,9 @@
 // Created: 2019-05-20
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
+using System.Collections.Generic;
+using System.Reflection;
+
 namespace LightweightIocContainer.Interfaces.Factories
 {
     /// <summary>
@@ -9,7 +12,10 @@ namespace LightweightIocContainer.Interfaces.Factories
     /// </summary>
     public interface ITypedFactory
     {
-        
+        /// <summary>
+        /// The create methods of this <see cref="ITypedFactory"/>
+        /// </summary>
+        List<MethodInfo> CreateMethods { get; }
     }
     
     /// <summary>

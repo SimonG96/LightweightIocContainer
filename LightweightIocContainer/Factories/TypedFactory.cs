@@ -17,7 +17,7 @@ namespace LightweightIocContainer.Factories
     /// Class to help implement an abstract typed factory
     /// </summary>
     /// <typeparam name="TFactory">The type of the abstract factory</typeparam>
-    public class TypedFactory<TFactory> : ITypedFactory<TFactory>
+    public class TypedFactory<TFactory> : TypedFactoryBase<TFactory>, ITypedFactory<TFactory>
     {
         private const string CLEAR_MULTITON_INSTANCE_METHOD_NAME = "ClearMultitonInstance";
 
@@ -41,10 +41,6 @@ namespace LightweightIocContainer.Factories
         {
             Type factoryType = typeof(TFactory);
             
-            List<MethodInfo> createMethods = factoryType.GetMethods().Where(m => m.ReturnType != typeof(void)).ToList();
-            if (!createMethods.Any())
-                throw new InvalidFactoryRegistrationException($"Factory {factoryType.Name} has no create methods.");
-
             AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Factory"), AssemblyBuilderAccess.Run);
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("Factory");
             TypeBuilder typeBuilder = moduleBuilder.DefineType($"TypedFactory.{factoryType.Name}");
@@ -62,7 +58,7 @@ namespace LightweightIocContainer.Factories
             constructorGenerator.Emit(OpCodes.Stfld, containerFieldBuilder); //set `_container` field
             constructorGenerator.Emit(OpCodes.Ret);
 
-            foreach (MethodInfo createMethod in createMethods)
+            foreach (MethodInfo createMethod in CreateMethods)
             {
                 //create a method that looks like this
                 //public `createMethod.ReturnType` Create(`createMethod.GetParameters()`)
