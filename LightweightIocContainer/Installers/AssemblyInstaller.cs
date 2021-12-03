@@ -26,7 +26,7 @@ namespace LightweightIocContainer.Installers
             Type[] types = assembly.GetTypes();
             foreach (Type type in types)
             {
-                if (!typeof(IIocInstaller).IsAssignableFrom(type))
+                if (!typeof(IIocInstaller).IsAssignableFrom(type) || type.IsNestedPrivate)
                     continue;
 
                 Installers.Add((IIocInstaller) Activator.CreateInstance(type));
