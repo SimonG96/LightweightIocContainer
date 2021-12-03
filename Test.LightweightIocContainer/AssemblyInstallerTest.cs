@@ -19,7 +19,8 @@ namespace Test.LightweightIocContainer
     [TestFixture]
     public class AssemblyInstallerTest
     {
-        private class TestInstaller : IIocInstaller
+        [UsedImplicitly]
+        public class TestInstaller : IIocInstaller
         {
             public void Install(IIocContainer container) => container.Register<Mock<IRegistration>>();
         }
