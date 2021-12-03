@@ -1515,6 +1515,7 @@
         <member name="M:LightweightIocContainer.Validation.IocValidator.Validate">
             <summary>
             Validates your given <see cref="T:LightweightIocContainer.IocContainer"/> and checks if everything can be resolved with the current setup
+            <exception cref="T:System.AggregateException">Collection of all exceptions that are thrown during validation</exception>
             </summary>
         </member>
     </members>

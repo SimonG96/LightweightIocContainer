@@ -17,6 +17,8 @@ namespace LightweightIocContainer.Validation
         private readonly IocContainer _iocContainer;
         private readonly List<(Type type, object parameter)> _parameters;
 
+        private List<Exception> _validationExceptions;
+
         /// <summary>
         /// Validator for your <see cref="IocContainer"/> to check if everything can be resolved with your current setup
         /// </summary>
@@ -37,6 +39,7 @@ namespace LightweightIocContainer.Validation
         
         /// <summary>
         /// Validates your given <see cref="IocContainer"/> and checks if everything can be resolved with the current setup
+        /// <exception cref="AggregateException">Collection of all exceptions that are thrown during validation</exception>
         /// </summary>
         public void Validate()
         {
@@ -53,10 +56,26 @@ namespace LightweightIocContainer.Validation
                                 .FirstOrDefault(p => parameterType.IsInstanceOfType(p.parameter))
                             select definedParameter == default ? parameterType.GetDefault() : definedParameter.parameter).ToArray())
                         .ToList()
-                        .ForEach(p => _iocContainer.Resolve(registration.InterfaceType, p, null));
+                        .ForEach(p => TryResolve(registration.InterfaceType, p));
                 }
                 else
-                    _iocContainer.Resolve(registration.InterfaceType, null, null);
+                    TryResolve(registration.InterfaceType);
+            }
+
+            if (_validationExceptions != null)
+                throw new AggregateException("Validation failed.", _validationExceptions);
+        }
+
+        private void TryResolve(Type type, object[] arguments = null)
+        {
+            try
+            {
+                _iocContainer.Resolve(type, arguments, null);
+            }
+            catch (Exception exception)
+            {
+                _validationExceptions ??= new List<Exception>();
+                _validationExceptions.Add(exception);
             }
         }
     }
