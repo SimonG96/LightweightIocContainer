@@ -4,7 +4,6 @@
 
 using JetBrains.Annotations;
 using LightweightIocContainer;
-using LightweightIocContainer.Interfaces;
 using NUnit.Framework;
 
 namespace Test.LightweightIocContainer
@@ -12,7 +11,7 @@ namespace Test.LightweightIocContainer
     [TestFixture]
     public class MultipleMultitonRegistrationTest
     {
-        private IIocContainer _iocContainer;
+        private IocContainer _iocContainer;
         
         [UsedImplicitly]
         public interface ITest : IProvider

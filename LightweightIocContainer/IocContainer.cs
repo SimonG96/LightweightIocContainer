@@ -21,7 +21,7 @@ namespace LightweightIocContainer
     /// <summary>
     /// The main container that carries all the <see cref="IRegistration"/>s and can resolve all the types you'll ever want
     /// </summary>
-    public class IocContainer : IIocContainer
+    public class IocContainer : IIocContainer, IResolver
     {
         private readonly RegistrationFactory _registrationFactory;
 

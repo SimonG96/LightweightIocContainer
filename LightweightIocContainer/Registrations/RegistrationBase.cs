@@ -6,7 +6,6 @@ using System;
 using System.Linq;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Factories;
-using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Factories;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
@@ -26,7 +25,7 @@ namespace LightweightIocContainer.Registrations
         /// </summary>
         /// <param name="interfaceType">The <see cref="Type"/> of the Interface</param>
         /// <param name="lifestyle">The <see cref="LightweightIocContainer.Lifestyle"/> of the registration</param>
-        /// <param name="container">The current instance of the <see cref="IIocContainer"/></param>
+        /// <param name="container">The current instance of the <see cref="IocContainer"/></param>
         protected RegistrationBase(Type interfaceType, Lifestyle lifestyle, IocContainer container)
         {
             InterfaceType = interfaceType;
@@ -45,7 +44,7 @@ namespace LightweightIocContainer.Registrations
         public Lifestyle Lifestyle { get; }
 
         /// <summary>
-        /// An <see cref="Array"/> of parameters that are used to <see cref="IIocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
+        /// An <see cref="Array"/> of parameters that are used to <see cref="IocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
         /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="WithParameters(object[])"/></para>
         /// </summary>
         public object[] Parameters { get; private set; }
@@ -56,7 +55,7 @@ namespace LightweightIocContainer.Registrations
         public ITypedFactory Factory { get; private set; }
 
         /// <summary>
-        /// Pass parameters that will be used to <see cref="IIocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
+        /// Pass parameters that will be used to <see cref="IocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
         /// <para>Parameters set with this method are always inserted at the beginning of the argument list if more parameters are given when resolving</para>
         /// </summary>
         /// <param name="parameters">The parameters</param>
@@ -75,7 +74,7 @@ namespace LightweightIocContainer.Registrations
         }
 
         /// <summary>
-        /// Pass parameters that will be used to<see cref="IIocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
+        /// Pass parameters that will be used to<see cref="IocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
         /// <para>Parameters set with this method are inserted at the position in the argument list that is passed with the parameter if more parameters are given when resolving</para>
         /// </summary>
         /// <param name="parameters">The parameters with their position</param>

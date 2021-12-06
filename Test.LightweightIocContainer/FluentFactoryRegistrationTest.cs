@@ -5,7 +5,6 @@
 using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Exceptions;
-using LightweightIocContainer.Interfaces;
 using NUnit.Framework;
 
 namespace Test.LightweightIocContainer
@@ -84,7 +83,7 @@ namespace Test.LightweightIocContainer
 
         }
         
-        private IIocContainer _iocContainer;
+        private IocContainer _iocContainer;
 
         [SetUp]
         public void SetUp() => _iocContainer = new IocContainer();

@@ -14,7 +14,7 @@ namespace LightweightIocContainer.Interfaces.Registrations.Fluent
     public interface IWithParameters
     {
         /// <summary>
-        /// Pass parameters that will be used to<see cref="IIocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
+        /// Pass parameters that will be used to<see cref="IocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
         /// <para>Parameters set with this method are always inserted at the beginning of the argument list if more parameters are given when resolving</para>
         /// </summary>
         /// <param name="parameters">The parameters</param>
@@ -23,7 +23,7 @@ namespace LightweightIocContainer.Interfaces.Registrations.Fluent
         IRegistrationBase WithParameters(params object[] parameters);
 
         /// <summary>
-        /// Pass parameters that will be used to<see cref="IIocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
+        /// Pass parameters that will be used to<see cref="IocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
         /// <para>Parameters set with this method are inserted at the position in the argument list that is passed with the parameter if more parameters are given when resolving</para>
         /// </summary>
         /// <param name="parameters">The parameters with their position</param>
@@ -35,7 +35,7 @@ namespace LightweightIocContainer.Interfaces.Registrations.Fluent
     internal interface IWithParametersInternal : IWithParameters
     {
         /// <summary>
-        /// An <see cref="Array"/> of parameters that are used to <see cref="IIocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
+        /// An <see cref="Array"/> of parameters that are used to <see cref="IocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
         /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="IWithParameters.WithParameters(object[])"/></para>
         /// </summary>
         object[] Parameters { get; }

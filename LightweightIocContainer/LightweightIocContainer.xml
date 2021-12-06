@@ -44,12 +44,12 @@
         </member>
         <member name="T:LightweightIocContainer.Exceptions.CircularDependencyException">
             <summary>
-            A circular dependency was detected during <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/>
+            A circular dependency was detected during <see cref="M:LightweightIocContainer.IocContainer.Resolve``1"/>
             </summary>
         </member>
         <member name="M:LightweightIocContainer.Exceptions.CircularDependencyException.#ctor(System.Type,System.Collections.Generic.List{System.Type})">
             <summary>
-            A circular dependency was detected during <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/>
+            A circular dependency was detected during <see cref="M:LightweightIocContainer.IocContainer.Resolve``1"/>
             </summary>
             <param name="resolvingType">The currently resolving <see cref="T:System.Type"/></param>
             <param name="resolveStack">The resolve stack at the time the <see cref="T:LightweightIocContainer.Exceptions.CircularDependencyException"/> was thrown</param>
@@ -394,7 +394,7 @@
         </member>
         <member name="T:LightweightIocContainer.Interfaces.IIocContainer">
             <summary>
-            The main container that carries all the <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>s and can resolve all the types you'll ever want
+            The main container that carries all <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>s
             </summary>
         </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Install(LightweightIocContainer.Interfaces.Installers.IIocInstaller[])">
@@ -495,21 +495,6 @@
             <typeparam name="TScope">The Type of the multiton scope</typeparam>
             <returns>The created <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
         </member>
-        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1">
-            <summary>
-            Gets an instance of the given <see cref="T:System.Type"/>
-            </summary>
-            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
-            <returns>An instance of the given <see cref="T:System.Type"/></returns>
-        </member>
-        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1(System.Object[])">
-            <summary>
-            Gets an instance of the given <see cref="T:System.Type"/>
-            </summary>
-            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
-            <param name="arguments">The constructor arguments</param>
-            <returns>An instance of the given <see cref="T:System.Type"/></returns>
-        </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.ClearMultitonInstances``1">
             <summary>
             Clear the multiton instances of the given <see cref="T:System.Type"/> from the registered multitons list
@@ -543,6 +528,26 @@
             Install the needed <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>s in the given <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/>
             </summary>
             <param name="container">The current <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/></param>
+        </member>
+        <member name="T:LightweightIocContainer.Interfaces.IResolver">
+            <summary>
+            Provides <see cref="M:LightweightIocContainer.Interfaces.IResolver.Resolve``1"/> methods
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.IResolver.Resolve``1">
+            <summary>
+            Gets an instance of the given <see cref="T:System.Type"/>
+            </summary>
+            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
+            <returns>An instance of the given <see cref="T:System.Type"/></returns>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.IResolver.Resolve``1(System.Object[])">
+            <summary>
+            Gets an instance of the given <see cref="T:System.Type"/>
+            </summary>
+            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
+            <param name="arguments">The constructor arguments</param>
+            <returns>An instance of the given <see cref="T:System.Type"/></returns>
         </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.Fluent.IOnCreate">
             <summary>
@@ -601,7 +606,7 @@
         </member>
         <member name="M:LightweightIocContainer.Interfaces.Registrations.Fluent.IWithParameters.WithParameters(System.Object[])">
             <summary>
-            Pass parameters that will be used to<see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
+            Pass parameters that will be used to<see cref="M:LightweightIocContainer.IocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
             <para>Parameters set with this method are always inserted at the beginning of the argument list if more parameters are given when resolving</para>
             </summary>
             <param name="parameters">The parameters</param>
@@ -610,7 +615,7 @@
         </member>
         <member name="M:LightweightIocContainer.Interfaces.Registrations.Fluent.IWithParameters.WithParameters(System.ValueTuple{System.Int32,System.Object}[])">
             <summary>
-            Pass parameters that will be used to<see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
+            Pass parameters that will be used to<see cref="M:LightweightIocContainer.IocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
             <para>Parameters set with this method are inserted at the position in the argument list that is passed with the parameter if more parameters are given when resolving</para>
             </summary>
             <param name="parameters">The parameters with their position</param>
@@ -619,7 +624,7 @@
         </member>
         <member name="P:LightweightIocContainer.Interfaces.Registrations.Fluent.IWithParametersInternal.Parameters">
             <summary>
-            An <see cref="T:System.Array"/> of parameters that are used to <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
+            An <see cref="T:System.Array"/> of parameters that are used to <see cref="M:LightweightIocContainer.IocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
             <para>Can be set in the <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> by calling <see cref="M:LightweightIocContainer.Interfaces.Registrations.Fluent.IWithParameters.WithParameters(System.Object[])"/></para>
             </summary>
         </member>
@@ -739,7 +744,7 @@
             <see cref="T:System.Func`2"/> that is invoked instead of creating an instance of this <see cref="T:System.Type"/> the default way
             </summary>
         </member>
-        <member name="M:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1.WithFactoryMethod(System.Func{LightweightIocContainer.Interfaces.IIocContainer,`0})">
+        <member name="M:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1.WithFactoryMethod(System.Func{LightweightIocContainer.Interfaces.IResolver,`0})">
             <summary>
             Pass a <see cref="T:System.Func`2"/> that will be invoked instead of creating an instance of this <see cref="T:System.Type"/> the default way
             </summary>
@@ -1247,7 +1252,7 @@
             </summary>
             <param name="interfaceType">The <see cref="T:System.Type"/> of the Interface</param>
             <param name="lifestyle">The <see cref="T:LightweightIocContainer.Lifestyle"/> of the registration</param>
-            <param name="container">The current instance of the <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/></param>
+            <param name="container">The current instance of the <see cref="T:LightweightIocContainer.IocContainer"/></param>
         </member>
         <member name="P:LightweightIocContainer.Registrations.RegistrationBase.InterfaceType">
             <summary>
@@ -1261,7 +1266,7 @@
         </member>
         <member name="P:LightweightIocContainer.Registrations.RegistrationBase.Parameters">
             <summary>
-            An <see cref="T:System.Array"/> of parameters that are used to <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
+            An <see cref="T:System.Array"/> of parameters that are used to <see cref="M:LightweightIocContainer.IocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
             <para>Can be set in the <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> by calling <see cref="M:LightweightIocContainer.Registrations.RegistrationBase.WithParameters(System.Object[])"/></para>
             </summary>
         </member>
@@ -1272,7 +1277,7 @@
         </member>
         <member name="M:LightweightIocContainer.Registrations.RegistrationBase.WithParameters(System.Object[])">
             <summary>
-            Pass parameters that will be used to <see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
+            Pass parameters that will be used to <see cref="M:LightweightIocContainer.IocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
             <para>Parameters set with this method are always inserted at the beginning of the argument list if more parameters are given when resolving</para>
             </summary>
             <param name="parameters">The parameters</param>
@@ -1281,7 +1286,7 @@
         </member>
         <member name="M:LightweightIocContainer.Registrations.RegistrationBase.WithParameters(System.ValueTuple{System.Int32,System.Object}[])">
             <summary>
-            Pass parameters that will be used to<see cref="M:LightweightIocContainer.Interfaces.IIocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
+            Pass parameters that will be used to<see cref="M:LightweightIocContainer.IocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
             <para>Parameters set with this method are inserted at the position in the argument list that is passed with the parameter if more parameters are given when resolving</para>
             </summary>
             <param name="parameters">The parameters with their position</param>
@@ -1425,7 +1430,7 @@
             <see cref="T:System.Func`2"/> that is invoked instead of creating an instance of this <see cref="T:System.Type"/> the default way
             </summary>
         </member>
-        <member name="M:LightweightIocContainer.Registrations.SingleTypeRegistration`1.WithFactoryMethod(System.Func{LightweightIocContainer.Interfaces.IIocContainer,`0})">
+        <member name="M:LightweightIocContainer.Registrations.SingleTypeRegistration`1.WithFactoryMethod(System.Func{LightweightIocContainer.Interfaces.IResolver,`0})">
             <summary>
             Pass a <see cref="T:System.Func`2"/> that will be invoked instead of creating an instance of this <see cref="T:System.Type"/> the default way
             </summary>

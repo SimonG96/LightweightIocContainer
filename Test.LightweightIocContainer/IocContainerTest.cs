@@ -80,7 +80,7 @@ namespace Test.LightweightIocContainer
         }
 
 
-        private IIocContainer _iocContainer;
+        private IocContainer _iocContainer;
 
         [SetUp]
         public void SetUp() => _iocContainer = new IocContainer();

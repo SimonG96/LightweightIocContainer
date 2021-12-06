@@ -4,7 +4,6 @@
 
 using JetBrains.Annotations;
 using LightweightIocContainer;
-using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Registrations;
 using LightweightIocContainer.Registrations;
 using Moq;
@@ -58,7 +57,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestSingleTypeRegistrationResolveSingleton()
         {
-            IIocContainer container = new IocContainer();
+            IocContainer container = new IocContainer();
 
             IBar bar = new Bar();
             container.Register<IFoo>(Lifestyle.Singleton).WithFactoryMethod(_ => new Foo(bar));

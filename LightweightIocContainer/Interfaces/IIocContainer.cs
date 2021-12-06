@@ -9,7 +9,7 @@ using LightweightIocContainer.Interfaces.Registrations;
 namespace LightweightIocContainer.Interfaces
 {
     /// <summary>
-    /// The main container that carries all the <see cref="IRegistration"/>s and can resolve all the types you'll ever want
+    /// The main container that carries all <see cref="IRegistration"/>s
     /// </summary>
     public interface IIocContainer : IDisposable
     {
@@ -110,21 +110,6 @@ namespace LightweightIocContainer.Interfaces
         /// <typeparam name="TScope">The Type of the multiton scope</typeparam>
         /// <returns>The created <see cref="IRegistration"/></returns>
         IMultipleMultitonRegistration<TInterface1, TInterface2, TImplementation> RegisterMultiton<TInterface1, TInterface2, TImplementation, TScope>() where TImplementation : TInterface1, TInterface2;
-
-        /// <summary>
-        /// Gets an instance of the given <see cref="Type"/>
-        /// </summary>
-        /// <typeparam name="T">The given <see cref="Type"/></typeparam>
-        /// <returns>An instance of the given <see cref="Type"/></returns>
-        T Resolve<T>();
-
-        /// <summary>
-        /// Gets an instance of the given <see cref="Type"/>
-        /// </summary>
-        /// <typeparam name="T">The given <see cref="Type"/></typeparam>
-        /// <param name="arguments">The constructor arguments</param>
-        /// <returns>An instance of the given <see cref="Type"/></returns>
-        T Resolve<T>(params object[] arguments);
 
         /// <summary>
         /// Clear the multiton instances of the given <see cref="Type"/> from the registered multitons list

@@ -6,17 +6,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using LightweightIocContainer.Interfaces;
 
 namespace LightweightIocContainer.Exceptions
 {
     /// <summary>
-    /// A circular dependency was detected during <see cref="IIocContainer.Resolve{T}()"/>
+    /// A circular dependency was detected during <see cref="IocContainer.Resolve{T}()"/>
     /// </summary>
     internal class CircularDependencyException : IocContainerException
     {
         /// <summary>
-        /// A circular dependency was detected during <see cref="IIocContainer.Resolve{T}()"/>
+        /// A circular dependency was detected during <see cref="IocContainer.Resolve{T}()"/>
         /// </summary>
         /// <param name="resolvingType">The currently resolving <see cref="Type"/></param>
         /// <param name="resolveStack">The resolve stack at the time the <see cref="CircularDependencyException"/> was thrown</param>
