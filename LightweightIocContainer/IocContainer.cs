@@ -25,8 +25,8 @@ namespace LightweightIocContainer
     {
         private readonly RegistrationFactory _registrationFactory;
 
-        private readonly List<(Type type, object instance)> _singletons = new List<(Type, object)>();
-        private readonly List<(Type type, Type scope, ConditionalWeakTable<object, object> instances)> _multitons = new List<(Type, Type, ConditionalWeakTable<object, object>)>();
+        private readonly List<(Type type, object instance)> _singletons = new();
+        private readonly List<(Type type, Type scope, ConditionalWeakTable<object, object> instances)> _multitons = new();
 
         /// <summary>
         /// The main container that carries all the <see cref="IRegistration"/>s and can resolve all the types you'll ever want
@@ -47,9 +47,7 @@ namespace LightweightIocContainer
         public IIocContainer Install(params IIocInstaller[] installers)
         {
             foreach (IIocInstaller installer in installers)
-            {
                 installer.Install(this);
-            }
 
             return this;
         }
@@ -119,8 +117,7 @@ namespace LightweightIocContainer
         /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2,TInterface3}"/></returns>
         public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TImplementation> Register<TInterface1, TInterface2, TInterface3, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface3, TInterface2, TInterface1
         {
-            IMultipleRegistration<TInterface1, TInterface2, TInterface3, TImplementation> multipleRegistration =
-                _registrationFactory.Register<TInterface1, TInterface2, TInterface3, TImplementation>(lifestyle);
+            IMultipleRegistration<TInterface1, TInterface2, TInterface3, TImplementation> multipleRegistration = _registrationFactory.Register<TInterface1, TInterface2, TInterface3, TImplementation>(lifestyle);
             Register(multipleRegistration);
 
             return multipleRegistration;
@@ -138,8 +135,7 @@ namespace LightweightIocContainer
         /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2,TInterface3,TInterface4}"/></returns>
         public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation> Register<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface4, TInterface3, TInterface2, TInterface1
         {
-            IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation> multipleRegistration =
-                _registrationFactory.Register<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation>(lifestyle);
+            IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation> multipleRegistration = _registrationFactory.Register<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation>(lifestyle);
             Register(multipleRegistration);
 
             return multipleRegistration;
@@ -158,8 +154,7 @@ namespace LightweightIocContainer
         /// <returns>The created <see cref="IMultipleRegistration{TInterface1,TInterface2,TInterface3,TInterface4,TInterface5}"/></returns>
         public IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation> Register<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation>(Lifestyle lifestyle = Lifestyle.Transient) where TImplementation : TInterface5, TInterface4, TInterface3, TInterface2, TInterface1
         {
-            IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation> multipleRegistration =
-                _registrationFactory.Register<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation>(lifestyle);
+            IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation> multipleRegistration = _registrationFactory.Register<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation>(lifestyle);
             Register(multipleRegistration);
 
             return multipleRegistration;
@@ -243,10 +238,8 @@ namespace LightweightIocContainer
         /// <param name="multipleRegistration">The <see cref="IMultipleRegistration{TInterface1,TImplementation}"/></param>
         private void Register<TInterface1, TImplementation>(IMultipleRegistration<TInterface1, TImplementation> multipleRegistration) where TImplementation : TInterface1
         {
-            foreach (var registration in multipleRegistration.Registrations)
-            {
+            foreach (IRegistration registration in multipleRegistration.Registrations)
                 Register(registration);
-            }
         }
 
         /// <summary>
@@ -298,23 +291,14 @@ namespace LightweightIocContainer
             else //not the first resolve call in chain but no circular dependencies for now
                 resolveStack.Add(typeof(T)); //add currently resolving type to the stack
 
-            T resolvedInstance;
-
-            if (registration is IRegistrationBase defaultRegistration)
+            T resolvedInstance = registration switch
             {
-                if (defaultRegistration.Lifestyle == Lifestyle.Singleton)
-                    resolvedInstance = GetOrCreateSingletonInstance<T>(defaultRegistration, arguments, resolveStack);
-                else if (defaultRegistration is IMultitonRegistration multitonRegistration && defaultRegistration.Lifestyle == Lifestyle.Multiton)
-                    resolvedInstance = GetOrCreateMultitonInstance<T>(multitonRegistration, arguments, resolveStack);
-                else
-                    resolvedInstance = CreateInstance<T>(defaultRegistration, arguments, resolveStack);
-            }
-            else if (registration is ITypedFactoryRegistration<T> typedFactoryRegistration)
-            {
-                resolvedInstance = typedFactoryRegistration.Factory.Factory;
-            }
-            else
-                throw new UnknownRegistrationException($"There is no registration of type {registration.GetType().Name}.");
+                IRegistrationBase { Lifestyle: Lifestyle.Singleton } defaultRegistration => GetOrCreateSingletonInstance<T>(defaultRegistration, arguments, resolveStack),
+                IRegistrationBase { Lifestyle: Lifestyle.Multiton } and IMultitonRegistration multitonRegistration => GetOrCreateMultitonInstance<T>(multitonRegistration, arguments, resolveStack),
+                IRegistrationBase defaultRegistration => CreateInstance<T>(defaultRegistration, arguments, resolveStack),
+                ITypedFactoryRegistration<T> typedFactoryRegistration => typedFactoryRegistration.Factory.Factory,
+                _ => throw new UnknownRegistrationException($"There is no registration of type {registration.GetType().Name}.")
+            };
 
             resolveStack.Remove(typeof(T)); //T was successfully resolved -> no circular dependency -> remove from resolve stack
 
@@ -331,13 +315,12 @@ namespace LightweightIocContainer
         /// <returns>An existing or newly created singleton instance of the given <see cref="Type"/></returns>
         private T GetOrCreateSingletonInstance<T>(IRegistration registration, object[] arguments, List<Type> resolveStack)
         {
-            Type type;
-            if (registration is ITypedRegistration typedRegistration)
-                type = typedRegistration.ImplementationType;
-            else if (registration is ISingleTypeRegistration<T> singleTypeRegistration)
-                type = singleTypeRegistration.InterfaceType;
-            else
-                throw new UnknownRegistrationException($"There is no registration {registration.GetType().Name} that can have lifestyle singleton.");
+            Type type = registration switch
+            {
+                ITypedRegistration typedRegistration => typedRegistration.ImplementationType,
+                ISingleTypeRegistration<T> singleTypeRegistration => singleTypeRegistration.InterfaceType,
+                _ => throw new UnknownRegistrationException($"There is no registration {registration.GetType().Name} that can have lifestyle singleton.")
+            };
 
             //if a singleton instance exists return it
             object instance = _singletons.FirstOrDefault(s => s.type == type).instance;
@@ -385,7 +368,7 @@ namespace LightweightIocContainer
 
             T newInstance = CreateInstance<T>(registration, arguments, resolveStack);
 
-            ConditionalWeakTable<object, object> weakTable = new ConditionalWeakTable<object, object>();
+            ConditionalWeakTable<object, object> weakTable = new();
             weakTable.Add(scopeArgument, newInstance);
             
             _multitons.Add((registration.ImplementationType, registration.Scope, weakTable));
@@ -461,7 +444,7 @@ namespace LightweightIocContainer
                     if (i < registration.Parameters.Length) //if `i` is bigger than the length of the parameters, take the given arguments
                     {
                         object currentParameter = registration.Parameters[i];
-                        if (!(currentParameter is InternalResolvePlaceholder)) //use the parameter at the current index if it is not a placeholder
+                        if (currentParameter is not InternalResolvePlaceholder) //use the parameter at the current index if it is not a placeholder
                         {
                             newArguments[i] = currentParameter;
                             continue;
@@ -509,7 +492,7 @@ namespace LightweightIocContainer
                 try
                 {
                     List<object> argumentsList = arguments?.ToList();
-                    List<object> ctorParams = new List<object>();
+                    List<object> ctorParams = new();
 
                     ParameterInfo[] parameters = ctor.GetParameters();
                     foreach (ParameterInfo parameter in parameters)
@@ -519,7 +502,8 @@ namespace LightweightIocContainer
                         {
                             fittingArgument = argumentsList.FirstOrGiven<object, InternalResolvePlaceholder>(a =>
                                 a?.GetType() == parameter.ParameterType || parameter.ParameterType.IsInstanceOfType(a));
-                            if (!(fittingArgument is InternalResolvePlaceholder))
+                            
+                            if (fittingArgument is not InternalResolvePlaceholder)
                             {
                                 int index = argumentsList.IndexOf(fittingArgument);
                                 argumentsList[index] = new InternalResolvePlaceholder();
@@ -534,7 +518,7 @@ namespace LightweightIocContainer
                                 {
                                     fittingArgument = argumentsList.FirstOrGiven<object, InternalResolvePlaceholder>(a => parameter.ParameterType.GetDefault() == a);
 
-                                    if (!(fittingArgument is InternalResolvePlaceholder))
+                                    if (fittingArgument is not InternalResolvePlaceholder)
                                     {
                                         int index = argumentsList.IndexOf(fittingArgument);
                                         argumentsList[index] = new InternalResolvePlaceholder();
@@ -586,10 +570,7 @@ namespace LightweightIocContainer
                 return null;
             
             List<IRegistration> openGenericRegistrations = Registrations.Where(r => r.InterfaceType.ContainsGenericParameters).ToList();
-            if (!openGenericRegistrations.Any())
-                return null;
-
-            return openGenericRegistrations.FirstOrDefault(r => r.InterfaceType == typeof(T).GetGenericTypeDefinition());
+            return !openGenericRegistrations.Any() ? null : openGenericRegistrations.FirstOrDefault(r => r.InterfaceType == typeof(T).GetGenericTypeDefinition());
         }
         
         /// <summary>

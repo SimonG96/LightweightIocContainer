@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LightweightIocContainer.Interfaces.Registrations;
 using LightweightIocContainer.Interfaces.Registrations.Fluent;
 
 namespace LightweightIocContainer.Validation
@@ -43,7 +44,7 @@ namespace LightweightIocContainer.Validation
         {
             List<Exception> validationExceptions = new();
             
-            foreach (var registration in _iocContainer.Registrations)
+            foreach (IRegistration registration in _iocContainer.Registrations)
             {
                 if (registration is IWithFactory { Factory: { } } withFactoryRegistration)
                 {

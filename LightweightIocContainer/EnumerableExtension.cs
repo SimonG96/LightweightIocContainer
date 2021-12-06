@@ -43,13 +43,7 @@ namespace LightweightIocContainer
         {
             try
             {
-                TSource first;
-                if (predicate == null)
-                    first = source.First();
-                else
-                    first = source.First(predicate);
-
-                return first;
+                return predicate == null ? source.First() : source.First(predicate);
             }
             catch (Exception)
             {

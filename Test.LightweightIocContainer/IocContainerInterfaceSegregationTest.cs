@@ -58,10 +58,10 @@ namespace Test.LightweightIocContainer
             _container.Register<IBar, IFoo, Foo>().OnCreate(foo => foo.ThrowFoo());
 
             Exception fooException = Assert.Throws<Exception>(() => _container.Resolve<IFoo>());
-            Assert.AreEqual("Foo", fooException.Message);
+            Assert.AreEqual("Foo", fooException?.Message);
             
             Exception barException = Assert.Throws<Exception>(() => _container.Resolve<IBar>());
-            Assert.AreEqual("Foo", barException.Message);
+            Assert.AreEqual("Foo", barException?.Message);
         }
 
         [Test]
@@ -70,13 +70,13 @@ namespace Test.LightweightIocContainer
             _container.Register<IBar, IFoo, IAnotherFoo, Foo>().OnCreate(foo => foo.ThrowFoo());
 
             Exception fooException = Assert.Throws<Exception>(() => _container.Resolve<IFoo>());
-            Assert.AreEqual("Foo", fooException.Message);
+            Assert.AreEqual("Foo", fooException?.Message);
 
             Exception barException = Assert.Throws<Exception>(() => _container.Resolve<IBar>());
-            Assert.AreEqual("Foo", barException.Message);
+            Assert.AreEqual("Foo", barException?.Message);
 
             Exception anotherFooException = Assert.Throws<Exception>(() => _container.Resolve<IAnotherFoo>());
-            Assert.AreEqual("Foo", anotherFooException.Message);
+            Assert.AreEqual("Foo", anotherFooException?.Message);
         }
 
         [Test]
@@ -85,16 +85,16 @@ namespace Test.LightweightIocContainer
             _container.Register<IBar, IFoo, IAnotherFoo, IAnotherBar, Foo>().OnCreate(foo => foo.ThrowFoo());
 
             Exception fooException = Assert.Throws<Exception>(() => _container.Resolve<IFoo>());
-            Assert.AreEqual("Foo", fooException.Message);
+            Assert.AreEqual("Foo", fooException?.Message);
 
             Exception barException = Assert.Throws<Exception>(() => _container.Resolve<IBar>());
-            Assert.AreEqual("Foo", barException.Message);
+            Assert.AreEqual("Foo", barException?.Message);
 
             Exception anotherFooException = Assert.Throws<Exception>(() => _container.Resolve<IAnotherFoo>());
-            Assert.AreEqual("Foo", anotherFooException.Message);
+            Assert.AreEqual("Foo", anotherFooException?.Message);
 
             Exception anotherBarException = Assert.Throws<Exception>(() => _container.Resolve<IAnotherBar>());
-            Assert.AreEqual("Foo", anotherBarException.Message);
+            Assert.AreEqual("Foo", anotherBarException?.Message);
         }
 
         [Test]
@@ -103,19 +103,19 @@ namespace Test.LightweightIocContainer
             _container.Register<IBar, IFoo, IAnotherFoo, IAnotherBar, IAnotherOne, Foo>().OnCreate(foo => foo.ThrowFoo());
 
             Exception fooException = Assert.Throws<Exception>(() => _container.Resolve<IFoo>());
-            Assert.AreEqual("Foo", fooException.Message);
+            Assert.AreEqual("Foo", fooException?.Message);
 
             Exception barException = Assert.Throws<Exception>(() => _container.Resolve<IBar>());
-            Assert.AreEqual("Foo", barException.Message);
+            Assert.AreEqual("Foo", barException?.Message);
 
             Exception anotherFooException = Assert.Throws<Exception>(() => _container.Resolve<IAnotherFoo>());
-            Assert.AreEqual("Foo", anotherFooException.Message);
+            Assert.AreEqual("Foo", anotherFooException?.Message);
 
             Exception anotherBarException = Assert.Throws<Exception>(() => _container.Resolve<IAnotherBar>());
-            Assert.AreEqual("Foo", anotherBarException.Message);
+            Assert.AreEqual("Foo", anotherBarException?.Message);
 
             Exception anotherOneException = Assert.Throws<Exception>(() => _container.Resolve<IAnotherOne>());
-            Assert.AreEqual("Foo", anotherOneException.Message);
+            Assert.AreEqual("Foo", anotherOneException?.Message);
         }
 
         [Test]

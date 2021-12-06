@@ -100,7 +100,7 @@ namespace Test.LightweightIocContainer
             _iocContainer.Register<IBar, Bar>();
 
             CircularDependencyException exception = Assert.Throws<CircularDependencyException>(() => _iocContainer.Resolve<IFoo>());
-            Assert.AreEqual(typeof(IFoo), exception.ResolvingType);
+            Assert.AreEqual(typeof(IFoo), exception?.ResolvingType);
             Assert.AreEqual(2, exception.ResolveStack.Count);
 
             string message = $"Circular dependency has been detected when trying to resolve `{typeof(IFoo)}`.\n" +
@@ -115,7 +115,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestCircularDependencyExceptionNoStack()
         {
-            CircularDependencyException circularDependencyException = new CircularDependencyException(typeof(IFoo), null);
+            CircularDependencyException circularDependencyException = new(typeof(IFoo), null);
             string message = $"Circular dependency has been detected when trying to resolve `{typeof(IFoo)}`.\n";
             Assert.AreEqual(message, circularDependencyException.Message);
         }

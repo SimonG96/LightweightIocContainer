@@ -28,7 +28,7 @@ namespace LightweightIocContainer.Registrations
         public MultipleMultitonRegistration(Type interfaceType1, Type interfaceType2, Type implementationType, Type scope, IocContainer container)
             : base(interfaceType1, implementationType, scope, container)
         {
-            Registrations = new List<IRegistration>()
+            Registrations = new List<IRegistration>
             {
                 new MultitonRegistration<TInterface1, TImplementation>(interfaceType1, implementationType, scope, container),
                 new MultitonRegistration<TInterface2, TImplementation>(interfaceType2, implementationType, scope, container)
@@ -47,7 +47,7 @@ namespace LightweightIocContainer.Registrations
         /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
         public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
         {
-            foreach (var registration in Registrations)
+            foreach (IRegistration registration in Registrations)
             {
                 if (registration is IMultitonRegistration<TInterface2, TImplementation> interface2Registration)
                     interface2Registration.OnCreate(action);

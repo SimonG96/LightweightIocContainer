@@ -53,7 +53,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestWithParameters()
         {
-            RegistrationFactory registrationFactory = new RegistrationFactory(new Mock<IocContainer>().Object);
+            RegistrationFactory registrationFactory = new(new Mock<IocContainer>().Object);
 
             IBar bar = new Bar();
             ITest test = new Test();
@@ -67,7 +67,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestWithParametersDifferentOrder()
         {
-            RegistrationFactory registrationFactory = new RegistrationFactory(new Mock<IocContainer>().Object);
+            RegistrationFactory registrationFactory = new(new Mock<IocContainer>().Object);
 
             IBar bar = new Bar();
             ITest test = new Test();
@@ -83,7 +83,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestWithParametersCalledTwice()
         {
-            RegistrationFactory registrationFactory = new RegistrationFactory(new Mock<IocContainer>().Object);
+            RegistrationFactory registrationFactory = new(new Mock<IocContainer>().Object);
             Assert.Throws<InvalidRegistrationException>(() => registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters(new Bar()).WithParameters(new Test()));
             Assert.Throws<InvalidRegistrationException>(() => registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters((0, new Bar())).WithParameters((1, new Test())));
         }
@@ -91,7 +91,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestWithParametersNoParametersGiven()
         {
-            RegistrationFactory registrationFactory = new RegistrationFactory(new Mock<IocContainer>().Object);
+            RegistrationFactory registrationFactory = new(new Mock<IocContainer>().Object);
             Assert.Throws<InvalidRegistrationException>(() => registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters((object[])null));
             Assert.Throws<InvalidRegistrationException>(() => registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters(((int index, object parameter)[])null));
         }

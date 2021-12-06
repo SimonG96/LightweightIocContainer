@@ -45,9 +45,7 @@ namespace LightweightIocContainer.Installers
         public void Install(IIocContainer container)
         {
             foreach (IIocInstaller installer in Installers)
-            {
                 installer.Install(container);
-            }
         }
     }
 }

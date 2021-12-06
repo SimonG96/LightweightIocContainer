@@ -35,18 +35,18 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestInstall()
         {
-            List<Type> types = new List<Type>
+            List<Type> types = new()
             {
                 typeof(object),
                 typeof(TestInstaller)
             };
 
-            Mock<AssemblyWrapper> assemblyMock = new Mock<AssemblyWrapper>();
+            Mock<AssemblyWrapper> assemblyMock = new();
             assemblyMock.Setup(a => a.GetTypes()).Returns(types.ToArray);
 
-            Mock<IIocContainer> iocContainerMock = new Mock<IIocContainer>();
+            Mock<IIocContainer> iocContainerMock = new();
 
-            AssemblyInstaller assemblyInstaller = new AssemblyInstaller(assemblyMock.Object);
+            AssemblyInstaller assemblyInstaller = new(assemblyMock.Object);
             assemblyInstaller.Install(iocContainerMock.Object);
 
             iocContainerMock.Verify(ioc => ioc.Register<It.IsSubtype<Mock<IRegistration>>>(It.IsAny<Lifestyle>()), Times.Once);
@@ -62,13 +62,13 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestFromAssemblyInstance()
         {
-            List<Type> types = new List<Type>
+            List<Type> types = new()
             {
                 typeof(object),
                 typeof(TestInstaller)
             };
 
-            Mock<AssemblyWrapper> assemblyMock = new Mock<AssemblyWrapper>();
+            Mock<AssemblyWrapper> assemblyMock = new();
             assemblyMock.Setup(a => a.GetTypes()).Returns(types.ToArray);
 
             IIocContainer iocContainer = new IocContainer();

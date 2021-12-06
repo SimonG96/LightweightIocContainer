@@ -51,7 +51,7 @@ namespace Test.LightweightIocContainer
         {
             _iocContainer.RegisterMultiton<IProvider, ITest, Test, MultitonScope>();
 
-            MultitonScope scope = new MultitonScope();
+            MultitonScope scope = new();
             
             ITest test = _iocContainer.Resolve<ITest>(scope);
             Assert.NotNull(test);
@@ -67,8 +67,8 @@ namespace Test.LightweightIocContainer
         {
             _iocContainer.RegisterMultiton<IProvider, ITest, Test, MultitonScope>();
 
-            MultitonScope scope = new MultitonScope();
-            MultitonScope differentScope = new MultitonScope();
+            MultitonScope scope = new();
+            MultitonScope differentScope = new();
             
             ITest test = _iocContainer.Resolve<ITest>(scope);
             Assert.NotNull(test);
@@ -85,7 +85,7 @@ namespace Test.LightweightIocContainer
         {
             _iocContainer.RegisterMultiton<IProvider, ITest, Test, MultitonScope>().OnCreate(t => t.DoSomething(1));
             
-            MultitonScope scope = new MultitonScope();
+            MultitonScope scope = new();
             
             ITest test = _iocContainer.Resolve<ITest>(scope);
             Assert.NotNull(test);

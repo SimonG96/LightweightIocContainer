@@ -92,7 +92,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestInstall()
         {
-            Mock<IIocInstaller> installerMock = new Mock<IIocInstaller>();
+            Mock<IIocInstaller> installerMock = new();
             IIocContainer returnedContainer = _iocContainer.Install(installerMock.Object);
 
             installerMock.Verify(m => m.Install(It.IsAny<IIocContainer>()), Times.Once);
@@ -103,9 +103,9 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestInstallMultiple()
         {
-            Mock<IIocInstaller> installer1Mock = new Mock<IIocInstaller>();
-            Mock<IIocInstaller> installer2Mock = new Mock<IIocInstaller>();
-            Mock<IIocInstaller> installer3Mock = new Mock<IIocInstaller>();
+            Mock<IIocInstaller> installer1Mock = new();
+            Mock<IIocInstaller> installer2Mock = new();
+            Mock<IIocInstaller> installer3Mock = new();
 
             IIocContainer returnedContainer = _iocContainer.Install(installer1Mock.Object, installer2Mock.Object, installer3Mock.Object);
 
@@ -133,14 +133,14 @@ namespace Test.LightweightIocContainer
         {
             _iocContainer.Register<ITest, Test>();
             MultipleRegistrationException exception = Assert.Throws<MultipleRegistrationException>(() => _iocContainer.Register<ITest, TestConstructor>());
-            Assert.AreEqual(typeof(ITest), exception.Type);
+            Assert.AreEqual(typeof(ITest), exception?.Type);
         }
 
         [Test]
         public void TestResolveNotRegistered()
         {
             TypeNotRegisteredException exception = Assert.Throws<TypeNotRegisteredException>(() => _iocContainer.Resolve<ITest>());
-            Assert.AreEqual(typeof(ITest), exception.Type);
+            Assert.AreEqual(typeof(ITest), exception?.Type);
         }
 
         [Test]
@@ -217,8 +217,8 @@ namespace Test.LightweightIocContainer
         {
             _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>();
 
-            MultitonScope scope1 = new MultitonScope();
-            MultitonScope scope2 = new MultitonScope();
+            MultitonScope scope1 = new();
+            MultitonScope scope2 = new();
 
             ITest resolvedTest1 = _iocContainer.Resolve<ITest>(scope1);
             ITest resolvedTest2 = _iocContainer.Resolve<ITest>(scope1);
@@ -235,7 +235,7 @@ namespace Test.LightweightIocContainer
             _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>();
 
             MultitonResolveException exception = Assert.Throws<MultitonResolveException>(() => _iocContainer.Resolve<ITest>());
-            Assert.AreEqual(typeof(ITest), exception.Type);
+            Assert.AreEqual(typeof(ITest), exception?.Type);
         }
 
         [Test]
@@ -244,7 +244,7 @@ namespace Test.LightweightIocContainer
             _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>();
 
             MultitonResolveException exception = Assert.Throws<MultitonResolveException>(() => _iocContainer.Resolve<ITest>(new object()));
-            Assert.AreEqual(typeof(ITest), exception.Type);
+            Assert.AreEqual(typeof(ITest), exception?.Type);
         }
 
         [Test]
@@ -263,7 +263,7 @@ namespace Test.LightweightIocContainer
         {
             _iocContainer.Register<ITest, TestConstructor>();
             NoMatchingConstructorFoundException exception = Assert.Throws<NoMatchingConstructorFoundException>(() => _iocContainer.Resolve<ITest>());
-            Assert.AreEqual(typeof(TestConstructor), exception.Type);
+            Assert.AreEqual(typeof(TestConstructor), exception?.Type);
         }
 
         [Test]
@@ -278,7 +278,7 @@ namespace Test.LightweightIocContainer
         {
             _iocContainer.Register<ITest, TestPrivateConstructor>();
             NoPublicConstructorFoundException exception = Assert.Throws<NoPublicConstructorFoundException>(() => _iocContainer.Resolve<ITest>());
-            Assert.AreEqual(typeof(TestPrivateConstructor), exception.Type);
+            Assert.AreEqual(typeof(TestPrivateConstructor), exception?.Type);
         }
 
         [Test]

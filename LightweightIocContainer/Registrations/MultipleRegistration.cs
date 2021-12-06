@@ -68,7 +68,7 @@ namespace LightweightIocContainer.Registrations
         /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
         public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
         {
-            foreach (var registration in Registrations)
+            foreach (IRegistration registration in Registrations)
             {
                 if (registration is ITypedRegistration<TInterface2, TImplementation> interface2Registration)
                     interface2Registration.OnCreate(action);
@@ -116,7 +116,7 @@ namespace LightweightIocContainer.Registrations
         /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
         public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
         {
-            foreach (var registration in Registrations)
+            foreach (IRegistration registration in Registrations)
             {
                 if (registration is ITypedRegistration<TInterface3, TImplementation> interface3Registration)
                     interface3Registration.OnCreate(action);
@@ -169,7 +169,7 @@ namespace LightweightIocContainer.Registrations
         /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
         public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
         {
-            foreach (var registration in Registrations)
+            foreach (IRegistration registration in Registrations)
             {
                 if (registration is ITypedRegistration<TInterface4, TImplementation> interface4Registration)
                     interface4Registration.OnCreate(action);
@@ -227,7 +227,7 @@ namespace LightweightIocContainer.Registrations
         /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
         public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
         {
-            foreach (var registration in Registrations)
+            foreach (IRegistration registration in Registrations)
             {
                 if (registration is ITypedRegistration<TInterface5, TImplementation> interface5Registration)
                     interface5Registration.OnCreate(action);

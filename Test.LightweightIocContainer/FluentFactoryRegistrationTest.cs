@@ -185,8 +185,8 @@ namespace Test.LightweightIocContainer
         {
             _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>().WithFactory<ITestFactory>();
         
-            MultitonScope scope1 = new MultitonScope();
-            MultitonScope scope2 = new MultitonScope();
+            MultitonScope scope1 = new();
+            MultitonScope scope2 = new();
         
             ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
         
@@ -204,8 +204,8 @@ namespace Test.LightweightIocContainer
         {
             _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>().WithFactory<ITestFactory>();
         
-            MultitonScope scope1 = new MultitonScope();
-            MultitonScope scope2 = new MultitonScope();
+            MultitonScope scope1 = new();
+            MultitonScope scope2 = new();
         
             ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
         

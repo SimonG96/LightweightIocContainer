@@ -44,7 +44,7 @@ namespace LightweightIocContainer.Exceptions
         {
             get
             {
-                StringBuilder message = new StringBuilder($"Circular dependency has been detected when trying to resolve `{ResolvingType}`.\n");
+                StringBuilder message = new($"Circular dependency has been detected when trying to resolve `{ResolvingType}`.\n");
                 if (ResolveStack == null || !ResolveStack.Any())
                     return message.ToString();
 
@@ -52,9 +52,7 @@ namespace LightweightIocContainer.Exceptions
                 message.Append($"\t`{ResolvingType}` resolved as dependency of\n");
 
                 for (int i = ResolveStack.Count - 1; i >= 1 ; i--)
-                {
                     message.Append($"\t`{ResolveStack[i]}` resolved as dependency of\n");
-                }
 
                 message.Append($"\t`{ResolveStack[0]}` which is the root type being resolved.");
                 return message.ToString();

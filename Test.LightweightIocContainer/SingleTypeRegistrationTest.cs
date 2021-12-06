@@ -48,7 +48,7 @@ namespace Test.LightweightIocContainer
             Mock<IocContainer> iocContainerMock = new();
             iocContainerMock.Setup(c => c.Resolve<IBar>()).Returns(bar);
 
-            RegistrationFactory registrationFactory = new RegistrationFactory(iocContainerMock.Object);
+            RegistrationFactory registrationFactory = new(iocContainerMock.Object);
             ISingleTypeRegistration<IFoo> registration = registrationFactory.Register<IFoo>(Lifestyle.Transient).WithFactoryMethod(c => new Foo(c.Resolve<IBar>()));
 
             IFoo foo = registration.FactoryMethod(iocContainerMock.Object);
@@ -61,7 +61,7 @@ namespace Test.LightweightIocContainer
             IIocContainer container = new IocContainer();
 
             IBar bar = new Bar();
-            container.Register<IFoo>(Lifestyle.Singleton).WithFactoryMethod(c => new Foo(bar));
+            container.Register<IFoo>(Lifestyle.Singleton).WithFactoryMethod(_ => new Foo(bar));
 
             IFoo foo = container.Resolve<IFoo>();
 
