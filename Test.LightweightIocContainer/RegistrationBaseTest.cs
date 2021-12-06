@@ -5,7 +5,6 @@
 using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Exceptions;
-using LightweightIocContainer.Interfaces.Registrations;
 using LightweightIocContainer.Registrations;
 using Moq;
 using NUnit.Framework;
@@ -58,7 +57,7 @@ namespace Test.LightweightIocContainer
             IBar bar = new Bar();
             ITest test = new Test();
 
-            IRegistrationBase testRegistration = registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters(bar, test);
+            RegistrationBase testRegistration = (RegistrationBase) registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters(bar, test);
 
             Assert.AreEqual(bar, testRegistration.Parameters[0]);
             Assert.AreEqual(test, testRegistration.Parameters[1]);
@@ -72,7 +71,7 @@ namespace Test.LightweightIocContainer
             IBar bar = new Bar();
             ITest test = new Test();
 
-            IRegistrationBase testRegistration = registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters((0, bar), (3, test), (2, "SomeString"));
+            RegistrationBase testRegistration = (RegistrationBase) registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters((0, bar), (3, test), (2, "SomeString"));
 
             Assert.AreEqual(bar, testRegistration.Parameters[0]);
             Assert.IsInstanceOf<InternalResolvePlaceholder>(testRegistration.Parameters[1]);

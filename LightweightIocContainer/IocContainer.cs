@@ -293,9 +293,9 @@ namespace LightweightIocContainer
 
             T resolvedInstance = registration switch
             {
-                IRegistrationBase { Lifestyle: Lifestyle.Singleton } defaultRegistration => GetOrCreateSingletonInstance<T>(defaultRegistration, arguments, resolveStack),
-                IRegistrationBase { Lifestyle: Lifestyle.Multiton } and IMultitonRegistration multitonRegistration => GetOrCreateMultitonInstance<T>(multitonRegistration, arguments, resolveStack),
-                IRegistrationBase defaultRegistration => CreateInstance<T>(defaultRegistration, arguments, resolveStack),
+                RegistrationBase { Lifestyle: Lifestyle.Singleton } defaultRegistration => GetOrCreateSingletonInstance<T>(defaultRegistration, arguments, resolveStack),
+                RegistrationBase { Lifestyle: Lifestyle.Multiton } and IMultitonRegistration multitonRegistration => GetOrCreateMultitonInstance<T>(multitonRegistration, arguments, resolveStack),
+                RegistrationBase defaultRegistration => CreateInstance<T>(defaultRegistration, arguments, resolveStack),
                 ITypedFactoryRegistration<T> typedFactoryRegistration => typedFactoryRegistration.Factory.Factory,
                 _ => throw new UnknownRegistrationException($"There is no registration of type {registration.GetType().Name}.")
             };
@@ -386,7 +386,7 @@ namespace LightweightIocContainer
         /// <returns>A newly created instance of the given <see cref="Type"/></returns>
         private T CreateInstance<T>(IRegistration registration, object[] arguments, List<Type> resolveStack)
         {
-            if (registration is IWithParameters { Parameters: { } } registrationWithParameters)
+            if (registration is IWithParametersInternal { Parameters: { } } registrationWithParameters)
                 arguments = UpdateArgumentsWithRegistrationParameters(registrationWithParameters, arguments);
 
             T instance;
@@ -427,12 +427,12 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
-        /// Update the given arguments with the <see cref="IWithParameters.Parameters"/> of the given <see cref="IRegistrationBase"/>
+        /// Update the given arguments with the <see cref="IWithParametersInternal.Parameters"/> of the given <see cref="IRegistrationBase"/>
         /// </summary>
         /// <param name="registration">The <see cref="IRegistrationBase"/> of the given <see cref="Type"/></param>
         /// <param name="arguments">The constructor arguments</param>
-        /// <returns>The argument list updated with the <see cref="IWithParameters.Parameters"/></returns>
-        private object[] UpdateArgumentsWithRegistrationParameters(IWithParameters registration, object[] arguments)
+        /// <returns>The argument list updated with the <see cref="IWithParametersInternal.Parameters"/></returns>
+        private object[] UpdateArgumentsWithRegistrationParameters(IWithParametersInternal registration, object[] arguments)
         {
             if (arguments != null && arguments.Any()) //if more arguments were passed to resolve
             {

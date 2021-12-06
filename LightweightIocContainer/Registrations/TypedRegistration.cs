@@ -35,7 +35,13 @@ namespace LightweightIocContainer.Registrations
         /// This <see cref="Action"/> is invoked when an instance of this type is created.
         /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="IOnCreate{TInterface,TImplementation}.OnCreate"/></para>
         /// </summary>
-        public Action<object> OnCreateAction { get; private set; }
+        private Action<object> OnCreateAction { get; set; }
+
+        /// <summary>
+        /// This <see cref="Action"/> is invoked when an instance of this type is created.
+        /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="IOnCreate{TInterface,TImplementation}.OnCreate"/></para>
+        /// </summary>
+        Action<object> IOnCreate.OnCreateAction => OnCreateAction;
 
         /// <summary>
         /// Pass an <see cref="Action{T}"/> that will be invoked when an instance of this type is created

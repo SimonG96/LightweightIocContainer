@@ -10,13 +10,14 @@ using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Factories;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
+using LightweightIocContainer.Interfaces.Registrations.Fluent;
 
 namespace LightweightIocContainer.Registrations
 {
     /// <summary>
     /// The <see cref="RegistrationBase"/> that is used to register an Interface
     /// </summary>
-    public abstract class RegistrationBase : IRegistrationBase
+    public abstract class RegistrationBase : IRegistrationBase, IWithFactoryInternal, IWithParametersInternal, ILifestyleProvider
     {
         private readonly IocContainer _container;
 

@@ -12,11 +12,6 @@ namespace LightweightIocContainer.Interfaces.Registrations.Fluent
     public interface IWithFactory
     {
         /// <summary>
-        /// The Factory added with the <see cref="WithFactory{TFactory}"/> method
-        /// </summary>
-        ITypedFactory Factory { get; }
-        
-        /// <summary>
         /// Register an abstract typed factory for the <see cref="IRegistrationBase"/> 
         /// </summary>
         /// <typeparam name="TFactory">The type of the abstract typed factory</typeparam>
@@ -30,5 +25,13 @@ namespace LightweightIocContainer.Interfaces.Registrations.Fluent
         /// <typeparam name="TFactoryImplementation">The type of the implementation for the custom factory</typeparam>
         /// <returns>The current instance of this <see cref="IRegistrationBase"/></returns>
         IRegistrationBase WithFactory<TFactoryInterface, TFactoryImplementation>() where TFactoryImplementation : TFactoryInterface;
+    }
+
+    internal interface IWithFactoryInternal : IWithFactory
+    {
+        /// <summary>
+        /// The Factory added with the <see cref="IWithFactory.WithFactory{TFactory}"/> method
+        /// </summary>
+        ITypedFactory Factory { get; }
     }
 }

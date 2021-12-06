@@ -46,7 +46,7 @@ namespace LightweightIocContainer.Validation
             
             foreach (IRegistration registration in _iocContainer.Registrations)
             {
-                if (registration is IWithFactory { Factory: { } } withFactoryRegistration)
+                if (registration is IWithFactoryInternal { Factory: { } } withFactoryRegistration)
                 {
                     (from createMethod in withFactoryRegistration.Factory.CreateMethods
                         select createMethod.GetParameters().Select(p => p.ParameterType)
