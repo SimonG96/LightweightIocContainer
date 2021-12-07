@@ -224,7 +224,7 @@ namespace LightweightIocContainer
                 throw new MultipleRegistrationException(registration.InterfaceType);
 
             //don't allow lifestyle.multiton without iMultitonRegistration
-            if (registration is ILifestyleProvider lifestyleProvider && lifestyleProvider.Lifestyle == Lifestyle.Multiton && !(registration is IMultitonRegistration))
+            if (registration is ILifestyleProvider { Lifestyle: Lifestyle.Multiton } and not IMultitonRegistration)
                 throw new InvalidRegistrationException("Can't register a type as Lifestyle.Multiton without a scope (Registration is not of type IMultitonRegistration).");
 
             Registrations.Add(registration);
@@ -451,7 +451,7 @@ namespace LightweightIocContainer
                         }
                     }
 
-                    object firstArgument = arguments.FirstOrGiven<object, InternalResolvePlaceholder>(a => !(a is InternalResolvePlaceholder)); //find the first argument that is not a placeholder
+                    object firstArgument = arguments.FirstOrGiven<object, InternalResolvePlaceholder>(a => a is not InternalResolvePlaceholder); //find the first argument that is not a placeholder
                     if (firstArgument is InternalResolvePlaceholder) //no more arguments available
                         break; //there won't be any more arguments
 
