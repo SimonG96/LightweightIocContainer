@@ -279,9 +279,7 @@ namespace LightweightIocContainer
         /// <exception cref="UnknownRegistrationException">The registration for the given <see cref="Type"/> has an unknown <see cref="Type"/></exception>
         private T ResolveInternal<T>(object[] arguments, List<Type> resolveStack = null)
         {
-            IRegistration registration = FindRegistration<T>();
-            if (registration == null)
-                throw new TypeNotRegisteredException(typeof(T));
+            IRegistration registration = FindRegistration<T>() ?? throw new TypeNotRegisteredException(typeof(T));
 
             //Circular dependency check
             if (resolveStack == null) //first resolve call
@@ -580,7 +578,7 @@ namespace LightweightIocContainer
         public void ClearMultitonInstances<T>()
         {
             IRegistration registration = FindRegistration<T>();
-            if (!(registration is IMultitonRegistration multitonRegistration))
+            if (registration is not IMultitonRegistration multitonRegistration)
                 return;
             
             var multitonInstance = _multitons.FirstOrDefault(m => m.type == multitonRegistration.ImplementationType);
