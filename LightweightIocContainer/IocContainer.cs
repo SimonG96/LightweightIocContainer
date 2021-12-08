@@ -487,8 +487,35 @@ namespace LightweightIocContainer
         [CanBeNull]
         private object[] ResolveTypeCreationArguments(Type type, object[] arguments, List<Type> resolveStack)
         {
-            NoMatchingConstructorFoundException noMatchingConstructorFoundException = null;
+            (bool result, List<object> parameters, NoMatchingConstructorFoundException exception) = TryGetTypeResolveStack(type, arguments, resolveStack);
+            
+            if (result)
+            {
+                if (parameters == null)
+                    return null;
+                    
+                List<object> constructorParameters = new();
+                foreach (object parameter in parameters)
+                {
+                    if (parameter is InternalToBeResolvedPlaceholder toBeResolvedPlaceholder)
+                        constructorParameters.Add(Resolve(toBeResolvedPlaceholder, resolveStack));
+                    else
+                        constructorParameters.Add(parameter);
+                }
 
+                return constructorParameters.ToArray();
+            }
+
+            if (exception != null)
+                throw exception;
+            
+            return null;
+        }
+
+        private (bool result, List<object> parameters, NoMatchingConstructorFoundException exception) TryGetTypeResolveStack(Type type, object[] arguments, List<Type> resolveStack)
+        {
+            NoMatchingConstructorFoundException noMatchingConstructorFoundException = null;
+            
             //find best ctor
             List<ConstructorInfo> sortedConstructors = TryGetSortedConstructors(type);
             foreach (ConstructorInfo constructor in sortedConstructors)
@@ -496,31 +523,14 @@ namespace LightweightIocContainer
                 (bool result, List<object> parameters, List<ConstructorNotMatchingException> exceptions) = TryGetConstructorResolveStack(constructor, arguments, resolveStack);
 
                 if (result)
-                {
-                    if (parameters == null)
-                        return null;
-                    
-                    List<object> constructorParameters = new();
-                    foreach (object parameter in parameters)
-                    {
-                        if (parameter is InternalToBeResolvedPlaceholder toBeResolvedPlaceholder)
-                            constructorParameters.Add(Resolve(toBeResolvedPlaceholder, resolveStack));
-                        else
-                            constructorParameters.Add(parameter);
-                    }
-
-                    return constructorParameters.ToArray();
-                }
-
+                    return (true, parameters, null);
+                
                 noMatchingConstructorFoundException ??= new NoMatchingConstructorFoundException(type);
-                exceptions.ForEach(e => 
+                exceptions?.ForEach(e => 
                     noMatchingConstructorFoundException.AddInnerException(new ConstructorNotMatchingException(constructor, e)));
             }
 
-            if (noMatchingConstructorFoundException != null)
-                throw noMatchingConstructorFoundException;
-            
-            return null;
+            return (false, null, noMatchingConstructorFoundException);
         }
 
         private (bool result, List<object> parameters, List<ConstructorNotMatchingException> constructorNotMatchingExceptions) TryGetConstructorResolveStack(ConstructorInfo constructor, object[] arguments, List<Type> resolveStack)
@@ -555,7 +565,7 @@ namespace LightweightIocContainer
                         IRegistration registration = FindRegistration(parameter.ParameterType) ?? throw new TypeNotRegisteredException(parameter.ParameterType);
 
                         List<Type> internalResolveStack = new(resolveStack);
-                        internalResolveStack = CheckForCircularDependencies(parameter.ParameterType, internalResolveStack); //testMe: seems to work
+                        internalResolveStack = CheckForCircularDependencies(parameter.ParameterType, internalResolveStack);
 
                         Type registeredType = GetTypeNonGeneric(parameter.ParameterType, registration);
 
@@ -568,19 +578,13 @@ namespace LightweightIocContainer
                             if (registration is IWithParametersInternal { Parameters: { } } registrationWithParameters)
                                 argumentsForRegistration = UpdateArgumentsWithRegistrationParameters(registrationWithParameters, null);
 
-                            foreach (ConstructorInfo registeredTypeConstructor in TryGetSortedConstructors(registeredType))
-                            {
-                                (bool result, List<object> parametersToResolve, List<ConstructorNotMatchingException> exceptions) = 
-                                    TryGetConstructorResolveStack(registeredTypeConstructor, argumentsForRegistration, internalResolveStack);
+                            (bool result, List<object> parametersToResolve, NoMatchingConstructorFoundException exception) = 
+                                TryGetTypeResolveStack(registeredType, argumentsForRegistration, internalResolveStack);
 
-                                if (result)
-                                {
-                                    fittingArgument = new InternalToBeResolvedPlaceholder(registeredType, parametersToResolve);
-                                    break;
-                                }
-
-                                constructorNotMatchingExceptions.AddRange(exceptions);
-                            }
+                            if (result) 
+                                fittingArgument = new InternalToBeResolvedPlaceholder(registeredType, parametersToResolve);
+                            else
+                                constructorNotMatchingExceptions.Add(new ConstructorNotMatchingException(constructor, exception));
                         }
                     }
                     catch (Exception exception)
