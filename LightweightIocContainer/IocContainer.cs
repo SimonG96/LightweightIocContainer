@@ -15,6 +15,7 @@ using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
 using LightweightIocContainer.Interfaces.Registrations.Fluent;
 using LightweightIocContainer.Registrations;
+using LightweightIocContainer.ResolvePlaceholders;
 
 namespace LightweightIocContainer
 {
@@ -266,8 +267,25 @@ namespace LightweightIocContainer
         /// <returns>An instance of the given <see cref="Type"/></returns>
         /// <exception cref="InternalResolveException">Could not find function <see cref="ResolveInternal{T}"/></exception>
         internal object Resolve(Type type, object[] arguments, List<Type> resolveStack) => 
-            GenericMethodCaller.Call(this, nameof(ResolveInternal), type, BindingFlags.NonPublic | BindingFlags.Instance, arguments, resolveStack);
+            GenericMethodCaller.CallPrivate(this, nameof(ResolveInternal), type, arguments, resolveStack);
 
+        private object Resolve(InternalToBeResolvedPlaceholder toBeResolvedPlaceholder, List<Type> resolveStack)
+        {
+            if (toBeResolvedPlaceholder.Parameters == null)
+                return Resolve(toBeResolvedPlaceholder.ResolvedType, null, resolveStack);
+            
+            List<object> parameters = new();
+            foreach (object parameter in toBeResolvedPlaceholder.Parameters)
+            {
+                if (parameter is InternalToBeResolvedPlaceholder internalToBeResolvedPlaceholder)
+                    parameters.Add(Resolve(internalToBeResolvedPlaceholder, resolveStack));
+                else
+                    parameters.Add(parameter);
+            }
+
+            return Resolve(toBeResolvedPlaceholder.ResolvedType, parameters.ToArray(), resolveStack);
+        }
+        
         /// <summary>
         /// Gets an instance of a given registered <see cref="Type"/>
         /// </summary>
@@ -282,12 +300,7 @@ namespace LightweightIocContainer
             IRegistration registration = FindRegistration<T>() ?? throw new TypeNotRegisteredException(typeof(T));
 
             //Circular dependency check
-            if (resolveStack == null) //first resolve call
-                resolveStack = new List<Type> {typeof(T)}; //create new stack and add the currently resolving type to the stack
-            else if (resolveStack.Contains(typeof(T)))
-                throw new CircularDependencyException(typeof(T), resolveStack); //currently resolving type is still resolving -> circular dependency
-            else //not the first resolve call in chain but no circular dependencies for now
-                resolveStack.Add(typeof(T)); //add currently resolving type to the stack
+            resolveStack = CheckForCircularDependencies<T>(resolveStack);
 
             T resolvedInstance = registration switch
             {
@@ -313,15 +326,9 @@ namespace LightweightIocContainer
         /// <returns>An existing or newly created singleton instance of the given <see cref="Type"/></returns>
         private T GetOrCreateSingletonInstance<T>(IRegistration registration, object[] arguments, List<Type> resolveStack)
         {
-            Type type = registration switch
-            {
-                ITypedRegistration typedRegistration => typedRegistration.ImplementationType,
-                ISingleTypeRegistration<T> singleTypeRegistration => singleTypeRegistration.InterfaceType,
-                _ => throw new UnknownRegistrationException($"There is no registration {registration.GetType().Name} that can have lifestyle singleton.")
-            };
-
-            //if a singleton instance exists return it
-            object instance = _singletons.FirstOrDefault(s => s.type == type).instance;
+            Type type = GetType<T>(registration);
+            
+            object instance = TryGetSingletonInstance(type);
             if (instance != null)
                 return (T) instance;
 
@@ -331,6 +338,8 @@ namespace LightweightIocContainer
 
             return newInstance;
         }
+        
+        private object TryGetSingletonInstance(Type type) => _singletons.FirstOrDefault(s => s.type == type).instance; //if a singleton instance exists return it
 
         /// <summary>
         /// Gets or creates a multiton instance of a given <see cref="Type"/>
@@ -390,7 +399,7 @@ namespace LightweightIocContainer
             T instance;
             if (registration is IOpenGenericRegistration openGenericRegistration)
             {
-                arguments = ResolveConstructorArguments(openGenericRegistration.ImplementationType, arguments, resolveStack);
+                arguments = ResolveTypeCreationArguments(openGenericRegistration.ImplementationType, arguments, resolveStack);
                 
                 //create generic implementation type from generic arguments of T
                 Type genericImplementationType = openGenericRegistration.ImplementationType.MakeGenericType(typeof(T).GenericTypeArguments);
@@ -399,7 +408,7 @@ namespace LightweightIocContainer
             }
             else if (registration is ITypedRegistration defaultRegistration)
             {
-                arguments = ResolveConstructorArguments(defaultRegistration.ImplementationType, arguments, resolveStack);
+                arguments = ResolveTypeCreationArguments(defaultRegistration.ImplementationType, arguments, resolveStack);
                 instance = (T) Activator.CreateInstance(defaultRegistration.ImplementationType, arguments);
             }
             else if (registration is ISingleTypeRegistration<T> singleTypeRegistration)
@@ -409,7 +418,7 @@ namespace LightweightIocContainer
 
                 if (singleTypeRegistration.FactoryMethod == null) //type registration without interface -> just create this type
                 {
-                    arguments = ResolveConstructorArguments(singleTypeRegistration.InterfaceType, arguments, resolveStack);
+                    arguments = ResolveTypeCreationArguments(singleTypeRegistration.InterfaceType, arguments, resolveStack);
                     instance = (T)Activator.CreateInstance(singleTypeRegistration.InterfaceType, arguments);
                 }
                 else //factory method set to create the instance
@@ -468,7 +477,7 @@ namespace LightweightIocContainer
         }
 
         /// <summary>
-        /// Resolve the missing constructor arguments
+        /// Resolve the missing type creation arguments
         /// </summary>
         /// <param name="type">The <see cref="Type"/> that will be created</param>
         /// <param name="arguments">The existing arguments</param>
@@ -476,74 +485,36 @@ namespace LightweightIocContainer
         /// <returns>An array of all needed constructor arguments to create the <see cref="Type"/></returns>
         /// <exception cref="NoMatchingConstructorFoundException">No matching constructor was found for the given or resolvable arguments</exception>
         [CanBeNull]
-        private object[] ResolveConstructorArguments(Type type, object[] arguments, List<Type> resolveStack)
+        private object[] ResolveTypeCreationArguments(Type type, object[] arguments, List<Type> resolveStack)
         {
-            //find best ctor
-            List<ConstructorInfo> sortedConstructors = type.GetConstructors().OrderByDescending(c => c.GetParameters().Length).ToList();
-            if (!sortedConstructors.Any()) //no public constructor available
-                throw new NoPublicConstructorFoundException(type);
-
             NoMatchingConstructorFoundException noMatchingConstructorFoundException = null;
 
-            foreach (ConstructorInfo ctor in sortedConstructors)
-            {
-                try
+            //find best ctor
+            List<ConstructorInfo> sortedConstructors = TryGetSortedConstructors(type);
+            foreach (ConstructorInfo constructor in sortedConstructors)
+            { 
+                (bool result, List<object> parameters, List<ConstructorNotMatchingException> exceptions) = TryGetConstructorResolveStack(constructor, arguments, resolveStack);
+
+                if (result)
                 {
-                    List<object> argumentsList = arguments?.ToList();
-                    List<object> ctorParams = new();
-
-                    ParameterInfo[] parameters = ctor.GetParameters();
-                    foreach (ParameterInfo parameter in parameters)
+                    if (parameters == null)
+                        return null;
+                    
+                    List<object> constructorParameters = new();
+                    foreach (object parameter in parameters)
                     {
-                        object fittingArgument = new InternalResolvePlaceholder();
-                        if (argumentsList != null)
-                        {
-                            fittingArgument = argumentsList.FirstOrGiven<object, InternalResolvePlaceholder>(a =>
-                                a?.GetType() == parameter.ParameterType || parameter.ParameterType.IsInstanceOfType(a));
-                            
-                            if (fittingArgument is not InternalResolvePlaceholder)
-                            {
-                                int index = argumentsList.IndexOf(fittingArgument);
-                                argumentsList[index] = new InternalResolvePlaceholder();
-                            }
-                            else //fittingArgument is InternalResolvePlaceholder
-                            {
-                                try
-                                {
-                                    fittingArgument = Resolve(parameter.ParameterType, null, resolveStack);
-                                }
-                                catch (Exception)
-                                {
-                                    fittingArgument = argumentsList.FirstOrGiven<object, InternalResolvePlaceholder>(a => parameter.ParameterType.GetDefault() == a);
-
-                                    if (fittingArgument is not InternalResolvePlaceholder)
-                                    {
-                                        int index = argumentsList.IndexOf(fittingArgument);
-                                        argumentsList[index] = new InternalResolvePlaceholder();
-                                    }
-                                }
-                            }
-                        }
-
-                        if (fittingArgument is InternalResolvePlaceholder && parameter.HasDefaultValue)
-                            ctorParams.Add(parameter.DefaultValue);
-                        else if (fittingArgument is InternalResolvePlaceholder)
-                            ctorParams.Add(Resolve(parameter.ParameterType, null, resolveStack));
+                        if (parameter is InternalToBeResolvedPlaceholder toBeResolvedPlaceholder)
+                            constructorParameters.Add(Resolve(toBeResolvedPlaceholder, resolveStack));
                         else
-                            ctorParams.Add(fittingArgument);
+                            constructorParameters.Add(parameter);
                     }
 
-                    return ctorParams.ToArray();
+                    return constructorParameters.ToArray();
                 }
-                catch (CircularDependencyException) //don't handle circular dependencies as no matching constructor, just rethrow them
-                {
-                    throw;
-                }
-                catch (Exception ex)
-                {
-                    noMatchingConstructorFoundException ??= new NoMatchingConstructorFoundException(type);
-                    noMatchingConstructorFoundException.AddInnerException(new ConstructorNotMatchingException(ctor, ex));
-                }
+
+                noMatchingConstructorFoundException ??= new NoMatchingConstructorFoundException(type);
+                exceptions.ForEach(e => 
+                    noMatchingConstructorFoundException.AddInnerException(new ConstructorNotMatchingException(constructor, e)));
             }
 
             if (noMatchingConstructorFoundException != null)
@@ -552,25 +523,149 @@ namespace LightweightIocContainer
             return null;
         }
 
-        [CanBeNull]
-        private IRegistration FindRegistration<T>()
+        private (bool result, List<object> parameters, List<ConstructorNotMatchingException> constructorNotMatchingExceptions) TryGetConstructorResolveStack(ConstructorInfo constructor, object[] arguments, List<Type> resolveStack)
         {
-            IRegistration registration = Registrations.FirstOrDefault(r => r.InterfaceType == typeof(T));
+            List<ParameterInfo> constructorParameters = constructor.GetParameters().ToList();
+            if (!constructorParameters.Any())
+                return (true, null, null);
+            
+            List<ConstructorNotMatchingException> constructorNotMatchingExceptions = new();
+            List<object> parameters = new();
+
+            List<object> passedArguments = null;
+            if (arguments != null)
+                passedArguments = new List<object>(arguments);
+
+            foreach (ParameterInfo parameter in constructorParameters)
+            {
+                object fittingArgument = new InternalResolvePlaceholder();
+                if (passedArguments != null)
+                {
+                    fittingArgument = passedArguments.FirstOrGiven<object, InternalResolvePlaceholder>(a =>
+                        a?.GetType() == parameter.ParameterType || parameter.ParameterType.IsInstanceOfType(a));
+                    
+                    if (fittingArgument is not InternalResolvePlaceholder)
+                    {
+                        int index = passedArguments.IndexOf(fittingArgument); //todo
+                        passedArguments[index] = new InternalResolvePlaceholder();
+                    }
+                }
+
+                if (fittingArgument is InternalResolvePlaceholder)
+                {
+                    try
+                    {
+                        IRegistration registration = FindRegistration(parameter.ParameterType) ?? throw new TypeNotRegisteredException(parameter.ParameterType);
+
+                        List<Type> internalResolveStack = new(resolveStack);
+                        internalResolveStack = CheckForCircularDependencies(parameter.ParameterType, internalResolveStack); //testMe: seems to work
+
+                        Type registeredType = GetTypeNonGeneric(parameter.ParameterType, registration);
+
+                        object singletonInstance = TryGetSingletonInstance(registeredType);
+                        if (singletonInstance != null)
+                            fittingArgument = singletonInstance;
+                        else
+                        {
+                            object[] argumentsForRegistration = null;
+                            if (registration is IWithParametersInternal { Parameters: { } } registrationWithParameters)
+                                argumentsForRegistration = UpdateArgumentsWithRegistrationParameters(registrationWithParameters, null);
+
+                            foreach (ConstructorInfo registeredTypeConstructor in TryGetSortedConstructors(registeredType))
+                            {
+                                (bool result, List<object> parametersToResolve, List<ConstructorNotMatchingException> exceptions) = 
+                                    TryGetConstructorResolveStack(registeredTypeConstructor, argumentsForRegistration, internalResolveStack);
+
+                                if (result)
+                                {
+                                    fittingArgument = new InternalToBeResolvedPlaceholder(registeredType, parametersToResolve);
+                                    break;
+                                }
+
+                                constructorNotMatchingExceptions.AddRange(exceptions);
+                            }
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        constructorNotMatchingExceptions.Add(new ConstructorNotMatchingException(constructor, exception));
+                    }
+
+                    if (fittingArgument is InternalResolvePlaceholder && passedArguments != null)
+                    {
+                        fittingArgument = passedArguments.FirstOrGiven<object, InternalResolvePlaceholder>(a => parameter.ParameterType.GetDefault() == a);
+
+                        if (fittingArgument is not InternalResolvePlaceholder)
+                        {
+                            int index = passedArguments.IndexOf(fittingArgument);
+                            passedArguments[index] = new InternalResolvePlaceholder();
+                        }
+                    }
+                }
+
+                if (fittingArgument is InternalResolvePlaceholder && parameter.HasDefaultValue)
+                    parameters.Add(parameter.DefaultValue);
+                else
+                    parameters.Add(fittingArgument);
+            }
+
+            return (!parameters.Any(p => p is InternalResolvePlaceholder), parameters, constructorNotMatchingExceptions);
+        }
+
+        [CanBeNull]
+        private IRegistration FindRegistration<T>() => FindRegistration(typeof(T));
+        
+        [CanBeNull]
+        private IRegistration FindRegistration(Type type)
+        {
+            IRegistration registration = Registrations.FirstOrDefault(r => r.InterfaceType == type);
             if (registration != null)
                 return registration;
 
-            registration = Registrations.OfType<ITypedRegistration>().FirstOrDefault(r => r.ImplementationType == typeof(T));
+            registration = Registrations.OfType<ITypedRegistration>().FirstOrDefault(r => r.ImplementationType == type);
             if (registration != null)
                 return registration;
             
             //check for open generic registration
-            if (!typeof(T).GenericTypeArguments.Any())
+            if (!type.GenericTypeArguments.Any())
                 return null;
             
             List<IRegistration> openGenericRegistrations = Registrations.Where(r => r.InterfaceType.ContainsGenericParameters).ToList();
-            return !openGenericRegistrations.Any() ? null : openGenericRegistrations.FirstOrDefault(r => r.InterfaceType == typeof(T).GetGenericTypeDefinition());
+            return !openGenericRegistrations.Any() ? null : openGenericRegistrations.FirstOrDefault(r => r.InterfaceType == type.GetGenericTypeDefinition());
         }
         
+        private List<ConstructorInfo> TryGetSortedConstructors(Type type)
+        {
+            List<ConstructorInfo> sortedConstructors = type.GetConstructors().OrderByDescending(c => c.GetParameters().Length).ToList();
+            if (!sortedConstructors.Any()) //no public constructor available
+                throw new NoPublicConstructorFoundException(type);
+            
+            return sortedConstructors;
+        }
+        
+        private Type GetType<T>(IRegistration registration) =>
+            registration switch
+            {
+                ITypedRegistration typedRegistration => typedRegistration.ImplementationType,
+                ISingleTypeRegistration<T> singleTypeRegistration => singleTypeRegistration.InterfaceType,
+                _ => throw new UnknownRegistrationException($"Unknown registration used: {registration.GetType().Name}.")
+            };
+        
+        private Type GetTypeNonGeneric(Type type, IRegistration registration) => (Type) GenericMethodCaller.CallPrivate(this, nameof(GetType), type, registration);
+        
+        private List<Type> CheckForCircularDependencies<T>(List<Type> resolveStack) => CheckForCircularDependencies(typeof(T), resolveStack);
+        private List<Type> CheckForCircularDependencies(Type type, List<Type> resolveStack)
+        {
+            if (resolveStack == null) //first resolve call
+                resolveStack = new List<Type> {type}; //create new stack and add the currently resolving type to the stack
+            else if (resolveStack.Contains(type))
+                throw new CircularDependencyException(type, resolveStack); //currently resolving type is still resolving -> circular dependency
+            else //not the first resolve call in chain but no circular dependencies for now
+                resolveStack.Add(type); //add currently resolving type to the stack
+            
+            return resolveStack;
+        }
+
         /// <summary>
         /// Clear the multiton instances of the given <see cref="Type"/> from the registered multitons list
         /// </summary>

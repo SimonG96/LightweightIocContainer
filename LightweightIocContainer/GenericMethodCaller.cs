@@ -41,5 +41,18 @@ namespace LightweightIocContainer
                 throw ex.GetBaseException();
             }
         }
+
+        /// <summary>
+        /// Call a private generic method without generic type parameters
+        /// </summary>
+        /// <param name="caller">The caller of the method</param>
+        /// <param name="functionName">The name of the method to call</param>
+        /// <param name="genericParameter">The generic parameter as <see cref="Type"/> parameter</param>
+        /// <param name="parameters">The parameters of the method</param>
+        /// <returns>The result of invoking the method</returns>
+        /// <exception cref="GenericMethodNotFoundException">Could not find the generic method</exception>
+        /// <exception cref="Exception">Any <see cref="Exception"/> thrown after invoking the generic method</exception>
+        public static object CallPrivate(object caller, string functionName, Type genericParameter, params object[] parameters) =>
+            Call(caller, functionName, genericParameter, BindingFlags.NonPublic | BindingFlags.Instance, parameters);
     }
 }

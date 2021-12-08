@@ -331,6 +331,18 @@
             <exception cref="T:LightweightIocContainer.Exceptions.GenericMethodNotFoundException">Could not find the generic method</exception>
             <exception cref="T:System.Exception">Any <see cref="T:System.Exception"/> thrown after invoking the generic method</exception>
         </member>
+        <member name="M:LightweightIocContainer.GenericMethodCaller.CallPrivate(System.Object,System.String,System.Type,System.Object[])">
+            <summary>
+            Call a private generic method without generic type parameters
+            </summary>
+            <param name="caller">The caller of the method</param>
+            <param name="functionName">The name of the method to call</param>
+            <param name="genericParameter">The generic parameter as <see cref="T:System.Type"/> parameter</param>
+            <param name="parameters">The parameters of the method</param>
+            <returns>The result of invoking the method</returns>
+            <exception cref="T:LightweightIocContainer.Exceptions.GenericMethodNotFoundException">Could not find the generic method</exception>
+            <exception cref="T:System.Exception">Any <see cref="T:System.Exception"/> thrown after invoking the generic method</exception>
+        </member>
         <member name="T:LightweightIocContainer.Installers.AssemblyInstaller">
             <summary>
             An <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> that installs all <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/>s for its given <see cref="T:System.Reflection.Assembly"/>
@@ -777,11 +789,6 @@
             A <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> that implements a <see cref="T:System.Type"/>
             </summary>
         </member>
-        <member name="T:LightweightIocContainer.InternalResolvePlaceholder">
-            <summary>
-            An internal placeholder that is used during the resolving process
-            </summary>
-        </member>
         <member name="T:LightweightIocContainer.IocContainer">
             <summary>
             The main container that carries all the <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>s and can resolve all the types you'll ever want
@@ -990,9 +997,9 @@
             <param name="arguments">The constructor arguments</param>
             <returns>The argument list updated with the <see cref="P:LightweightIocContainer.Interfaces.Registrations.Fluent.IWithParametersInternal.Parameters"/></returns>
         </member>
-        <member name="M:LightweightIocContainer.IocContainer.ResolveConstructorArguments(System.Type,System.Object[],System.Collections.Generic.List{System.Type})">
+        <member name="M:LightweightIocContainer.IocContainer.ResolveTypeCreationArguments(System.Type,System.Object[],System.Collections.Generic.List{System.Type})">
             <summary>
-            Resolve the missing constructor arguments
+            Resolve the missing type creation arguments
             </summary>
             <param name="type">The <see cref="T:System.Type"/> that will be created</param>
             <param name="arguments">The existing arguments</param>
@@ -1496,6 +1503,16 @@
             </summary>
             <param name="action">The <see cref="T:System.Action`1"/></param>
             <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistration`2"/></returns>
+        </member>
+        <member name="T:LightweightIocContainer.ResolvePlaceholders.InternalResolvePlaceholder">
+            <summary>
+            An internal placeholder that is used during the resolving process
+            </summary>
+        </member>
+        <member name="T:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder">
+            <summary>
+            An internal placeholder that is used to hold types that need to be resolved during the resolving process
+            </summary>
         </member>
         <member name="M:LightweightIocContainer.TypeExtension.GetDefault(System.Type)">
             <summary>

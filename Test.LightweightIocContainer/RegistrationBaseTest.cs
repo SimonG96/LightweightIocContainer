@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Registrations;
+using LightweightIocContainer.ResolvePlaceholders;
 using Moq;
 using NUnit.Framework;
 

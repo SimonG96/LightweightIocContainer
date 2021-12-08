@@ -10,6 +10,7 @@ using LightweightIocContainer.Interfaces.Factories;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
 using LightweightIocContainer.Interfaces.Registrations.Fluent;
+using LightweightIocContainer.ResolvePlaceholders;
 
 namespace LightweightIocContainer.Registrations
 {
