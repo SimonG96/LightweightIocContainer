@@ -545,10 +545,7 @@ namespace LightweightIocContainer
                         a?.GetType() == parameter.ParameterType || parameter.ParameterType.IsInstanceOfType(a));
                     
                     if (fittingArgument is not InternalResolvePlaceholder)
-                    {
-                        int index = passedArguments.IndexOf(fittingArgument); //todo
-                        passedArguments[index] = new InternalResolvePlaceholder();
-                    }
+                        passedArguments.Remove(fittingArgument);
                 }
 
                 if (fittingArgument is InternalResolvePlaceholder)
@@ -596,10 +593,7 @@ namespace LightweightIocContainer
                         fittingArgument = passedArguments.FirstOrGiven<object, InternalResolvePlaceholder>(a => parameter.ParameterType.GetDefault() == a);
 
                         if (fittingArgument is not InternalResolvePlaceholder)
-                        {
-                            int index = passedArguments.IndexOf(fittingArgument);
-                            passedArguments[index] = new InternalResolvePlaceholder();
-                        }
+                            passedArguments.Remove(fittingArgument);
                     }
                 }
 
