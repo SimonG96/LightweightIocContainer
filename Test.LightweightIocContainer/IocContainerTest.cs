@@ -69,9 +69,25 @@ namespace Test.LightweightIocContainer
         }
 
         [UsedImplicitly]
+        private class TestWithFoo : ITest
+        {
+            public TestWithFoo(IFoo foo) => Foo = foo;
+            public IFoo Foo { get; }
+        }
+
+        [UsedImplicitly]
         private class Foo : IFoo
         {
 
+        }
+
+        [UsedImplicitly]
+        private class FooConstructor : IFoo
+        {
+            public FooConstructor(string test)
+            {
+                
+            }
         }
 
         private class MultitonScope
@@ -290,6 +306,30 @@ namespace Test.LightweightIocContainer
             ITest test = _iocContainer.Resolve<ITest>();
             
             Assert.NotNull(test);
+        }
+
+        [Test]
+        public void TestResolveParameterIsRegisteredWithParameters()
+        {
+            _iocContainer.Register<ITest, TestConstructor>();
+            _iocContainer.Register<IFoo, FooConstructor>().WithParameters("TestString");
+
+            ITest test = _iocContainer.Resolve<ITest>("testName");
+            
+            Assert.IsInstanceOf<TestConstructor>(test);
+        }
+
+        [Test]
+        public void TestResolveParameterWithParameterThatIsAlreadyExistingSingleton()
+        {
+            _iocContainer.Register<ITest, TestWithFoo>();
+            _iocContainer.Register<IFoo, FooConstructor>(Lifestyle.Singleton).WithParameters("TestString");
+
+            IFoo foo = _iocContainer.Resolve<IFoo>();
+            ITest test = _iocContainer.Resolve<ITest>("testName");
+            
+            Assert.IsInstanceOf<TestWithFoo>(test);
+            Assert.AreSame(foo, ((TestWithFoo) test).Foo);
         }
 
         [Test]
