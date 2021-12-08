@@ -71,8 +71,8 @@ namespace Test.LightweightIocContainer
         [UsedImplicitly]
         private class TestWithFoo : ITest
         {
-            public TestWithFoo(IFoo foo) => Foo = foo;
-            public IFoo Foo { get; }
+            public TestWithFoo(IFoo testFoo) => TestFoo = testFoo;
+            public IFoo TestFoo { get; }
         }
 
         [UsedImplicitly]
@@ -329,7 +329,7 @@ namespace Test.LightweightIocContainer
             ITest test = _iocContainer.Resolve<ITest>("testName");
             
             Assert.IsInstanceOf<TestWithFoo>(test);
-            Assert.AreSame(foo, ((TestWithFoo) test).Foo);
+            Assert.AreSame(foo, ((TestWithFoo) test).TestFoo);
         }
 
         [Test]
