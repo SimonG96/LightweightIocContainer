@@ -2,6 +2,7 @@
 // Created: 2019-11-05
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
+using System;
 using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Exceptions;
@@ -82,6 +83,20 @@ namespace Test.LightweightIocContainer
         {
 
         }
+        
+        [UsedImplicitly]
+        private class ATwoCtor : IA
+        {
+            public ATwoCtor(IB b) => Console.WriteLine("A with args");
+            public ATwoCtor() => Console.WriteLine("A without args");
+        }
+        
+        [UsedImplicitly]
+        private class BTwoCtor : IB
+        {
+            public BTwoCtor(IA a) => Console.WriteLine("B with args");
+            public BTwoCtor() => Console.WriteLine("B without args");
+        }
 
 
         private IocContainer _iocContainer;
@@ -98,7 +113,12 @@ namespace Test.LightweightIocContainer
             _iocContainer.Register<IFoo, Foo>();
             _iocContainer.Register<IBar, Bar>();
 
-            CircularDependencyException exception = Assert.Throws<CircularDependencyException>(() => _iocContainer.Resolve<IFoo>());
+            NoMatchingConstructorFoundException noMatchingConstructorFoundException = Assert.Throws<NoMatchingConstructorFoundException>(() => _iocContainer.Resolve<IFoo>());
+            ConstructorNotMatchingException fooConstructorNotMatchingException = (ConstructorNotMatchingException) noMatchingConstructorFoundException?.InnerExceptions[0];
+            ConstructorNotMatchingException barConstructorNotMatchingException = (ConstructorNotMatchingException) fooConstructorNotMatchingException?.InnerExceptions[0];
+            
+            CircularDependencyException exception = (CircularDependencyException) barConstructorNotMatchingException?.InnerExceptions[0];
+            
             Assert.AreEqual(typeof(IFoo), exception?.ResolvingType);
             Assert.AreEqual(2, exception.ResolveStack.Count);
 
@@ -138,6 +158,16 @@ namespace Test.LightweightIocContainer
 
             Assert.DoesNotThrow(() => _iocContainer.Resolve<IFoo>(new Mock<IBar>().Object));
             Assert.DoesNotThrow(() => _iocContainer.Resolve<IBar>(new Mock<IFoo>().Object));
+        }
+
+        [Test]
+        public void TestNonCircularCrossDependencies()
+        {
+            _iocContainer.Register<IA, ATwoCtor>();
+            _iocContainer.Register<IB, BTwoCtor>();
+
+            Assert.DoesNotThrow(() => _iocContainer.Resolve<IA>());
+            Assert.DoesNotThrow(() => _iocContainer.Resolve<IB>());
         }
     }
 }
