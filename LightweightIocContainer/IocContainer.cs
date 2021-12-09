@@ -210,7 +210,12 @@ namespace LightweightIocContainer
         /// </summary>
         /// <typeparam name="TFactory">The abstract typed factory to register</typeparam>
         /// <returns>The created <see cref="IRegistration"/></returns>
-        internal void RegisterFactory<TFactory>(ITypedFactory<TFactory> factory) => Register(_registrationFactory.RegisterFactory(factory));
+        internal void RegisterFactory<TFactory>(ITypedFactory<TFactory> factory)
+        {
+            ITypedFactoryRegistration<TFactory> typedFactoryRegistration = _registrationFactory.RegisterFactory(factory);
+            if (!Registrations.Contains(typedFactoryRegistration))
+                Registrations.Add(typedFactoryRegistration);
+        }
 
         /// <summary>
         /// Add the <see cref="IRegistration"/> to the the <see cref="IocContainer"/>
