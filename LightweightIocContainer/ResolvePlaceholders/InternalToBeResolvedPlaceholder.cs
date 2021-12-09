@@ -18,7 +18,14 @@ namespace LightweightIocContainer.ResolvePlaceholders
             Parameters = parameters;
         }
 
+        /// <summary>
+        /// The <see cref="Type"/> to be resolved
+        /// </summary>
         public Type ResolvedType { get; }
+        
+        /// <summary>
+        /// The parameters needed to resolve the <see cref="ResolvedType"/>
+        /// </summary>
         public List<object> Parameters { get; }
     }
 }

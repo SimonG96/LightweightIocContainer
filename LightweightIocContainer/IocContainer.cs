@@ -269,6 +269,12 @@ namespace LightweightIocContainer
         internal object Resolve(Type type, object[] arguments, List<Type> resolveStack) => 
             GenericMethodCaller.CallPrivate(this, nameof(ResolveInternal), type, arguments, resolveStack);
 
+        /// <summary>
+        /// Recursively resolve a <see cref="Type"/> with the given parameters for an <see cref="InternalToBeResolvedPlaceholder"/>
+        /// </summary>
+        /// <param name="toBeResolvedPlaceholder">The <see cref="InternalToBeResolvedPlaceholder"/> that includes the type and resolve stack</param>
+        /// <param name="resolveStack">The current resolve stack</param>
+        /// <returns>A recursively resolved instance of the given <see cref="Type"/></returns>
         private object Resolve(InternalToBeResolvedPlaceholder toBeResolvedPlaceholder, List<Type> resolveStack)
         {
             if (toBeResolvedPlaceholder.Parameters == null)
@@ -339,6 +345,11 @@ namespace LightweightIocContainer
             return newInstance;
         }
         
+        /// <summary>
+        /// Try to get an existing singleton instance for a given <see cref="Type"/>
+        /// </summary>
+        /// <param name="type">The given <see cref="Type"/></param>
+        /// <returns>A singleton instance if existing for the given <see cref="Type"/>, null if not</returns>
         private object TryGetSingletonInstance(Type type) => _singletons.FirstOrDefault(s => s.type == type).instance; //if a singleton instance exists return it
 
         /// <summary>
@@ -512,6 +523,17 @@ namespace LightweightIocContainer
             return null;
         }
 
+        /// <summary>
+        /// Try to get the resolve stack for a given <see cref="Type"/>
+        /// </summary>
+        /// <param name="type">The given <see cref="Type"/></param>
+        /// <param name="arguments">The given arguments</param>
+        /// <param name="resolveStack">The current resolve stack</param>
+        /// <returns>
+        /// <para>result: True if successful, false if not</para>
+        /// <para>parameters: The parameters needed to resolve the given <see cref="Type"/></para>
+        /// <para>exception: A <see cref="NoMatchingConstructorFoundException"/> if no matching constructor was found</para>
+        /// </returns>
         private (bool result, List<object> parameters, NoMatchingConstructorFoundException exception) TryGetTypeResolveStack(Type type, object[] arguments, List<Type> resolveStack)
         {
             NoMatchingConstructorFoundException noMatchingConstructorFoundException = null;
@@ -533,13 +555,24 @@ namespace LightweightIocContainer
             return (false, null, noMatchingConstructorFoundException);
         }
 
-        private (bool result, List<object> parameters, List<ConstructorNotMatchingException> constructorNotMatchingExceptions) TryGetConstructorResolveStack(ConstructorInfo constructor, object[] arguments, List<Type> resolveStack)
+        /// <summary>
+        /// Try to get the resolve stack for a given constructor
+        /// </summary>
+        /// <param name="constructor">The <see cref="ConstructorInfo"/> for the given constructor</param>
+        /// <param name="arguments">The given arguments</param>
+        /// <param name="resolveStack">The current resolve stack</param>
+        /// <returns>
+        /// <para>result: True if successful, false if not</para>
+        /// <para>parameters: The parameters needed to resolve the given <see cref="Type"/></para>
+        /// <para>exception: A List of <see cref="ConstructorNotMatchingException"/>s if the constructor is not matching</para>
+        /// </returns>
+        private (bool result, List<object> parameters, List<ConstructorNotMatchingException> exceptions) TryGetConstructorResolveStack(ConstructorInfo constructor, object[] arguments, List<Type> resolveStack)
         {
             List<ParameterInfo> constructorParameters = constructor.GetParameters().ToList();
             if (!constructorParameters.Any())
                 return (true, null, null);
             
-            List<ConstructorNotMatchingException> constructorNotMatchingExceptions = new();
+            List<ConstructorNotMatchingException> exceptions = new();
             List<object> parameters = new();
 
             List<object> passedArguments = null;
@@ -584,12 +617,12 @@ namespace LightweightIocContainer
                             if (result) 
                                 fittingArgument = new InternalToBeResolvedPlaceholder(registeredType, parametersToResolve);
                             else
-                                constructorNotMatchingExceptions.Add(new ConstructorNotMatchingException(constructor, exception));
+                                exceptions.Add(new ConstructorNotMatchingException(constructor, exception));
                         }
                     }
                     catch (Exception exception)
                     {
-                        constructorNotMatchingExceptions.Add(new ConstructorNotMatchingException(constructor, exception));
+                        exceptions.Add(new ConstructorNotMatchingException(constructor, exception));
                     }
 
                     if (fittingArgument is InternalResolvePlaceholder && passedArguments != null)
@@ -607,12 +640,22 @@ namespace LightweightIocContainer
                     parameters.Add(fittingArgument);
             }
 
-            return (!parameters.Any(p => p is InternalResolvePlaceholder), parameters, constructorNotMatchingExceptions);
+            return (!parameters.Any(p => p is InternalResolvePlaceholder), parameters, exceptions);
         }
 
+        /// <summary>
+        /// Find the <see cref="IRegistration"/> for the given <see cref="Type"/>
+        /// </summary>
+        /// <typeparam name="T">The given <see cref="Type"/></typeparam>
+        /// <returns>The <see cref="IRegistration"/> for the given <see cref="Type"/></returns>
         [CanBeNull]
         private IRegistration FindRegistration<T>() => FindRegistration(typeof(T));
         
+        /// <summary>
+        /// Find the <see cref="IRegistration"/> for the given <see cref="Type"/>
+        /// </summary>
+        /// <param name="type">The given <see cref="Type"/></param>
+        /// <returns>The <see cref="IRegistration"/> for the given <see cref="Type"/></returns>
         [CanBeNull]
         private IRegistration FindRegistration(Type type)
         {
@@ -632,6 +675,12 @@ namespace LightweightIocContainer
             return !openGenericRegistrations.Any() ? null : openGenericRegistrations.FirstOrDefault(r => r.InterfaceType == type.GetGenericTypeDefinition());
         }
         
+        /// <summary>
+        /// Try to get the sorted constructors for the given <see cref="Type"/>
+        /// </summary>
+        /// <param name="type">The given <see cref="Type"/></param>
+        /// <returns>A list of sorted <see cref="ConstructorInfo"/> for the given <see cref="Type"/></returns>
+        /// <exception cref="NoPublicConstructorFoundException">No public constructor was found for the given <see cref="Type"/></exception>
         private List<ConstructorInfo> TryGetSortedConstructors(Type type)
         {
             List<ConstructorInfo> sortedConstructors = type.GetConstructors().OrderByDescending(c => c.GetParameters().Length).ToList();
@@ -641,6 +690,13 @@ namespace LightweightIocContainer
             return sortedConstructors;
         }
         
+        /// <summary>
+        /// Get the implementation type for the given <see cref="IRegistration"/>
+        /// </summary>
+        /// <param name="registration">The given <see cref="IRegistration"/></param>
+        /// <typeparam name="T">The given <see cref="Type"/> of the interface</typeparam>
+        /// <returns>The implementation <see cref="Type"/> for the given <see cref="IRegistration"/></returns>
+        /// <exception cref="UnknownRegistrationException">Unknown <see cref="IRegistration"/> passed</exception>
         private Type GetType<T>(IRegistration registration) =>
             registration switch
             {
@@ -649,9 +705,31 @@ namespace LightweightIocContainer
                 _ => throw new UnknownRegistrationException($"Unknown registration used: {registration.GetType().Name}.")
             };
         
+        /// <summary>
+        /// Non generic method to get the implementation type for the given <see cref="IRegistration"/>
+        /// </summary>
+        /// <param name="type">The given <see cref="Type"/> of the interface</param>
+        /// <param name="registration">The given <see cref="IRegistration"/></param>
+        /// <returns>The implementation <see cref="Type"/> for the given <see cref="IRegistration"/></returns>
+        /// <exception cref="UnknownRegistrationException">Unknown <see cref="IRegistration"/> passed</exception>
         private Type GetTypeNonGeneric(Type type, IRegistration registration) => (Type) GenericMethodCaller.CallPrivate(this, nameof(GetType), type, registration);
         
+        /// <summary>
+        /// Check the given resolve stack for circular dependencies
+        /// </summary>
+        /// <param name="resolveStack">The given resolve stack</param>
+        /// <typeparam name="T">The given <see cref="Type"/></typeparam>
+        /// <returns>The new resolve stack</returns>
+        /// <exception cref="CircularDependencyException">A circular dependency was detected</exception>
         private List<Type> CheckForCircularDependencies<T>(List<Type> resolveStack) => CheckForCircularDependencies(typeof(T), resolveStack);
+        
+        /// <summary>
+        /// Check the given resolve stack for circular dependencies
+        /// </summary>
+        /// <param name="type">The given <see cref="Type"/></param>
+        /// <param name="resolveStack">The given resolve stack</param>
+        /// <returns>The new resolve stack</returns>
+        /// <exception cref="CircularDependencyException">A circular dependency was detected</exception>
         private List<Type> CheckForCircularDependencies(Type type, List<Type> resolveStack)
         {
             if (resolveStack == null) //first resolve call
