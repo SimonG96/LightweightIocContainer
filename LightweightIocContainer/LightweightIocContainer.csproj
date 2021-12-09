@@ -14,6 +14,7 @@
     <FileVersion>3.0.0.0</FileVersion>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageVersion>3.0.0-beta2</PackageVersion>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -58,7 +59,7 @@
   <ItemGroup>
     <None Include="..\LICENSE.md">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 
