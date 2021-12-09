@@ -6,7 +6,7 @@
     <Version>2.2.0-beta</Version>
     <Authors>SimonG</Authors>
     <LangVersion>default</LangVersion>
-    <PackageVersion>3.0.0-beta</PackageVersion>
+    <PackageVersion>3.0.0-beta2</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
