@@ -35,22 +35,22 @@ namespace LightweightIocContainer.Registrations
         /// This <see cref="Action"/> is invoked when an instance of this type is created.
         /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="IOnCreate{TInterface,TImplementation}.OnCreate"/></para>
         /// </summary>
-        private Action<object> OnCreateAction { get; set; }
+        private Action<object?>? OnCreateAction { get; set; }
 
         /// <summary>
         /// This <see cref="Action"/> is invoked when an instance of this type is created.
         /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="IOnCreate{TInterface,TImplementation}.OnCreate"/></para>
         /// </summary>
-        Action<object> IOnCreate.OnCreateAction => OnCreateAction;
+        Action<object?>? IOnCreate.OnCreateAction => OnCreateAction;
 
         /// <summary>
         /// Pass an <see cref="Action{T}"/> that will be invoked when an instance of this type is created
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/></param>
         /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
-        public virtual ITypedRegistration<TInterface, TImplementation> OnCreate(Action<TImplementation> action)
+        public virtual ITypedRegistration<TInterface, TImplementation> OnCreate(Action<TImplementation?> action)
         {
-            OnCreateAction = a => action((TImplementation) a);
+            OnCreateAction = a => action((TImplementation?) a);
             return this;
         }
     }

@@ -24,7 +24,7 @@ namespace LightweightIocContainer.Factories
         /// The 
         /// </summary>
         /// <param name="container">The current instance of the <see cref="IIocContainer"/></param>
-        public TypedFactory(IIocContainer container) => CreateFactory(container);
+        public TypedFactory(IIocContainer container) => Factory = CreateFactory(container);
 
         /// <summary>
         /// The implemented abstract typed factory/>
@@ -36,7 +36,7 @@ namespace LightweightIocContainer.Factories
         /// </summary>
         /// <exception cref="InvalidFactoryRegistrationException">Factory registration is invalid</exception>
         /// <exception cref="IllegalAbstractMethodCreationException">Creation of abstract methods are illegal in their current state</exception>
-        private void CreateFactory(IIocContainer container)
+        private TFactory CreateFactory(IIocContainer container)
         {
             Type factoryType = typeof(TFactory);
             
@@ -92,7 +92,7 @@ namespace LightweightIocContainer.Factories
                 }
                 else
                 {
-                    MethodInfo emptyArray = typeof(Array).GetMethod(nameof(Array.Empty))?.MakeGenericMethod(typeof(object));
+                    MethodInfo? emptyArray = typeof(Array).GetMethod(nameof(Array.Empty))?.MakeGenericMethod(typeof(object));
                     generator.EmitCall(OpCodes.Call, emptyArray, null);
                 }
 
@@ -102,7 +102,7 @@ namespace LightweightIocContainer.Factories
             }
 
             //if factory contains a method to clear multiton instances
-            MethodInfo multitonClearMethod = factoryType.GetMethods().FirstOrDefault(m => m.Name.Equals(CLEAR_MULTITON_INSTANCE_METHOD_NAME));
+            MethodInfo? multitonClearMethod = factoryType.GetMethods().FirstOrDefault(m => m.Name.Equals(CLEAR_MULTITON_INSTANCE_METHOD_NAME));
             if (multitonClearMethod != null)
             {
                 //create a method that looks like this
@@ -113,7 +113,7 @@ namespace LightweightIocContainer.Factories
 
                 if (multitonClearMethod.IsGenericMethod)
                 {
-                    Type typeToClear = multitonClearMethod.GetGenericArguments().FirstOrDefault();
+                    Type? typeToClear = multitonClearMethod.GetGenericArguments().FirstOrDefault();
                     if (typeToClear == null)
                         throw new IllegalAbstractMethodCreationException("No Type to clear specified.", multitonClearMethod);
 
@@ -136,7 +136,7 @@ namespace LightweightIocContainer.Factories
                 }
             }
 
-            Factory = (TFactory) Activator.CreateInstance(typeBuilder.CreateTypeInfo().AsType(), container);
+            return (TFactory) Activator.CreateInstance(typeBuilder.CreateTypeInfo()?.AsType(), container);
         }
     }
 }

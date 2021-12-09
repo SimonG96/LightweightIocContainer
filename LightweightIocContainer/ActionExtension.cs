@@ -15,7 +15,7 @@ namespace LightweightIocContainer
         /// <typeparam name="T2">The <see cref="Type"/> of the given <see cref="Action{T2}"/>, has to implement <typeparamref name="T1"/></typeparam>
         /// <param name="action">The given <see cref="Action{T2}"/> to convert</param>
         /// <returns>An <see cref="Action{T1}"/> converted from the given <see cref="Action{T2}"/></returns>
-        public static Action<T1> Convert<T1, T2>(this Action<T2> action) where T1 : T2
+        public static Action<T1>? Convert<T1, T2>(this Action<T2>? action) where T1 : T2
         {
             if (action == null)
                 return null;

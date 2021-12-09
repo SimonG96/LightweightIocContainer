@@ -45,7 +45,7 @@ namespace LightweightIocContainer.Registrations
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/></param>
         /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
-        public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
+        public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation?> action)
         {
             foreach (IRegistration registration in Registrations)
             {

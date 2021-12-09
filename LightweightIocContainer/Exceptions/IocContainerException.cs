@@ -16,20 +16,15 @@ namespace LightweightIocContainer.Exceptions
         /// <summary>
         ///  A base <see cref="Exception"/> for the <see cref="LightweightIocContainer"/>
         /// </summary>
-        protected IocContainerException()
-        {
-
-        }
+        protected IocContainerException() => InnerExceptions = new List<Exception>();
 
         /// <summary>
         /// A base <see cref="Exception"/> for the <see cref="LightweightIocContainer"/>
         /// </summary>
         /// <param name="message">The message of the <see cref="Exception"/></param>
         protected IocContainerException(string message)
-            : base(message)
-        {
-
-        }
+            : base(message) =>
+            InnerExceptions = new List<Exception>();
 
         /// <summary>
         /// A base <see cref="Exception"/> for the <see cref="LightweightIocContainer"/>

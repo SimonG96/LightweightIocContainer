@@ -16,7 +16,7 @@ namespace LightweightIocContainer.Interfaces.Registrations.Fluent
         /// This <see cref="Action"/> is invoked when an instance of this type is created.
         /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="IOnCreate{TInterface, TImplementation}.OnCreate"/></para>
         /// </summary>
-        internal Action<object> OnCreateAction { get; }
+        internal Action<object?>? OnCreateAction { get; }
     }
 
     /// <summary>
@@ -31,6 +31,6 @@ namespace LightweightIocContainer.Interfaces.Registrations.Fluent
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/></param>
         /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
-        ITypedRegistration<TInterface, TImplementation> OnCreate(Action<TImplementation> action);
+        ITypedRegistration<TInterface, TImplementation> OnCreate(Action<TImplementation?> action);
     }
 }

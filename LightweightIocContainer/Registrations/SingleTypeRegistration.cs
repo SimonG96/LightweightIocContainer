@@ -29,7 +29,7 @@ namespace LightweightIocContainer.Registrations
         /// <summary>
         /// <see cref="Func{T,TResult}"/> that is invoked instead of creating an instance of this <see cref="Type"/> the default way
         /// </summary>
-        public Func<IResolver, T> FactoryMethod { get; private set; }
+        public Func<IResolver, T>? FactoryMethod { get; private set; }
 
         /// <summary>
         /// Pass a <see cref="Func{T,TResult}"/> that will be invoked instead of creating an instance of this <see cref="Type"/> the default way

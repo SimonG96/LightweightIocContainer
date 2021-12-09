@@ -16,7 +16,7 @@ namespace LightweightIocContainer.Validation
     public class IocValidator
     {
         private readonly IocContainer _iocContainer;
-        private readonly List<(Type type, object parameter)> _parameters;
+        private readonly List<(Type type, object? parameter)> _parameters;
 
         /// <summary>
         /// Validator for your <see cref="IocContainer"/> to check if everything can be resolved with your current setup
@@ -25,7 +25,7 @@ namespace LightweightIocContainer.Validation
         public IocValidator(IocContainer iocContainer)
         {
             _iocContainer = iocContainer;
-            _parameters = new List<(Type, object)>();
+            _parameters = new List<(Type, object?)>();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace LightweightIocContainer.Validation
                 throw new AggregateException("Validation failed.", validationExceptions);
         }
 
-        private void TryResolve(Type type, object[] arguments, List<Exception> validationExceptions)
+        private void TryResolve(Type type, object?[]? arguments, List<Exception> validationExceptions)
         {
             try
             {

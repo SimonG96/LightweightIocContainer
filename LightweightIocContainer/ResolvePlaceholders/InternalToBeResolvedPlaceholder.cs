@@ -12,7 +12,7 @@ namespace LightweightIocContainer.ResolvePlaceholders
     /// </summary>
     internal class InternalToBeResolvedPlaceholder
     {
-        public InternalToBeResolvedPlaceholder(Type resolvedType, List<object> parameters)
+        public InternalToBeResolvedPlaceholder(Type resolvedType, List<object>? parameters)
         {
             ResolvedType = resolvedType;
             Parameters = parameters;
@@ -26,6 +26,6 @@ namespace LightweightIocContainer.ResolvePlaceholders
         /// <summary>
         /// The parameters needed to resolve the <see cref="ResolvedType"/>
         /// </summary>
-        public List<object> Parameters { get; }
+        public List<object>? Parameters { get; }
     }
 }

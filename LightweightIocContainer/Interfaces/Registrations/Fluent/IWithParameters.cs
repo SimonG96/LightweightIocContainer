@@ -38,6 +38,6 @@ namespace LightweightIocContainer.Interfaces.Registrations.Fluent
         /// An <see cref="Array"/> of parameters that are used to <see cref="IocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
         /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="IWithParameters.WithParameters(object[])"/></para>
         /// </summary>
-        object[] Parameters { get; }
+        object[]? Parameters { get; }
     }
 }

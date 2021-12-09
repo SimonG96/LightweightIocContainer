@@ -32,6 +32,6 @@ namespace LightweightIocContainer.Interfaces.Registrations.Fluent
         /// <summary>
         /// The Factory added with the <see cref="IWithFactory.WithFactory{TFactory}"/> method
         /// </summary>
-        ITypedFactory Factory { get; }
+        ITypedFactory? Factory { get; }
     }
 }

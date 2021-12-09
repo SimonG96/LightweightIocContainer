@@ -213,12 +213,11 @@
             No matching constructor was found for the given or resolvable arguments
             </summary>
         </member>
-        <member name="M:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException.#ctor(System.Type,LightweightIocContainer.Exceptions.ConstructorNotMatchingException[])">
+        <member name="M:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException.#ctor(System.Type)">
             <summary>
             No matching constructor was found for the given or resolvable arguments
             </summary>
             <param name="type">The <see cref="P:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException.Type"/> with no matching constructor</param>
-            <param name="exceptions">The inner exceptions of type <see cref="T:LightweightIocContainer.Exceptions.ConstructorNotMatchingException"/></param>
         </member>
         <member name="P:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException.Type">
             <summary>
@@ -946,6 +945,14 @@
             <returns>An instance of the given <see cref="T:System.Type"/></returns>
             <exception cref="T:LightweightIocContainer.Exceptions.InternalResolveException">Could not find function <see cref="M:LightweightIocContainer.IocContainer.ResolveInternal``1(System.Object[],System.Collections.Generic.List{System.Type})"/></exception>
         </member>
+        <member name="M:LightweightIocContainer.IocContainer.Resolve(LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder,System.Collections.Generic.List{System.Type})">
+            <summary>
+            Recursively resolve a <see cref="T:System.Type"/> with the given parameters for an <see cref="T:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder"/>
+            </summary>
+            <param name="toBeResolvedPlaceholder">The <see cref="T:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder"/> that includes the type and resolve stack</param>
+            <param name="resolveStack">The current resolve stack</param>
+            <returns>A recursively resolved instance of the given <see cref="T:System.Type"/></returns>
+        </member>
         <member name="M:LightweightIocContainer.IocContainer.ResolveInternal``1(System.Object[],System.Collections.Generic.List{System.Type})">
             <summary>
             Gets an instance of a given registered <see cref="T:System.Type"/>
@@ -966,6 +973,13 @@
             <param name="arguments">The arguments to resolve</param>
             <param name="resolveStack">The current resolve stack</param>
             <returns>An existing or newly created singleton instance of the given <see cref="T:System.Type"/></returns>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.TryGetSingletonInstance(System.Type)">
+            <summary>
+            Try to get an existing singleton instance for a given <see cref="T:System.Type"/>
+            </summary>
+            <param name="type">The given <see cref="T:System.Type"/></param>
+            <returns>A singleton instance if existing for the given <see cref="T:System.Type"/>, null if not</returns>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.GetOrCreateMultitonInstance``1(LightweightIocContainer.Interfaces.Registrations.IMultitonRegistration,System.Object[],System.Collections.Generic.List{System.Type})">
             <summary>
@@ -1006,6 +1020,90 @@
             <param name="resolveStack">The current resolve stack</param>
             <returns>An array of all needed constructor arguments to create the <see cref="T:System.Type"/></returns>
             <exception cref="T:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException">No matching constructor was found for the given or resolvable arguments</exception>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.TryGetTypeResolveStack(System.Type,System.Object[],System.Collections.Generic.List{System.Type})">
+            <summary>
+            Try to get the resolve stack for a given <see cref="T:System.Type"/>
+            </summary>
+            <param name="type">The given <see cref="T:System.Type"/></param>
+            <param name="arguments">The given arguments</param>
+            <param name="resolveStack">The current resolve stack</param>
+            <returns>
+            <para>result: True if successful, false if not</para>
+            <para>parameters: The parameters needed to resolve the given <see cref="T:System.Type"/></para>
+            <para>exception: A <see cref="T:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException"/> if no matching constructor was found</para>
+            </returns>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.TryGetConstructorResolveStack(System.Reflection.ConstructorInfo,System.Object[],System.Collections.Generic.List{System.Type})">
+            <summary>
+            Try to get the resolve stack for a given constructor
+            </summary>
+            <param name="constructor">The <see cref="T:System.Reflection.ConstructorInfo"/> for the given constructor</param>
+            <param name="arguments">The given arguments</param>
+            <param name="resolveStack">The current resolve stack</param>
+            <returns>
+            <para>result: True if successful, false if not</para>
+            <para>parameters: The parameters needed to resolve the given <see cref="T:System.Type"/></para>
+            <para>exception: A List of <see cref="T:LightweightIocContainer.Exceptions.ConstructorNotMatchingException"/>s if the constructor is not matching</para>
+            </returns>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.FindRegistration``1">
+            <summary>
+            Find the <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> for the given <see cref="T:System.Type"/>
+            </summary>
+            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
+            <returns>The <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> for the given <see cref="T:System.Type"/></returns>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.FindRegistration(System.Type)">
+            <summary>
+            Find the <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> for the given <see cref="T:System.Type"/>
+            </summary>
+            <param name="type">The given <see cref="T:System.Type"/></param>
+            <returns>The <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> for the given <see cref="T:System.Type"/></returns>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.TryGetSortedConstructors(System.Type)">
+            <summary>
+            Try to get the sorted constructors for the given <see cref="T:System.Type"/>
+            </summary>
+            <param name="type">The given <see cref="T:System.Type"/></param>
+            <returns>A list of sorted <see cref="T:System.Reflection.ConstructorInfo"/> for the given <see cref="T:System.Type"/></returns>
+            <exception cref="T:LightweightIocContainer.Exceptions.NoPublicConstructorFoundException">No public constructor was found for the given <see cref="T:System.Type"/></exception>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.GetType``1(LightweightIocContainer.Interfaces.Registrations.IRegistration)">
+            <summary>
+            Get the implementation type for the given <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>
+            </summary>
+            <param name="registration">The given <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></param>
+            <typeparam name="T">The given <see cref="T:System.Type"/> of the interface</typeparam>
+            <returns>The implementation <see cref="T:System.Type"/> for the given <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
+            <exception cref="T:LightweightIocContainer.Exceptions.UnknownRegistrationException">Unknown <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> passed</exception>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.GetTypeNonGeneric(System.Type,LightweightIocContainer.Interfaces.Registrations.IRegistration)">
+            <summary>
+            Non generic method to get the implementation type for the given <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>
+            </summary>
+            <param name="type">The given <see cref="T:System.Type"/> of the interface</param>
+            <param name="registration">The given <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></param>
+            <returns>The implementation <see cref="T:System.Type"/> for the given <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
+            <exception cref="T:LightweightIocContainer.Exceptions.UnknownRegistrationException">Unknown <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> passed</exception>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.CheckForCircularDependencies``1(System.Collections.Generic.List{System.Type})">
+            <summary>
+            Check the given resolve stack for circular dependencies
+            </summary>
+            <param name="resolveStack">The given resolve stack</param>
+            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
+            <returns>The new resolve stack</returns>
+            <exception cref="T:LightweightIocContainer.Exceptions.CircularDependencyException">A circular dependency was detected</exception>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.CheckForCircularDependencies(System.Type,System.Collections.Generic.List{System.Type})">
+            <summary>
+            Check the given resolve stack for circular dependencies
+            </summary>
+            <param name="type">The given <see cref="T:System.Type"/></param>
+            <param name="resolveStack">The given resolve stack</param>
+            <returns>The new resolve stack</returns>
+            <exception cref="T:LightweightIocContainer.Exceptions.CircularDependencyException">A circular dependency was detected</exception>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.ClearMultitonInstances``1">
             <summary>
@@ -1512,6 +1610,16 @@
         <member name="T:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder">
             <summary>
             An internal placeholder that is used to hold types that need to be resolved during the resolving process
+            </summary>
+        </member>
+        <member name="P:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder.ResolvedType">
+            <summary>
+            The <see cref="T:System.Type"/> to be resolved
+            </summary>
+        </member>
+        <member name="P:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder.Parameters">
+            <summary>
+            The parameters needed to resolve the <see cref="P:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder.ResolvedType"/>
             </summary>
         </member>
         <member name="M:LightweightIocContainer.TypeExtension.GetDefault(System.Type)">

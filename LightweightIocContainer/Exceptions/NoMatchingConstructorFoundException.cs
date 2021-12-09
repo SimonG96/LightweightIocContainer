@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LightweightIocContainer.Exceptions
 {
@@ -17,12 +16,11 @@ namespace LightweightIocContainer.Exceptions
         /// No matching constructor was found for the given or resolvable arguments
         /// </summary>
         /// <param name="type">The <see cref="Type"/> with no matching constructor</param>
-        /// <param name="exceptions">The inner exceptions of type <see cref="ConstructorNotMatchingException"/></param>
-        public NoMatchingConstructorFoundException(Type type, params ConstructorNotMatchingException[] exceptions)
+        public NoMatchingConstructorFoundException(Type type)
             : base($"No matching constructor for {type} found.")
         {
             Type = type;
-            InnerExceptions = exceptions == null ? new List<Exception>() : exceptions.OfType<Exception>().ToList();
+            InnerExceptions = new List<Exception>();
         }
 
 

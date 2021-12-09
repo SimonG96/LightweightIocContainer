@@ -15,7 +15,7 @@ namespace LightweightIocContainer.Interfaces.Registrations
         /// <summary>
         /// <see cref="Func{T,TResult}"/> that is invoked instead of creating an instance of this <see cref="Type"/> the default way
         /// </summary>
-        Func<IResolver, T> FactoryMethod { get; }
+        Func<IResolver, T>? FactoryMethod { get; }
 
         /// <summary>
         /// Pass a <see cref="Func{T,TResult}"/> that will be invoked instead of creating an instance of this <see cref="Type"/> the default way

@@ -39,7 +39,7 @@ namespace LightweightIocContainer
         /// <param name="source">The given <see cref="IEnumerable{T}"/></param>
         /// <param name="predicate">A function to test each element for a condition</param>
         /// <returns>The first element of the <see cref="IEnumerable{T}"/> or a new instance of the given <see cref="Type"/> when no element is found</returns>
-        private static TSource TryGetFirst<TSource, TGiven>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) where TGiven : TSource, new()
+        private static TSource TryGetFirst<TSource, TGiven>(this IEnumerable<TSource> source, Func<TSource, bool>? predicate) where TGiven : TSource, new()
         {
             try
             {

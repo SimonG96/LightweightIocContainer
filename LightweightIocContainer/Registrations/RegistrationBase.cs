@@ -48,12 +48,12 @@ namespace LightweightIocContainer.Registrations
         /// An <see cref="Array"/> of parameters that are used to <see cref="IocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
         /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="WithParameters(object[])"/></para>
         /// </summary>
-        public object[] Parameters { get; private set; }
+        public object[]? Parameters { get; private set; }
         
         /// <summary>
         /// The Factory added with the <see cref="WithFactory{TFactory}"/> method
         /// </summary>
-        public ITypedFactory Factory { get; private set; }
+        public ITypedFactory? Factory { get; private set; }
 
         /// <summary>
         /// Pass parameters that will be used to <see cref="IocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
