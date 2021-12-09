@@ -78,6 +78,12 @@ namespace Test.LightweightIocContainer
             public void ClearMultitonInstance<T>() => throw new System.NotImplementedException();
         }
         
+        [UsedImplicitly]
+        public interface ITestFactoryWrongReturn
+        {
+            public MultitonScope Create();
+        }
+        
         public class MultitonScope
         {
 
@@ -225,5 +231,9 @@ namespace Test.LightweightIocContainer
             Assert.AreNotSame(resolvedTest2, resolvedTest4);
             Assert.AreNotSame(resolvedTest3, resolvedTest5);
         }
+
+        [Test]
+        public void TestInvalidCreateMethodReturnType() => 
+            Assert.Throws<InvalidFactoryRegistrationException>(() => _iocContainer.Register<ITest, Test>().WithFactory<ITestFactoryWrongReturn>());
     }
 }

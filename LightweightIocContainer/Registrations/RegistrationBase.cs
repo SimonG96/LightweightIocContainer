@@ -111,8 +111,9 @@ namespace LightweightIocContainer.Registrations
         public IRegistrationBase WithFactory<TFactory>()
         {
             TypedFactory<TFactory> factory = new(_container);
-            
             Factory = factory;
+            
+            ValidateFactory();
             _container.RegisterFactory(factory);
             
             return this;
@@ -127,9 +128,17 @@ namespace LightweightIocContainer.Registrations
         public IRegistrationBase WithFactory<TFactoryInterface, TFactoryImplementation>() where TFactoryImplementation : TFactoryInterface
         {
             Factory = new CustomTypedFactory<TFactoryInterface>();
+            ValidateFactory();
+            
             _container.Register<TFactoryInterface, TFactoryImplementation>();
 
             return this;
+        }
+
+        private void ValidateFactory()
+        {
+            if (Factory?.CreateMethods.Any(c => c.ReturnType == InterfaceType) != true)
+                throw new InvalidFactoryRegistrationException($"No create method that can create {InterfaceType}.");
         }
     }
 }
