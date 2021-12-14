@@ -744,6 +744,11 @@
             The <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/> that is used to register an Interface and extends the <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> with fluent options
             </summary>
         </member>
+        <member name="T:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration">
+            <summary>
+            A base <see cref="T:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1"/> without generic interface
+            </summary>
+        </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1">
             <summary>
             The <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> to register either only an interface or only a <see cref="T:System.Type"/>
@@ -1535,6 +1540,11 @@
             <see cref="T:System.Func`2"/> that is invoked instead of creating an instance of this <see cref="T:System.Type"/> the default way
             </summary>
         </member>
+        <member name="P:LightweightIocContainer.Registrations.SingleTypeRegistration`1.LightweightIocContainer#Interfaces#Registrations#ISingleTypeRegistration#HasFactoryMethod">
+            <summary>
+            True if <see cref="P:LightweightIocContainer.Registrations.SingleTypeRegistration`1.FactoryMethod"/> is set, false if not
+            </summary>
+        </member>
         <member name="M:LightweightIocContainer.Registrations.SingleTypeRegistration`1.WithFactoryMethod(System.Func{LightweightIocContainer.Interfaces.IResolver,`0})">
             <summary>
             Pass a <see cref="T:System.Func`2"/> that will be invoked instead of creating an instance of this <see cref="T:System.Type"/> the default way
@@ -1612,14 +1622,14 @@
             An internal placeholder that is used to hold types that need to be resolved during the resolving process
             </summary>
         </member>
-        <member name="P:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder.ResolvedType">
+        <member name="P:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder.ResolvedRegistration">
             <summary>
             The <see cref="T:System.Type"/> to be resolved
             </summary>
         </member>
         <member name="P:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder.Parameters">
             <summary>
-            The parameters needed to resolve the <see cref="P:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder.ResolvedType"/>
+            The parameters needed to resolve the <see cref="P:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder.ResolvedRegistration"/>
             </summary>
         </member>
         <member name="M:LightweightIocContainer.TypeExtension.GetDefault(System.Type)">

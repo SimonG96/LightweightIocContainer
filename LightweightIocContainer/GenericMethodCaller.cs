@@ -24,7 +24,7 @@ namespace LightweightIocContainer
         /// <returns>The result of invoking the method</returns>
         /// <exception cref="GenericMethodNotFoundException">Could not find the generic method</exception>
         /// <exception cref="Exception">Any <see cref="Exception"/> thrown after invoking the generic method</exception>
-        public static object Call(object caller, string functionName, Type genericParameter, BindingFlags bindingFlags, params object?[] parameters)
+        public static object? Call(object caller, string functionName, Type genericParameter, BindingFlags bindingFlags, params object?[] parameters)
         {
             MethodInfo? method = caller.GetType().GetMethod(functionName, bindingFlags);
             MethodInfo? genericMethod = method?.MakeGenericMethod(genericParameter);
@@ -52,7 +52,7 @@ namespace LightweightIocContainer
         /// <returns>The result of invoking the method</returns>
         /// <exception cref="GenericMethodNotFoundException">Could not find the generic method</exception>
         /// <exception cref="Exception">Any <see cref="Exception"/> thrown after invoking the generic method</exception>
-        public static object CallPrivate(object caller, string functionName, Type genericParameter, params object?[] parameters) =>
+        public static object? CallPrivate(object caller, string functionName, Type genericParameter, params object?[] parameters) =>
             Call(caller, functionName, genericParameter, BindingFlags.NonPublic | BindingFlags.Instance, parameters);
     }
 }

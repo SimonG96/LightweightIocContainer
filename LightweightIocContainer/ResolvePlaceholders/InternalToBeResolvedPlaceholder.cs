@@ -4,17 +4,19 @@
 
 using System;
 using System.Collections.Generic;
+using LightweightIocContainer.Interfaces.Registrations;
 
 namespace LightweightIocContainer.ResolvePlaceholders
 {
     /// <summary>
     /// An internal placeholder that is used to hold types that need to be resolved during the resolving process
     /// </summary>
-    internal class InternalToBeResolvedPlaceholder
+    internal class InternalToBeResolvedPlaceholder : IInternalToBeResolvedPlaceholder
     {
-        public InternalToBeResolvedPlaceholder(Type resolvedType, List<object>? parameters)
+        public InternalToBeResolvedPlaceholder(Type resolvedType, IRegistration resolvedRegistration, List<object?>? parameters)
         {
             ResolvedType = resolvedType;
+            ResolvedRegistration = resolvedRegistration;
             Parameters = parameters;
         }
 
@@ -24,8 +26,13 @@ namespace LightweightIocContainer.ResolvePlaceholders
         public Type ResolvedType { get; }
         
         /// <summary>
-        /// The parameters needed to resolve the <see cref="ResolvedType"/>
+        /// The <see cref="IRegistration"/> to be resolved
         /// </summary>
-        public List<object>? Parameters { get; }
+        public IRegistration ResolvedRegistration { get; }
+        
+        /// <summary>
+        /// The parameters needed to resolve the <see cref="ResolvedRegistration"/>
+        /// </summary>
+        public List<object?>? Parameters { get; }
     }
 }

@@ -29,7 +29,7 @@ namespace LightweightIocContainer.Installers
                 if (!typeof(IIocInstaller).IsAssignableFrom(type) || type.IsNestedPrivate)
                     continue;
 
-                Installers.Add((IIocInstaller) Activator.CreateInstance(type));
+                Installers.Add(Creator.CreateInstance<IIocInstaller>(type));
             }
         }
 

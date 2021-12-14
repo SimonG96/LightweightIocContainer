@@ -92,11 +92,11 @@ namespace LightweightIocContainer.Factories
                 }
                 else
                 {
-                    MethodInfo? emptyArray = typeof(Array).GetMethod(nameof(Array.Empty))?.MakeGenericMethod(typeof(object));
+                    MethodInfo emptyArray = typeof(Array).GetMethod(nameof(Array.Empty))!.MakeGenericMethod(typeof(object));
                     generator.EmitCall(OpCodes.Call, emptyArray, null);
                 }
 
-                generator.EmitCall(OpCodes.Callvirt, typeof(IResolver).GetMethod(nameof(IResolver.Resolve), new[] { typeof(object[]) })?.MakeGenericMethod(createMethod.ReturnType), null);
+                generator.EmitCall(OpCodes.Callvirt, typeof(IResolver).GetMethod(nameof(IResolver.Resolve), new[] { typeof(object[]) })!.MakeGenericMethod(createMethod.ReturnType), null);
                 generator.Emit(OpCodes.Castclass, createMethod.ReturnType);
                 generator.Emit(OpCodes.Ret);
             }
@@ -127,7 +127,7 @@ namespace LightweightIocContainer.Factories
                     multitonClearGenerator.Emit(OpCodes.Ldarg_0);
                     multitonClearGenerator.Emit(OpCodes.Ldfld, containerFieldBuilder);
 
-                    multitonClearGenerator.EmitCall(OpCodes.Callvirt, typeof(IIocContainer).GetMethod(nameof(IIocContainer.ClearMultitonInstances))?.MakeGenericMethod(typeToClear), null);
+                    multitonClearGenerator.EmitCall(OpCodes.Callvirt, typeof(IIocContainer).GetMethod(nameof(IIocContainer.ClearMultitonInstances))!.MakeGenericMethod(typeToClear), null);
                     multitonClearGenerator.Emit(OpCodes.Ret);
                 }
                 else
@@ -136,7 +136,7 @@ namespace LightweightIocContainer.Factories
                 }
             }
 
-            return (TFactory) Activator.CreateInstance(typeBuilder.CreateTypeInfo()?.AsType(), container);
+            return Creator.CreateInstance<TFactory>(typeBuilder.CreateTypeInfo()!.AsType(), container);
         }
     }
 }
