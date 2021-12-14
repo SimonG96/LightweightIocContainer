@@ -785,6 +785,19 @@ namespace LightweightIocContainer
         public void Dispose()
         {
             Registrations.Clear();
+
+            foreach (var singleton in _singletons)
+            {
+                if (singleton.instance is IDisposable disposable)
+                    disposable.Dispose();
+            }
+            
+            foreach (var multitonInstance in _multitons.SelectMany(multiton => multiton.instances))
+            {
+                if (multitonInstance.Value is IDisposable disposable)
+                    disposable.Dispose();
+            }
+            
             _singletons.Clear();
             _multitons.Clear();
         }
