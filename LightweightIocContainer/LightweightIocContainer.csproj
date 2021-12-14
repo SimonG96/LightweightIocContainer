@@ -7,37 +7,20 @@
     <Description>A lightweight IOC Container that is powerful enough to do all the things you need it to do.</Description>
     <RepositoryUrl>https://github.com/SimonG96/LightweightIocContainer</RepositoryUrl>
     <LangVersion>default</LangVersion>
+    <Nullable>enable</Nullable>
+    <DocumentationFile>LightweightIocContainer.xml</DocumentationFile>
+    <VersionPrefix>3.0.0</VersionPrefix>
+    <VersionSuffix>beta3</VersionSuffix>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/SimonG96/LightweightIocContainer</PackageProjectUrl>
-    <Version>3.0.0-beta3</Version>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>3.0.0.0</FileVersion>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <PackageVersion>3.0.0-beta3</PackageVersion>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Nullable>enable</Nullable>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <DocumentationFile>LightweightIocContainer.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <DocumentationFile>LightweightIocContainer.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
-    <DocumentationFile>LightweightIocContainer.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45|AnyCPU'">
-    <DocumentationFile>LightweightIocContainer.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Factories\" />
-    <Folder Include="Interfaces\Factories\" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
@@ -49,22 +32,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\README.md">
-      <Pack>true</Pack>
-      <PackagePath>\</PackagePath>
-    </Content>
+    <Content Include="..\README.md" Pack="true" PackagePath=""/>
+    <Content Include="..\LICENSE.md" Pack="true" PackagePath=""/>
   </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\LICENSE.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-
-  <PropertyGroup>
-    <IncludeSymbols>true</IncludeSymbols> 
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat> 
-  </PropertyGroup>
 
 </Project>
