@@ -9,7 +9,7 @@ namespace LightweightIocContainer.Interfaces
     /// <summary>
     /// Provides <see cref="Resolve{T}()"/> methods
     /// </summary>
-    public interface IResolver
+    public interface IResolver : IDisposable
     {
         /// <summary>
         /// Gets an instance of the given <see cref="Type"/>
