@@ -329,7 +329,7 @@ namespace LightweightIocContainer
                 object multitonScopeArgument = TryGetMultitonScopeArgument(multitonRegistration, arguments);
 
                 parametersToResolve ??= new List<object?>();
-                parametersToResolve.Add(multitonScopeArgument);
+                parametersToResolve.Insert(0, multitonScopeArgument); //insert scope at first place, won't be passed to ctor when creating multiton
             }
             
             if (result) 
