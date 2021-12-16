@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LightweightIocContainer.Interfaces.Registrations;
 using LightweightIocContainer.Interfaces.Registrations.Fluent;
+using Moq;
 
 namespace LightweightIocContainer.Validation
 {
@@ -55,7 +56,7 @@ namespace LightweightIocContainer.Validation
                         select (from parameterType in parameterTypes
                             let definedParameter = definedParameters
                                 .FirstOrDefault(p => parameterType.IsInstanceOfType(p.parameter))
-                            select definedParameter == default ? parameterType.GetDefault() : definedParameter.parameter).ToArray())
+                            select definedParameter == default ? GetMockOrDefault(parameterType) : definedParameter.parameter).ToArray())
                         .ToList()
                         .ForEach(p => TryResolve(registration.InterfaceType, p, validationExceptions));
                 }
@@ -78,5 +79,9 @@ namespace LightweightIocContainer.Validation
                 validationExceptions.Add(exception);
             }
         }
+
+        private T GetMock<T>() where T : class => new Mock<T>().Object;
+        private object? GetMockOrDefault(Type type) => 
+            type.IsValueType ? Activator.CreateInstance(type) : GenericMethodCaller.CallPrivate(this, nameof(GetMock), type);
     }
 }
