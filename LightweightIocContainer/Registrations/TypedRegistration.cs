@@ -58,5 +58,24 @@ namespace LightweightIocContainer.Registrations
         /// Validate the <see cref="DisposeStrategy"/> for the <see cref="ImplementationType"/> and <see cref="Lifestyle"/>
         /// </summary>
         protected override void ValidateDisposeStrategy() => ValidateDisposeStrategy(ImplementationType);
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not TypedRegistration<TInterface, TImplementation> typedRegistration)
+                return false;
+
+            if (!base.Equals(obj))
+                return false;
+
+            if (OnCreateAction == null && typedRegistration.OnCreateAction != null)
+                return false;
+
+            if (OnCreateAction != null && typedRegistration.OnCreateAction == null)
+                return false;
+            
+            return ImplementationType == typedRegistration.ImplementationType;
+        }
+
+        public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), ImplementationType);
     }
 }

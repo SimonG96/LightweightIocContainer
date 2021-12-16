@@ -30,7 +30,7 @@ namespace LightweightIocContainer.Registrations
         /// <summary>
         /// A <see cref="List{T}"/> of <see cref="IRegistration"/>s that are registered within this <see cref="MultipleRegistration{TInterface1,TInterface2}"/>
         /// </summary>
-        public List<IRegistration> Registrations { get; protected set; }
+        public List<IRegistration> Registrations { get; protected init; }
     }
 
     /// <summary>

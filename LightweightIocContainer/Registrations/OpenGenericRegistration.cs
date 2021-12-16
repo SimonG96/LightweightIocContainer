@@ -43,5 +43,11 @@ namespace LightweightIocContainer.Registrations
             
             base.Validate();
         }
+        
+        public override bool Equals(object? obj) => obj is OpenGenericRegistration openGenericRegistration &&
+                                                    base.Equals(obj) &&
+                                                    ImplementationType == openGenericRegistration.ImplementationType;
+
+        public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), ImplementationType);
     }
 }

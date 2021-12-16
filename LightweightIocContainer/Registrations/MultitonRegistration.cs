@@ -49,5 +49,11 @@ namespace LightweightIocContainer.Registrations
             
             base.ValidateFactory();
         }
+
+        public override bool Equals(object? obj) => obj is MultitonRegistration<TInterface, TImplementation> multitonRegistration && 
+                                                    base.Equals(obj) &&
+                                                    Scope == multitonRegistration.Scope;
+
+        public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), Scope);
     }
 }

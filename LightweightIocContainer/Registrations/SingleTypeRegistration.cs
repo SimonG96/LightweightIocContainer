@@ -41,5 +41,21 @@ namespace LightweightIocContainer.Registrations
             FactoryMethod = factoryMethod;
             return this;
         }
+        
+        public override bool Equals(object? obj)
+        {
+            if (obj is not SingleTypeRegistration<T> singleTypeRegistration)
+                return false;
+
+            if (FactoryMethod == null && singleTypeRegistration.FactoryMethod != null)
+                return false;
+
+            if (FactoryMethod != null && singleTypeRegistration.FactoryMethod == null)
+                return false;
+            
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode() => base.GetHashCode();
     }
 }

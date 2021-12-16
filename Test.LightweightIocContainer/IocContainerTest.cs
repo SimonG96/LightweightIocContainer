@@ -146,13 +146,27 @@ namespace Test.LightweightIocContainer
         public void TestInvalidMultitonRegistration() => Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Register(r => r.Add<ITest, Test>(Lifestyle.Multiton)));
 
         [Test]
-        public void TestRegisterMultiple()
+        public void TestRegisterMultipleDifferent()
         {
             _iocContainer.Register(r => r.Add<ITest, Test>());
             MultipleRegistrationException exception = Assert.Throws<MultipleRegistrationException>(() => _iocContainer.Register(r => r.Add<ITest, TestConstructor>()));
             Assert.AreEqual(typeof(ITest), exception?.Type);
         }
+        
+        [Test]
+        public void TestRegisterMultipleSame()
+        {
+            _iocContainer.Register(r => r.Add<ITest, Test>());
+            Assert.DoesNotThrow(() => _iocContainer.Register(r => r.Add<ITest, Test>()));
+        }
 
+        [Test]
+        public void TestRegisterMultipleSameWithParameters()
+        {
+            _iocContainer.Register(r => r.Add<ITest, Test>().WithParameters("test", 1, new Foo()));
+            Assert.DoesNotThrow(() => _iocContainer.Register(r => r.Add<ITest, Test>().WithParameters("test", 1, new Foo())));
+        }
+        
         [Test]
         public void TestResolveNotRegistered()
         {

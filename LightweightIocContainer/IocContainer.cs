@@ -88,8 +88,8 @@ namespace LightweightIocContainer
         /// <exception cref="MultipleRegistrationException">The <see cref="Type"/> is already registered in this <see cref="IocContainer"/></exception>
         private void Register(IRegistration registration)
         {
-            //if type is already registered //fixMe: Remove and check if already registered registration is the same
-            if (Registrations.Any(r => r.InterfaceType == registration.InterfaceType))
+            IRegistration? sameTypeRegistration = Registrations.FirstOrDefault(r => r.InterfaceType == registration.InterfaceType);
+            if (sameTypeRegistration != null && !registration.Equals(sameTypeRegistration)) //if type is already registered differently
                 throw new MultipleRegistrationException(registration.InterfaceType);
 
             if (registration is IInternalValidationProvider validationProvider)

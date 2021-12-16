@@ -213,5 +213,35 @@ namespace LightweightIocContainer.Registrations
                 }
             }
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not RegistrationBase registrationBase)
+                return false;
+
+            if (Parameters == null && registrationBase.Parameters != null)
+                return false;
+
+            if (Parameters != null && registrationBase.Parameters == null)
+                return false;
+
+            if (Parameters?.Length != registrationBase.Parameters?.Length)
+                return false;
+            
+            if (Factory == null && registrationBase.Factory != null)
+                return false;
+
+            if (Factory != null && registrationBase.Factory == null)
+                return false;
+
+            if (Factory?.CreateMethods.Count != registrationBase.Factory?.CreateMethods.Count)
+                return false;
+            
+            return InterfaceType == registrationBase.InterfaceType &&
+                   Lifestyle == registrationBase.Lifestyle &&
+                   DisposeStrategy == registrationBase.DisposeStrategy;
+        }
+        
+        public override int GetHashCode() => HashCode.Combine(InterfaceType, (int) Lifestyle);
     }
 }
