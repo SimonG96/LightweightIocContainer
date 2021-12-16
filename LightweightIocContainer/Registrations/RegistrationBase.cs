@@ -201,11 +201,16 @@ namespace LightweightIocContainer.Registrations
             }
             else
             {
-                if (!type.IsAssignableTo(typeof(IDisposable)))
-                    return;
-
-                if (DisposeStrategy == DisposeStrategy.None)
-                    throw new InvalidDisposeStrategyException(DisposeStrategy, type, Lifestyle);
+                if (type.IsAssignableTo(typeof(IDisposable)))
+                {
+                    if (DisposeStrategy == DisposeStrategy.None)
+                        throw new InvalidDisposeStrategyException(DisposeStrategy, type, Lifestyle);
+                }
+                else
+                {
+                    if (DisposeStrategy != DisposeStrategy.None)
+                        throw new InvalidDisposeStrategyException(DisposeStrategy, type, Lifestyle);
+                }
             }
         }
     }

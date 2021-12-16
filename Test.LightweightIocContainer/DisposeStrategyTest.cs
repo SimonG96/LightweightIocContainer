@@ -24,6 +24,12 @@ public class DisposeStrategyTest
         public void Dispose() => throw new Exception();
     }
     
+    private class TestNotDisposable
+    {
+        
+    }
+    
+    
     [Test]
     public void TestValidContainerDisposeStrategySingleton()
     {
@@ -87,5 +93,23 @@ public class DisposeStrategyTest
     {
         IocContainer iocContainer = new();
         Assert.Throws<InvalidDisposeStrategyException>(() => iocContainer.Register(r => r.Add<ITest, Test>().WithDisposeStrategy(DisposeStrategy.Container)));
+    }
+
+    [Test]
+    public void TestNoDisposeStrategyTypeNotDisposableSingleton()
+    {
+        IocContainer iocContainer = new();
+        iocContainer.Register(r => r.Add<TestNotDisposable>(Lifestyle.Singleton));
+
+        iocContainer.Resolve<TestNotDisposable>();
+        
+        Assert.DoesNotThrow(() => iocContainer.Dispose());
+    }
+    
+    [Test]
+    public void TestInvalidDisposeStrategyTypeNotDisposableSingleton()
+    {
+        IocContainer iocContainer = new();
+        Assert.Throws<InvalidDisposeStrategyException>(() => iocContainer.Register(r => r.Add<TestNotDisposable>(Lifestyle.Singleton).WithDisposeStrategy(DisposeStrategy.Container)));
     }
 }
