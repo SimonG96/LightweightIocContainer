@@ -9,7 +9,7 @@ namespace LightweightIocContainer.Exceptions
     /// <summary>
     /// Could not find generic method
     /// </summary>
-    public class GenericMethodNotFoundException : Exception
+    internal class GenericMethodNotFoundException : Exception
     {
         /// <summary>
         /// Could not find generic method

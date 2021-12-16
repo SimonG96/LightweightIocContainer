@@ -9,7 +9,7 @@ namespace LightweightIocContainer.Exceptions;
 /// <summary>
 /// Invalid <see cref="DisposeStrategy"/> is used
 /// </summary>
-public class InvalidDisposeStrategyException : IocContainerException
+internal class InvalidDisposeStrategyException : IocContainerException
 {
     /// <summary>
     /// Invalid <see cref="DisposeStrategy"/> is used
