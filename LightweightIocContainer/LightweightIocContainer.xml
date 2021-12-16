@@ -472,6 +472,12 @@
             <param name="installers">The given <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/>s</param>
             <returns>An instance of the current <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/></returns>
         </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.Register(System.Func{LightweightIocContainer.Interfaces.Registrations.IRegistrationCollector,LightweightIocContainer.Interfaces.Registrations.IRegistration})">
+            <summary>
+            Register an <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> at this <see cref="T:LightweightIocContainer.IocContainer"/> 
+            </summary>
+            <param name="addRegistration">The <see cref="T:System.Func`2"/> that creates an <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></param>
+        </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocContainer.ClearMultitonInstances``1">
             <summary>
             Clear the multiton instances of the given <see cref="T:System.Type"/> from the registered multitons list

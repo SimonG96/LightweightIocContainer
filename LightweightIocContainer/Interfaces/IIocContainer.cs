@@ -21,6 +21,12 @@ namespace LightweightIocContainer.Interfaces
         IIocContainer Install(params IIocInstaller[] installers);
 
         /// <summary>
+        /// Register an <see cref="IRegistration"/> at this <see cref="IocContainer"/> 
+        /// </summary>
+        /// <param name="addRegistration">The <see cref="Func{T, TResult}"/> that creates an <see cref="IRegistration"/></param>
+        public void Register(Func<IRegistrationCollector, IRegistration> addRegistration);
+
+        /// <summary>
         /// Clear the multiton instances of the given <see cref="Type"/> from the registered multitons list
         /// </summary>
         /// <typeparam name="T">The <see cref="Type"/> to clear the multiton instances</typeparam>
