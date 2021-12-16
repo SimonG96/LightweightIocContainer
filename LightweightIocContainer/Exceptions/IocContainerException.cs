@@ -13,7 +13,7 @@ namespace LightweightIocContainer.Exceptions
     public abstract class IocContainerException : Exception
     {
         /// <summary>
-        ///  A base <see cref="Exception"/> for the <see cref="LightweightIocContainer"/>
+        /// A base <see cref="Exception"/> for the <see cref="LightweightIocContainer"/>
         /// </summary>
         protected IocContainerException() => InnerExceptions = new List<Exception>();
 
