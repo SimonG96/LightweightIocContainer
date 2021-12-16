@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace LightweightIocContainer.Exceptions
 {
@@ -38,7 +37,6 @@ namespace LightweightIocContainer.Exceptions
         /// <summary>
         /// The inner exceptions of the <see cref="IocContainerException"/>
         /// </summary>
-        [UsedImplicitly]
-        public List<Exception> InnerExceptions { get; protected set; }
+        public List<Exception> InnerExceptions { get; protected init; }
     }
 }
