@@ -50,5 +50,17 @@ namespace LightweightIocContainer
                 return new TGiven();
             }
         }
+
+        /// <summary>
+        /// Executes an <see cref="Action{T}"/> for each item in an <see cref="IEnumerable{T}"/>
+        /// </summary>
+        /// <param name="enumerable">The <see cref="IEnumerable{T}"/></param>
+        /// <param name="action">The <see cref="Action{T}"/></param>
+        /// <typeparam name="T">The <see cref="Type"/> of the items in the <see cref="IEnumerable{T}"/></typeparam>
+        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
+        {
+            foreach (T item in enumerable) 
+                action(item);
+        }
     }
 }

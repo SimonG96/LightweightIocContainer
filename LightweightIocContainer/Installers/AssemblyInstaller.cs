@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Installers;
+using LightweightIocContainer.Interfaces.Registrations;
 
 namespace LightweightIocContainer.Installers
 {
@@ -41,11 +42,11 @@ namespace LightweightIocContainer.Installers
         /// <summary>
         /// Install the found <see cref="IIocInstaller"/>s in the given <see cref="IIocContainer"/>
         /// </summary>
-        /// <param name="container">The current <see cref="IIocContainer"/></param>
-        public void Install(IIocContainer container)
+        /// <param name="registration">The <see cref="IRegistrationCollector"/> where <see cref="IRegistration"/>s are added</param>
+        public void Install(IRegistrationCollector registration)
         {
             foreach (IIocInstaller installer in Installers)
-                installer.Install(container);
+                installer.Install(registration);
         }
     }
 }

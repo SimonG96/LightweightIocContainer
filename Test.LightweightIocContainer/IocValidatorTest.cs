@@ -6,8 +6,8 @@ using System;
 using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Exceptions;
-using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Installers;
+using LightweightIocContainer.Interfaces.Registrations;
 using LightweightIocContainer.Validation;
 using Moq;
 using NUnit.Framework;
@@ -47,12 +47,12 @@ namespace Test.LightweightIocContainer
         
         private class TestInstaller : IIocInstaller
         {
-            public void Install(IIocContainer container) => container.Register<ITest, Test>().WithFactory<ITestFactory>();
+            public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>().WithFactory<ITestFactory>();
         }
         
         private class InvalidTestInstaller : IIocInstaller
         {
-            public void Install(IIocContainer container) => container.Register<ITest, Test>().WithFactory<IInvalidFactory>();
+            public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>().WithFactory<IInvalidFactory>();
         }
         
         [Test]

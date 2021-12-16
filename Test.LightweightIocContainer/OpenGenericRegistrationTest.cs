@@ -37,7 +37,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestRegisterOpenGenericType()
         {
-            _iocContainer.RegisterOpenGenerics(typeof(ITest<>), typeof(Test<>));
+            _iocContainer.Register(r => r.AddOpenGenerics(typeof(ITest<>), typeof(Test<>)));
 
             ITest<int> test = _iocContainer.Resolve<ITest<int>>();
             Assert.NotNull(test);
@@ -46,7 +46,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestRegisterOpenGenericTypeAsSingleton()
         {
-            _iocContainer.RegisterOpenGenerics(typeof(ITest<>), typeof(Test<>), Lifestyle.Singleton);
+            _iocContainer.Register(r => r.AddOpenGenerics(typeof(ITest<>), typeof(Test<>), Lifestyle.Singleton));
 
             ITest<int> test = _iocContainer.Resolve<ITest<int>>();
             Assert.NotNull(test);
@@ -60,10 +60,10 @@ namespace Test.LightweightIocContainer
         
         [Test]
         public void TestRegisterOpenGenericTypeAsMultitonThrowsException() => 
-            Assert.Throws<InvalidRegistrationException>(() => _iocContainer.RegisterOpenGenerics(typeof(ITest<>), typeof(Test<>), Lifestyle.Multiton));
+            Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Register(r => r.AddOpenGenerics(typeof(ITest<>), typeof(Test<>), Lifestyle.Multiton)));
 
         [Test]
         public void TestRegisterNonOpenGenericTypeWithOpenGenericsFunctionThrowsException() =>
-            Assert.Throws<InvalidRegistrationException>(() => _iocContainer.RegisterOpenGenerics(typeof(int), typeof(int)));
+            Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Register(r => r.AddOpenGenerics(typeof(int), typeof(int))));
     }
 }

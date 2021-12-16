@@ -60,7 +60,7 @@ namespace Test.LightweightIocContainer
 
             RegistrationBase testRegistration = (RegistrationBase) registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters(bar, test);
 
-            Assert.AreEqual(bar, testRegistration.Parameters[0]);
+            Assert.AreEqual(bar, testRegistration.Parameters![0]);
             Assert.AreEqual(test, testRegistration.Parameters[1]);
         }
 
@@ -74,7 +74,7 @@ namespace Test.LightweightIocContainer
 
             RegistrationBase testRegistration = (RegistrationBase) registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters((0, bar), (3, test), (2, "SomeString"));
 
-            Assert.AreEqual(bar, testRegistration.Parameters[0]);
+            Assert.AreEqual(bar, testRegistration.Parameters![0]);
             Assert.IsInstanceOf<InternalResolvePlaceholder>(testRegistration.Parameters[1]);
             Assert.AreEqual("SomeString", testRegistration.Parameters[2]);
             Assert.AreEqual(test, testRegistration.Parameters[3]);

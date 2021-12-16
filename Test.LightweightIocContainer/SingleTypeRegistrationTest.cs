@@ -50,17 +50,17 @@ namespace Test.LightweightIocContainer
             RegistrationFactory registrationFactory = new(iocContainerMock.Object);
             ISingleTypeRegistration<IFoo> registration = registrationFactory.Register<IFoo>(Lifestyle.Transient).WithFactoryMethod(c => new Foo(c.Resolve<IBar>()));
 
-            IFoo foo = registration.FactoryMethod(iocContainerMock.Object);
+            IFoo foo = registration.FactoryMethod!(iocContainerMock.Object);
             Assert.AreEqual(bar, foo.Bar);
         }
 
         [Test]
         public void TestSingleTypeRegistrationResolveSingleton()
         {
-            IocContainer container = new IocContainer();
+            IocContainer container = new();
 
             IBar bar = new Bar();
-            container.Register<IFoo>(Lifestyle.Singleton).WithFactoryMethod(_ => new Foo(bar));
+            container.Register(r => r.Add<IFoo>(Lifestyle.Singleton).WithFactoryMethod(_ => new Foo(bar)));
 
             IFoo foo = container.Resolve<IFoo>();
 

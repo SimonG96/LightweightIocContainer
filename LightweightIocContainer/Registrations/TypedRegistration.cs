@@ -13,7 +13,7 @@ namespace LightweightIocContainer.Registrations
     /// <summary>
     /// A <see cref="IRegistrationBase"/> that implements a <see cref="Type"/>
     /// </summary>
-    public class TypedRegistration<TInterface, TImplementation> : RegistrationBase, ITypedRegistration<TInterface, TImplementation> where TImplementation : TInterface
+    internal class TypedRegistration<TInterface, TImplementation> : RegistrationBase, ITypedRegistration<TInterface, TImplementation> where TImplementation : TInterface
     {
         /// <summary>
         /// A <see cref="IRegistrationBase"/> that implements a <see cref="Type"/>
@@ -53,5 +53,10 @@ namespace LightweightIocContainer.Registrations
             OnCreateAction = a => action((TImplementation?) a);
             return this;
         }
+
+        /// <summary>
+        /// Validate the <see cref="DisposeStrategy"/> for the <see cref="ImplementationType"/> and <see cref="Lifestyle"/>
+        /// </summary>
+        protected override void ValidateDisposeStrategy() => ValidateDisposeStrategy(ImplementationType);
     }
 }

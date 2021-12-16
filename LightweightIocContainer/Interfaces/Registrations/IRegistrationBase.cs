@@ -9,7 +9,7 @@ namespace LightweightIocContainer.Interfaces.Registrations
     /// <summary>
     /// The <see cref="IRegistrationBase"/> that is used to register an Interface and extends the <see cref="IRegistration"/> with fluent options
     /// </summary>
-    public interface IRegistrationBase : IRegistration, IWithFactory, IWithParameters
+    public interface IRegistrationBase : IRegistration, IWithFactory, IWithParameters, IWithDisposeStrategy
     {
         
     }

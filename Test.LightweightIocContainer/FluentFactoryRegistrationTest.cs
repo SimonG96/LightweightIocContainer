@@ -100,7 +100,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestFluentFactoryRegistration()
         {
-            _iocContainer.Register<ITest, Test>().WithFactory<ITestFactory>();
+            _iocContainer.Register(r => r.Add<ITest, Test>().WithFactory<ITestFactory>());
 
             ITestFactory factory = _iocContainer.Resolve<ITestFactory>();
             ITest test = _iocContainer.Resolve<ITest>();
@@ -112,7 +112,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestFluentFactoryRegistration_CustomFactory()
         {
-            _iocContainer.Register<ITest, Test>().WithFactory<ITestFactory, TestFactory>();
+            _iocContainer.Register(r => r.Add<ITest, Test>().WithFactory<ITestFactory, TestFactory>());
 
             ITestFactory factory = _iocContainer.Resolve<ITestFactory>();
             ITest test = _iocContainer.Resolve<ITest>();
@@ -122,15 +122,15 @@ namespace Test.LightweightIocContainer
         }
         
         [Test]
-        public void TestRegisterFactoryWithoutCreate() => Assert.Throws<InvalidFactoryRegistrationException>(() => _iocContainer.Register<ITest, Test>().WithFactory<ITestFactoryNoCreate>());
+        public void TestRegisterFactoryWithoutCreate() => Assert.Throws<InvalidFactoryRegistrationException>(() => _iocContainer.Register(r => r.Add<ITest, Test>().WithFactory<ITestFactoryNoCreate>()));
         
         [Test]
-        public void TestRegisterFactoryClearMultitonsNonGeneric() => Assert.Throws<IllegalAbstractMethodCreationException>(() => _iocContainer.Register<ITest, Test>().WithFactory<ITestFactoryNonGenericClear>());
+        public void TestRegisterFactoryClearMultitonsNonGeneric() => Assert.Throws<IllegalAbstractMethodCreationException>(() => _iocContainer.Register(r => r.Add<ITest, Test>().WithFactory<ITestFactoryNonGenericClear>()));
         
         [Test]
         public void TestResolveFromFactory()
         {
-            _iocContainer.Register<ITest, Test>().WithFactory<ITestFactory>();
+            _iocContainer.Register(r => r.Add<ITest, Test>().WithFactory<ITestFactory>());
         
             ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
             ITest createdTest = testFactory.Create();
@@ -141,8 +141,8 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestResolveFromFactoryWithParams()
         {
-            _iocContainer.Register<ITest, TestConstructor>().WithFactory<ITestFactory>();
-            _iocContainer.Register<Test, Test>(); //this registration is abnormal and should only be used in unit tests
+            _iocContainer.Register(r => r.Add<ITest, TestConstructor>().WithFactory<ITestFactory>());
+            _iocContainer.Register(r => r.Add<Test, Test>()); //this registration is abnormal and should only be used in unit tests
         
             ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
             ITest createdTest = testFactory.Create("Test");
@@ -153,8 +153,8 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestResolveFromFactoryWithDefaultParamCreate()
         {
-            _iocContainer.Register<ITest, TestConstructor>().WithFactory<ITestFactory>();
-            _iocContainer.Register<Test, Test>(); //this registration is abnormal and should only be used in unit tests
+            _iocContainer.Register(r => r.Add<ITest, TestConstructor>().WithFactory<ITestFactory>());
+            _iocContainer.Register(r => r.Add<Test, Test>()); //this registration is abnormal and should only be used in unit tests
         
             ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
             ITest createdTest = testFactory.CreateTest();
@@ -165,8 +165,8 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestResolveFromFactoryWithDefaultParamCtor()
         {
-            _iocContainer.Register<ITest, TestConstructor>().WithFactory<ITestFactory>();
-            _iocContainer.Register<Test, Test>(); //this registration is abnormal and should only be used in unit tests
+            _iocContainer.Register(r => r.Add<ITest, TestConstructor>().WithFactory<ITestFactory>());
+            _iocContainer.Register(r => r.Add<Test, Test>()); //this registration is abnormal and should only be used in unit tests
         
             ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
             ITest createdTest = testFactory.Create();
@@ -177,7 +177,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestResolveFromFactoryWithByte()
         {
-            _iocContainer.Register<ITest, TestByte>().WithFactory<ITestFactory>();
+            _iocContainer.Register(r => r.Add<ITest, TestByte>().WithFactory<ITestFactory>());
         
             ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
             ITest createdTest = testFactory.Create(1);
@@ -188,7 +188,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestResolveMultitonFromFactory()
         {
-            _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>().WithFactory<ITestFactory>();
+            _iocContainer.Register(r => r.AddMultiton<ITest, Test, MultitonScope>().WithFactory<ITestFactory>());
         
             MultitonScope scope1 = new();
             MultitonScope scope2 = new();
@@ -207,7 +207,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestResolveMultitonFromFactoryClearInstances()
         {
-            _iocContainer.RegisterMultiton<ITest, Test, MultitonScope>().WithFactory<ITestFactory>();
+            _iocContainer.Register(r => r.AddMultiton<ITest, Test, MultitonScope>().WithFactory<ITestFactory>());
         
             MultitonScope scope1 = new();
             MultitonScope scope2 = new();
@@ -234,6 +234,6 @@ namespace Test.LightweightIocContainer
 
         [Test]
         public void TestInvalidCreateMethodReturnType() => 
-            Assert.Throws<InvalidFactoryRegistrationException>(() => _iocContainer.Register<ITest, Test>().WithFactory<ITestFactoryWrongReturn>());
+            Assert.Throws<InvalidFactoryRegistrationException>(() => _iocContainer.Register(r => r.Add<ITest, Test>().WithFactory<ITestFactoryWrongReturn>()));
     }
 }

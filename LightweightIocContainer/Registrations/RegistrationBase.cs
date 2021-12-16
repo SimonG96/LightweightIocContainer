@@ -17,7 +17,7 @@ namespace LightweightIocContainer.Registrations
     /// <summary>
     /// The <see cref="RegistrationBase"/> that is used to register an Interface
     /// </summary>
-    public abstract class RegistrationBase : IRegistrationBase, IWithFactoryInternal, IWithParametersInternal, ILifestyleProvider
+    internal abstract class RegistrationBase : IRegistrationBase, IWithFactoryInternal, IWithParametersInternal, ILifestyleProvider, IWithDisposeStrategyInternal, IInternalValidationProvider
     {
         private readonly IocContainer _container;
 
@@ -43,6 +43,11 @@ namespace LightweightIocContainer.Registrations
         /// The <see cref="LightweightIocContainer.Lifestyle"/> of Instances that are created with this <see cref="RegistrationBase"/>
         /// </summary>
         public Lifestyle Lifestyle { get; }
+        
+        /// <summary>
+        /// The <see cref="LightweightIocContainer.DisposeStrategy"/> of singletons/multitons that implement <see cref="IDisposable"/> and are created with this <see cref="RegistrationBase"/>
+        /// </summary>
+        public DisposeStrategy DisposeStrategy { get; private set; }
 
         /// <summary>
         /// An <see cref="Array"/> of parameters that are used to <see cref="IocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
@@ -113,7 +118,6 @@ namespace LightweightIocContainer.Registrations
             TypedFactory<TFactory> factory = new(_container);
             Factory = factory;
             
-            ValidateFactory();
             _container.RegisterFactory(factory);
             
             return this;
@@ -128,17 +132,81 @@ namespace LightweightIocContainer.Registrations
         public IRegistrationBase WithFactory<TFactoryInterface, TFactoryImplementation>() where TFactoryImplementation : TFactoryInterface
         {
             Factory = new CustomTypedFactory<TFactoryInterface>();
-            ValidateFactory();
-            
-            _container.Register<TFactoryInterface, TFactoryImplementation>();
+            _container.Register(r => r.Add<TFactoryInterface, TFactoryImplementation>());
 
             return this;
         }
+        
+        /// <summary>
+        /// Add a <see cref="DisposeStrategy"/> for the <see cref="IRegistrationBase"/>
+        /// </summary>
+        /// <param name="disposeStrategy">The <see cref="DisposeStrategy"/></param>
+        /// <returns>The current instance of this <see cref="RegistrationBase"/></returns>
+        public IRegistrationBase WithDisposeStrategy(DisposeStrategy disposeStrategy)
+        {
+            DisposeStrategy = disposeStrategy;
+            return this;
+        }
+        
+        /// <summary>
+        /// Validate this <see cref="RegistrationBase"/>
+        /// </summary>
+        public virtual void Validate()
+        {
+            ValidateMultiton();
+            ValidateFactory();
+            ValidateDisposeStrategy();
+        }
 
+        /// <summary>
+        /// Validate that no registration that isn't derived from <see cref="IMultitonRegistration"/> has <see cref="LightweightIocContainer.Lifestyle.Multiton"/>
+        /// </summary>
+        /// <exception cref="InvalidRegistrationException"></exception>
+        private void ValidateMultiton()
+        {
+            //don't allow lifestyle.multiton without iMultitonRegistration
+            if (Lifestyle == Lifestyle.Multiton && this is not IMultitonRegistration)
+                throw new InvalidRegistrationException("Can't register a type as Lifestyle.Multiton without a scope (Registration is not of type IMultitonRegistration).");
+        }
+
+        /// <summary>
+        /// Validate the <see cref="Factory"/>
+        /// </summary>
+        /// <exception cref="InvalidFactoryRegistrationException">No create method that can create the <see cref="InterfaceType"/></exception>
         private void ValidateFactory()
         {
-            if (Factory?.CreateMethods.Any(c => c.ReturnType == InterfaceType) != true)
+            if (Factory == null)
+                return;
+            
+            if (Factory.CreateMethods.Any(c => c.ReturnType == InterfaceType) != true)
                 throw new InvalidFactoryRegistrationException($"No create method that can create {InterfaceType}.");
+        }
+        
+        /// <summary>
+        /// Validate the <see cref="DisposeStrategy"/> for the <see cref="InterfaceType"/> and <see cref="Lifestyle"/>
+        /// </summary>
+        protected virtual void ValidateDisposeStrategy() => ValidateDisposeStrategy(InterfaceType);
+
+        /// <summary>
+        /// Validate the <see cref="DisposeStrategy"/> for the given <see cref="Type"/> and <see cref="Lifestyle"/>
+        /// </summary>
+        /// <param name="type">The given <see cref="Type"/></param>
+        /// <exception cref="InvalidDisposeStrategyException">Dispose strategy is invalid for this <see cref="InterfaceType"/> and <see cref="Lifestyle"/></exception>
+        protected void ValidateDisposeStrategy(Type type)
+        {
+            if (Lifestyle == Lifestyle.Transient)
+            {
+                if (DisposeStrategy != DisposeStrategy.None)
+                    throw new InvalidDisposeStrategyException(DisposeStrategy, type, Lifestyle);
+            }
+            else
+            {
+                if (!type.IsAssignableTo(typeof(IDisposable)))
+                    return;
+
+                if (DisposeStrategy == DisposeStrategy.None)
+                    throw new InvalidDisposeStrategyException(DisposeStrategy, type, Lifestyle);
+            }
         }
     }
 }

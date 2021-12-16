@@ -4,7 +4,9 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using LightweightIocContainer;
+using Moq;
 using NUnit.Framework;
 
 namespace Test.LightweightIocContainer
@@ -20,6 +22,12 @@ namespace Test.LightweightIocContainer
         private class Given : ListObject
         {
 
+        }
+
+        [UsedImplicitly]
+        public interface ITest
+        {
+            void DoSomething();
         }
 
 
@@ -71,6 +79,24 @@ namespace Test.LightweightIocContainer
 
             Assert.IsNotInstanceOf<Given>(listObject);
             Assert.AreEqual(2, listObject.Index);
+        }
+
+        [Test]
+        public void TestForEach()
+        {
+            Mock<ITest> test1 = new();
+            Mock<ITest> test2 = new();
+            Mock<ITest> test3 = new();
+            Mock<ITest> test4 = new();
+
+            IEnumerable<ITest> enumerable = new[] { test1.Object, test2.Object, test3.Object, test4.Object };
+            
+            enumerable.ForEach(t => t.DoSomething());
+            
+            test1.Verify(t => t.DoSomething(), Times.Once);
+            test2.Verify(t => t.DoSomething(), Times.Once);
+            test3.Verify(t => t.DoSomething(), Times.Once);
+            test4.Verify(t => t.DoSomething(), Times.Once);
         }
     }
 }

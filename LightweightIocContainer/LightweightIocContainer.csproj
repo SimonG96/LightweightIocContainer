@@ -32,8 +32,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\README.md" Pack="true" PackagePath=""/>
-    <Content Include="..\LICENSE.md" Pack="true" PackagePath=""/>
+    <Content Include="..\README.md" Pack="true" PackagePath="" />
+    <Content Include="..\LICENSE.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>

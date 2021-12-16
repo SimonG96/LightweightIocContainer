@@ -12,7 +12,7 @@ namespace LightweightIocContainer.Registrations
     /// The <see cref="IRegistration"/> to register either only an interface or only a <see cref="Type"/>
     /// </summary>
     /// <typeparam name="T">The <see cref="Type"/> of the <see cref="IRegistration"/></typeparam>
-    public class SingleTypeRegistration<T> : RegistrationBase, ISingleTypeRegistration<T>
+    internal class SingleTypeRegistration<T> : RegistrationBase, ISingleTypeRegistration<T>
     {
         /// <summary>
         /// The <see cref="IRegistration"/> to register either only an interface or only a <see cref="Type"/>

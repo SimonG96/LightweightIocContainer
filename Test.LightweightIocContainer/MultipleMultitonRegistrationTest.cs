@@ -48,7 +48,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestRegisterAndResolveMultipleMultitonRegistration()
         {
-            _iocContainer.RegisterMultiton<IProvider, ITest, Test, MultitonScope>();
+            _iocContainer.Register(r => r.AddMultiton<IProvider, ITest, Test, MultitonScope>());
 
             MultitonScope scope = new();
             
@@ -64,7 +64,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestRegisterAndResolveMultipleMultitonRegistrationWithDifferentScope()
         {
-            _iocContainer.RegisterMultiton<IProvider, ITest, Test, MultitonScope>();
+            _iocContainer.Register(r => r.AddMultiton<IProvider, ITest, Test, MultitonScope>());
 
             MultitonScope scope = new();
             MultitonScope differentScope = new();
@@ -82,7 +82,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestMultipleMultitonRegistrationOnCreate()
         {
-            _iocContainer.RegisterMultiton<IProvider, ITest, Test, MultitonScope>().OnCreate(t => t.DoSomething(1));
+            _iocContainer.Register(r => r.AddMultiton<IProvider, ITest, Test, MultitonScope>().OnCreate(t => t.DoSomething(1)));
             
             MultitonScope scope = new();
             

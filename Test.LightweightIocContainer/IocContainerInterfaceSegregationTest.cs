@@ -54,7 +54,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestRegistrationOnCreate2()
         {
-            _container.Register<IBar, IFoo, Foo>().OnCreate(foo => foo.ThrowFoo());
+            _container.Register(r => r.Add<IBar, IFoo, Foo>().OnCreate(foo => foo.ThrowFoo()));
 
             Exception fooException = Assert.Throws<Exception>(() => _container.Resolve<IFoo>());
             Assert.AreEqual("Foo", fooException?.Message);
@@ -66,7 +66,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestRegistrationOnCreate3()
         {
-            _container.Register<IBar, IFoo, IAnotherFoo, Foo>().OnCreate(foo => foo.ThrowFoo());
+            _container.Register(r => r.Add<IBar, IFoo, IAnotherFoo, Foo>().OnCreate(foo => foo.ThrowFoo()));
 
             Exception fooException = Assert.Throws<Exception>(() => _container.Resolve<IFoo>());
             Assert.AreEqual("Foo", fooException?.Message);
@@ -81,7 +81,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestRegistrationOnCreate4()
         {
-            _container.Register<IBar, IFoo, IAnotherFoo, IAnotherBar, Foo>().OnCreate(foo => foo.ThrowFoo());
+            _container.Register(r => r.Add<IBar, IFoo, IAnotherFoo, IAnotherBar, Foo>().OnCreate(foo => foo.ThrowFoo()));
 
             Exception fooException = Assert.Throws<Exception>(() => _container.Resolve<IFoo>());
             Assert.AreEqual("Foo", fooException?.Message);
@@ -99,7 +99,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestRegistrationOnCreate5()
         {
-            _container.Register<IBar, IFoo, IAnotherFoo, IAnotherBar, IAnotherOne, Foo>().OnCreate(foo => foo.ThrowFoo());
+            _container.Register(r => r.Add<IBar, IFoo, IAnotherFoo, IAnotherBar, IAnotherOne, Foo>().OnCreate(foo => foo.ThrowFoo()));
 
             Exception fooException = Assert.Throws<Exception>(() => _container.Resolve<IFoo>());
             Assert.AreEqual("Foo", fooException?.Message);
@@ -120,7 +120,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestResolveTransient()
         {
-            _container.Register<IBar, IFoo, IAnotherFoo, IAnotherBar, IAnotherOne, Foo>();
+            _container.Register(r => r.Add<IBar, IFoo, IAnotherFoo, IAnotherBar, IAnotherOne, Foo>());
             IFoo foo = _container.Resolve<IFoo>();
             IBar bar = _container.Resolve<IBar>();
             IAnotherFoo anotherFoo = _container.Resolve<IAnotherFoo>();
@@ -137,7 +137,7 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestResolveSingleton()
         {
-            _container.Register<IBar, IFoo, IAnotherFoo, IAnotherBar, IAnotherOne, Foo>(Lifestyle.Singleton);
+            _container.Register(r => r.Add<IBar, IFoo, IAnotherFoo, IAnotherBar, IAnotherOne, Foo>(Lifestyle.Singleton));
             IFoo foo = _container.Resolve<IFoo>();
             IBar bar = _container.Resolve<IBar>();
             IAnotherFoo anotherFoo = _container.Resolve<IAnotherFoo>();

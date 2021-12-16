@@ -3,6 +3,7 @@
 // Copyright(c) 2020 SimonG. All Rights Reserved.
 
 using System;
+using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Registrations;
 
@@ -11,7 +12,7 @@ namespace LightweightIocContainer.Registrations
     /// <summary>
     /// <see cref="IRegistration"/> for open generic types
     /// </summary>
-    public class OpenGenericRegistration : RegistrationBase, IOpenGenericRegistration
+    internal class OpenGenericRegistration : RegistrationBase, IOpenGenericRegistration
     {
         /// <summary>
         /// <see cref="IRegistration"/> for open generic types
@@ -28,5 +29,19 @@ namespace LightweightIocContainer.Registrations
         /// The <see cref="Type"/> that implements the <see cref="IRegistration.InterfaceType"/> that is registered with this <see cref="IOpenGenericRegistration"/>
         /// </summary>
         public Type ImplementationType { get; }
+
+        /// <summary>
+        /// Validate this <see cref="OpenGenericRegistration"/>
+        /// </summary>
+        public override void Validate()
+        {
+            if (!InterfaceType.ContainsGenericParameters)
+                throw new InvalidRegistrationException("This function can only be used to register open generic types.");
+            
+            if (Lifestyle == Lifestyle.Multiton)
+                throw new InvalidRegistrationException("Can't register a multiton with open generic registration."); //TODO: Is there any need to register multitons with open generics?
+            
+            base.Validate();
+        }
     }
 }

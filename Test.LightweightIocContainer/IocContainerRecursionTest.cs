@@ -110,8 +110,8 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestCircularDependencies()
         {
-            _iocContainer.Register<IFoo, Foo>();
-            _iocContainer.Register<IBar, Bar>();
+            _iocContainer.Register(r => r.Add<IFoo, Foo>());
+            _iocContainer.Register(r => r.Add<IBar, Bar>());
 
             NoMatchingConstructorFoundException noMatchingConstructorFoundException = Assert.Throws<NoMatchingConstructorFoundException>(() => _iocContainer.Resolve<IFoo>());
             ConstructorNotMatchingException fooConstructorNotMatchingException = (ConstructorNotMatchingException) noMatchingConstructorFoundException?.InnerExceptions[0];
@@ -145,9 +145,9 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestNonCircularDependencies()
         {
-            _iocContainer.Register<IA, A>();
-            _iocContainer.Register<IB, B>();
-            _iocContainer.Register<IC, C>();
+            _iocContainer.Register(r => r.Add<IA, A>());
+            _iocContainer.Register(r => r.Add<IB, B>());
+            _iocContainer.Register(r => r.Add<IC, C>());
 
             IA a = _iocContainer.Resolve<IA>();
             Assert.IsNotNull(a);
@@ -156,8 +156,8 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestRecursionWithParam()
         {
-            _iocContainer.Register<IFoo, Foo>();
-            _iocContainer.Register<IBar, Bar>();
+            _iocContainer.Register(r => r.Add<IFoo, Foo>());
+            _iocContainer.Register(r => r.Add<IBar, Bar>());
 
             Assert.DoesNotThrow(() => _iocContainer.Resolve<IFoo>(new Mock<IBar>().Object));
             Assert.DoesNotThrow(() => _iocContainer.Resolve<IBar>(new Mock<IFoo>().Object));
@@ -166,8 +166,8 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestNonCircularCrossDependencies()
         {
-            _iocContainer.Register<IA, ATwoCtor>();
-            _iocContainer.Register<IB, BTwoCtor>();
+            _iocContainer.Register(r => r.Add<IA, ATwoCtor>());
+            _iocContainer.Register(r => r.Add<IB, BTwoCtor>());
 
             Assert.DoesNotThrow(() => _iocContainer.Resolve<IA>());
             Assert.DoesNotThrow(() => _iocContainer.Resolve<IB>());

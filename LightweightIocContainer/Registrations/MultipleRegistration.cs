@@ -14,7 +14,7 @@ namespace LightweightIocContainer.Registrations
     /// </summary>
     /// <typeparam name="TInterface1">The first interface</typeparam>
     /// <typeparam name="TImplementation">The implementation</typeparam>
-    public abstract class MultipleRegistration<TInterface1, TImplementation> : TypedRegistration<TInterface1, TImplementation>, IMultipleRegistration<TInterface1, TImplementation> where TImplementation : TInterface1
+    internal abstract class MultipleRegistration<TInterface1, TImplementation> : TypedRegistration<TInterface1, TImplementation>, IMultipleRegistration<TInterface1, TImplementation> where TImplementation : TInterface1
     {
         /// <summary>
         /// The base class for every <see cref="IMultipleRegistration{TInterface1,TInterface2}"/> to register multiple interfaces
@@ -39,7 +39,7 @@ namespace LightweightIocContainer.Registrations
     /// <typeparam name="TInterface1">The first interface</typeparam>
     /// <typeparam name="TInterface2">The second interface</typeparam>
     /// <typeparam name="TImplementation">The implementation</typeparam>
-    public class MultipleRegistration<TInterface1, TInterface2, TImplementation> : MultipleRegistration<TInterface1, TImplementation>, IMultipleRegistration<TInterface1, TInterface2, TImplementation> where TImplementation : TInterface1, TInterface2
+    internal class MultipleRegistration<TInterface1, TInterface2, TImplementation> : MultipleRegistration<TInterface1, TImplementation>, IMultipleRegistration<TInterface1, TInterface2, TImplementation> where TImplementation : TInterface1, TInterface2
     {
         /// <summary>
         /// An <see cref="IRegistration"/> to register multiple interfaces for on implementation type
@@ -85,7 +85,7 @@ namespace LightweightIocContainer.Registrations
     /// <typeparam name="TInterface2">The second interface</typeparam>
     /// <typeparam name="TInterface3">The third interface</typeparam>
     /// <typeparam name="TImplementation">The implementation</typeparam>
-    public class MultipleRegistration<TInterface1, TInterface2, TInterface3, TImplementation> : MultipleRegistration<TInterface1, TImplementation>, IMultipleRegistration<TInterface1, TInterface2, TInterface3, TImplementation> where TImplementation : TInterface3, TInterface2, TInterface1
+    internal class MultipleRegistration<TInterface1, TInterface2, TInterface3, TImplementation> : MultipleRegistration<TInterface1, TImplementation>, IMultipleRegistration<TInterface1, TInterface2, TInterface3, TImplementation> where TImplementation : TInterface3, TInterface2, TInterface1
     {
         /// <summary>
         /// An <see cref="IRegistration"/> to register multiple interfaces for on implementation type
@@ -136,7 +136,7 @@ namespace LightweightIocContainer.Registrations
     /// <typeparam name="TInterface3">The third interface</typeparam>
     /// <typeparam name="TInterface4">The fourth interface</typeparam>
     /// <typeparam name="TImplementation">The implementation</typeparam>
-    public class MultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation> : MultipleRegistration<TInterface1, TImplementation>, IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation> where TImplementation : TInterface4, TInterface3, TInterface2, TInterface1
+    internal class MultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation> : MultipleRegistration<TInterface1, TImplementation>, IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TImplementation> where TImplementation : TInterface4, TInterface3, TInterface2, TInterface1
     {
         /// <summary>
         /// An <see cref="IRegistration"/> to register multiple interfaces for on implementation type
@@ -192,7 +192,7 @@ namespace LightweightIocContainer.Registrations
     /// <typeparam name="TInterface4">The fourth interface</typeparam>
     /// <typeparam name="TInterface5">The fifth interface</typeparam>
     /// <typeparam name="TImplementation">The implementation</typeparam>
-    public class MultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation> : MultipleRegistration<TInterface1, TImplementation>, IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation> where TImplementation : TInterface5, TInterface4, TInterface3, TInterface2, TInterface1
+    internal class MultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation> : MultipleRegistration<TInterface1, TImplementation>, IMultipleRegistration<TInterface1, TInterface2, TInterface3, TInterface4, TInterface5, TImplementation> where TImplementation : TInterface5, TInterface4, TInterface3, TInterface2, TInterface1
     {
         /// <summary>
         /// An <see cref="IRegistration"/> to register multiple interfaces for on implementation type

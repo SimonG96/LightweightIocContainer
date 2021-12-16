@@ -22,7 +22,7 @@ namespace Test.LightweightIocContainer
         [UsedImplicitly]
         public class TestInstaller : IIocInstaller
         {
-            public void Install(IIocContainer container) => container.Register<Mock<IRegistration>>();
+            public void Install(IRegistrationCollector registration) => registration.Add<Mock<IRegistration>>();
         }
 
         [UsedImplicitly]
@@ -44,12 +44,12 @@ namespace Test.LightweightIocContainer
             Mock<AssemblyWrapper> assemblyMock = new();
             assemblyMock.Setup(a => a.GetTypes()).Returns(types.ToArray);
 
-            Mock<IIocContainer> iocContainerMock = new();
+            Mock<IRegistrationCollector> registrationCollectorMock = new();
 
             AssemblyInstaller assemblyInstaller = new(assemblyMock.Object);
-            assemblyInstaller.Install(iocContainerMock.Object);
+            assemblyInstaller.Install(registrationCollectorMock.Object);
 
-            iocContainerMock.Verify(ioc => ioc.Register<It.IsSubtype<Mock<IRegistration>>>(It.IsAny<Lifestyle>()), Times.Once);
+            registrationCollectorMock.Verify(r => r.Add<It.IsSubtype<Mock<IRegistration>>>(It.IsAny<Lifestyle>()), Times.Once);
         }
 
         [Test]

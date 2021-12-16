@@ -64,8 +64,8 @@ public class MultiLayerResolveTest
     public void TestResolveFactoryAsCtorParameter()
     {
         IocContainer container = new();
-        container.Register<IA, A>().WithFactory<IAFactory>();
-        container.Register<IB, B>().WithFactory<IBFactory>();
+        container.Register(r => r.Add<IA, A>().WithFactory<IAFactory>());
+        container.Register(r => r.Add<IB, B>().WithFactory<IBFactory>());
 
         IA a = container.Resolve<IA>();
         Assert.IsInstanceOf<A>(a);
@@ -75,9 +75,9 @@ public class MultiLayerResolveTest
     public void TestResolveSingleTypeRegistrationAsCtorParameter()
     {
         IocContainer container = new();
-        container.Register<IA, A>();
-        container.Register<IB, B>().WithFactory<IBFactory>();
-        container.Register<C>().WithFactoryMethod(_ => new C("test"));
+        container.Register(r => r.Add<IA, A>());
+        container.Register(r => r.Add<IB, B>().WithFactory<IBFactory>());
+        container.Register(r => r.Add<C>().WithFactoryMethod(_ => new C("test")));
 
         IB b = container.Resolve<IB>();
         Assert.IsInstanceOf<B>(b);

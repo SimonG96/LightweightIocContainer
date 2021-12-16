@@ -14,7 +14,7 @@ namespace LightweightIocContainer.Interfaces.Installers
         /// <summary>
         /// Install the needed <see cref="IRegistration"/>s in the given <see cref="IIocContainer"/>
         /// </summary>
-        /// <param name="container">The current <see cref="IIocContainer"/></param>
-        void Install(IIocContainer container);
+        /// <param name="registration">The <see cref="IRegistrationCollector"/> where <see cref="IRegistration"/>s are added</param>
+        void Install(IRegistrationCollector registration);
     }
 }

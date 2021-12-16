@@ -101,7 +101,7 @@ namespace Test.LightweightIocContainer
             IC c = new C();
             IB b = new B(c);
             
-            _iocContainer.Register<IA, A>().WithParameters(b, c);
+            _iocContainer.Register(r => r.Add<IA, A>().WithParameters(b, c));
             IA a = _iocContainer.Resolve<IA>();
             
             Assert.AreEqual(b, a.B);
@@ -114,7 +114,7 @@ namespace Test.LightweightIocContainer
             IC c = new C();
             IB b = new B(c);
 
-            _iocContainer.Register<IA, A>().WithParameters(b);
+            _iocContainer.Register(r => r.Add<IA, A>().WithParameters(b));
             IA a = _iocContainer.Resolve<IA>(c);
 
             Assert.AreEqual(b, a.B);
@@ -129,7 +129,7 @@ namespace Test.LightweightIocContainer
             IA a = new A(b, c);
             IA a2 = new A(b, c);
 
-            _iocContainer.Register<ID, D>().WithParameters((0, a), (2, b), (3, c));
+            _iocContainer.Register(r => r.Add<ID, D>().WithParameters((0, a), (2, b), (3, c)));
             ID d = _iocContainer.Resolve<ID>(a2);
 
             Assert.AreEqual(a, d.A);
@@ -146,9 +146,9 @@ namespace Test.LightweightIocContainer
             IA a = new A(b, c);
             IA a2 = new A(b, c);
 
-            _iocContainer.Register<ID, D>().WithParameters(a2);
-            _iocContainer.Register<IB, B>();
-            _iocContainer.Register<IC, C>();
+            _iocContainer.Register(r => r.Add<ID, D>().WithParameters(a2));
+            _iocContainer.Register(r => r.Add<IB, B>());
+            _iocContainer.Register(r => r.Add<IC, C>());
 
             ID d = _iocContainer.Resolve<ID>(a);
 
