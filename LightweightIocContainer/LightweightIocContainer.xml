@@ -1351,6 +1351,11 @@
             The <see cref="T:System.Type"/> of the multiton scope
             </summary>
         </member>
+        <member name="M:LightweightIocContainer.Registrations.MultitonRegistration`2.ValidateFactory">
+            <summary>
+            Validate the <see cref="P:LightweightIocContainer.Registrations.RegistrationBase.Factory"/>
+            </summary>
+        </member>
         <member name="T:LightweightIocContainer.Registrations.OpenGenericRegistration">
             <summary>
             <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> for open generic types

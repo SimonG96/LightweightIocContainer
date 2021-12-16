@@ -61,21 +61,30 @@ namespace Test.LightweightIocContainer
         {
             ITest Create();
             ITest Create(string name);
-            ITest Create(MultitonScope scope);
             ITest CreateTest(string name = null);
             ITest Create(byte id);
-
-            void ClearMultitonInstance<T>();
         }
-
+        
         private class TestFactory : ITestFactory
         {
             public ITest Create() => new Test();
             public ITest Create(string name) => throw new System.NotImplementedException();
-            public ITest Create(MultitonScope scope) => throw new System.NotImplementedException();
             public ITest CreateTest(string name = null) => throw new System.NotImplementedException();
             public ITest Create(byte id) => throw new System.NotImplementedException();
-            public void ClearMultitonInstance<T>() => throw new System.NotImplementedException();
+        }
+        
+        [UsedImplicitly]
+        public interface IMultitonTestFactory
+        {
+            ITest Create(MultitonScope scope);
+            void ClearMultitonInstance<T>();
+        }
+        
+        [UsedImplicitly]
+        public interface IInvalidMultitonTestFactory
+        {
+            ITest Create(MultitonScope scope);
+            ITest Create(int number);
         }
         
         [UsedImplicitly]
@@ -188,12 +197,12 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestResolveMultitonFromFactory()
         {
-            _iocContainer.Register(r => r.AddMultiton<ITest, Test, MultitonScope>().WithFactory<ITestFactory>());
+            _iocContainer.Register(r => r.AddMultiton<ITest, Test, MultitonScope>().WithFactory<IMultitonTestFactory>());
         
             MultitonScope scope1 = new();
             MultitonScope scope2 = new();
         
-            ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
+            IMultitonTestFactory testFactory = _iocContainer.Resolve<IMultitonTestFactory>();
         
             ITest resolvedTest1 = testFactory.Create(scope1);
             ITest resolvedTest2 = testFactory.Create(scope1);
@@ -207,12 +216,12 @@ namespace Test.LightweightIocContainer
         [Test]
         public void TestResolveMultitonFromFactoryClearInstances()
         {
-            _iocContainer.Register(r => r.AddMultiton<ITest, Test, MultitonScope>().WithFactory<ITestFactory>());
+            _iocContainer.Register(r => r.AddMultiton<ITest, Test, MultitonScope>().WithFactory<IMultitonTestFactory>());
         
             MultitonScope scope1 = new();
             MultitonScope scope2 = new();
         
-            ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
+            IMultitonTestFactory testFactory = _iocContainer.Resolve<IMultitonTestFactory>();
         
             ITest resolvedTest1 = testFactory.Create(scope1);
             ITest resolvedTest2 = testFactory.Create(scope1);
@@ -231,6 +240,14 @@ namespace Test.LightweightIocContainer
             Assert.AreNotSame(resolvedTest2, resolvedTest4);
             Assert.AreNotSame(resolvedTest3, resolvedTest5);
         }
+
+        [Test]
+        public void InvalidMultitonFactoryRegistrationFactoryWithoutParameter() => 
+            Assert.Throws<InvalidFactoryRegistrationException>(() => _iocContainer.Register(r => r.AddMultiton<ITest, Test, MultitonScope>().WithFactory<ITestFactory>()));
+        
+        [Test]
+        public void InvalidMultitonFactoryRegistrationFactoryWithoutScopeAsFirstParameter() => 
+            Assert.Throws<InvalidFactoryRegistrationException>(() => _iocContainer.Register(r => r.AddMultiton<ITest, Test, MultitonScope>().WithFactory<IInvalidMultitonTestFactory>()));
 
         [Test]
         public void TestInvalidCreateMethodReturnType() => 

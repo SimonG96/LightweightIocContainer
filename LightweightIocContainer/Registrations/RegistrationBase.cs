@@ -173,12 +173,12 @@ namespace LightweightIocContainer.Registrations
         /// Validate the <see cref="Factory"/>
         /// </summary>
         /// <exception cref="InvalidFactoryRegistrationException">No create method that can create the <see cref="InterfaceType"/></exception>
-        private void ValidateFactory()
+        protected virtual void ValidateFactory()
         {
             if (Factory == null)
                 return;
             
-            if (Factory.CreateMethods.Any(c => c.ReturnType == InterfaceType) != true)
+            if (Factory.CreateMethods.All(c => c.ReturnType != InterfaceType))
                 throw new InvalidFactoryRegistrationException($"No create method that can create {InterfaceType}.");
         }
         
