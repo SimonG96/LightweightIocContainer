@@ -96,7 +96,7 @@ namespace LightweightIocContainer.Factories
                     generator.EmitCall(OpCodes.Call, emptyArray, null);
                 }
 
-                generator.EmitCall(OpCodes.Callvirt, typeof(IResolver).GetMethod(nameof(IResolver.Resolve), new[] { typeof(object[]) })!.MakeGenericMethod(createMethod.ReturnType), null);
+                generator.EmitCall(OpCodes.Callvirt, typeof(IIocResolver).GetMethod(nameof(IIocResolver.Resolve), new[] { typeof(object[]) })!.MakeGenericMethod(createMethod.ReturnType), null);
                 generator.Emit(OpCodes.Castclass, createMethod.ReturnType);
                 generator.Emit(OpCodes.Ret);
             }

@@ -27,5 +27,5 @@ internal class InternalFactoryMethodPlaceholder<T> : IInternalToBeResolvedPlaceh
     /// <summary>
     /// The <see cref="ISingleTypeRegistration{T}.FactoryMethod"/>
     /// </summary>
-    public Func<IResolver, T> FactoryMethod { get; }
+    public Func<IIocResolver, T> FactoryMethod { get; }
 }

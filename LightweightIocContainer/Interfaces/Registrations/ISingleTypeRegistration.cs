@@ -15,13 +15,13 @@ namespace LightweightIocContainer.Interfaces.Registrations
         /// <summary>
         /// <see cref="Func{T,TResult}"/> that is invoked instead of creating an instance of this <see cref="Type"/> the default way
         /// </summary>
-        Func<IResolver, T>? FactoryMethod { get; }
+        Func<IIocResolver, T>? FactoryMethod { get; }
 
         /// <summary>
         /// Pass a <see cref="Func{T,TResult}"/> that will be invoked instead of creating an instance of this <see cref="Type"/> the default way
         /// </summary>
         /// <param name="factoryMethod">The <see cref="Func{T,TResult}"/></param>
         /// <returns>The current instance of this <see cref="IRegistration"/></returns>
-        ISingleTypeRegistration<T> WithFactoryMethod(Func<IResolver, T> factoryMethod);
+        ISingleTypeRegistration<T> WithFactoryMethod(Func<IIocResolver, T> factoryMethod);
     }
 }

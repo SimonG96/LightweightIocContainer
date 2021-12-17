@@ -491,6 +491,26 @@
             <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
             <returns>True if the given <see cref="T:System.Type"/> is registered with this <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/>, false if not</returns>
         </member>
+        <member name="T:LightweightIocContainer.Interfaces.IIocResolver">
+            <summary>
+            Provides <see cref="M:LightweightIocContainer.Interfaces.IIocResolver.Resolve``1"/> methods
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocResolver.Resolve``1">
+            <summary>
+            Gets an instance of the given <see cref="T:System.Type"/>
+            </summary>
+            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
+            <returns>An instance of the given <see cref="T:System.Type"/></returns>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocResolver.Resolve``1(System.Object[])">
+            <summary>
+            Gets an instance of the given <see cref="T:System.Type"/>
+            </summary>
+            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
+            <param name="arguments">The constructor arguments</param>
+            <returns>An instance of the given <see cref="T:System.Type"/></returns>
+        </member>
         <member name="T:LightweightIocContainer.Interfaces.Installers.IAssemblyInstaller">
             <summary>
             An <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> that installs all <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/>s for its given <see cref="T:System.Reflection.Assembly"/>
@@ -511,26 +531,6 @@
             Install the needed <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>s in the given <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/>
             </summary>
             <param name="registration">The <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationCollector"/> where <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>s are added</param>
-        </member>
-        <member name="T:LightweightIocContainer.Interfaces.IResolver">
-            <summary>
-            Provides <see cref="M:LightweightIocContainer.Interfaces.IResolver.Resolve``1"/> methods
-            </summary>
-        </member>
-        <member name="M:LightweightIocContainer.Interfaces.IResolver.Resolve``1">
-            <summary>
-            Gets an instance of the given <see cref="T:System.Type"/>
-            </summary>
-            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
-            <returns>An instance of the given <see cref="T:System.Type"/></returns>
-        </member>
-        <member name="M:LightweightIocContainer.Interfaces.IResolver.Resolve``1(System.Object[])">
-            <summary>
-            Gets an instance of the given <see cref="T:System.Type"/>
-            </summary>
-            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
-            <param name="arguments">The constructor arguments</param>
-            <returns>An instance of the given <see cref="T:System.Type"/></returns>
         </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.Fluent.IOnCreate">
             <summary>
@@ -850,7 +850,7 @@
             <see cref="T:System.Func`2"/> that is invoked instead of creating an instance of this <see cref="T:System.Type"/> the default way
             </summary>
         </member>
-        <member name="M:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1.WithFactoryMethod(System.Func{LightweightIocContainer.Interfaces.IResolver,`0})">
+        <member name="M:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1.WithFactoryMethod(System.Func{LightweightIocContainer.Interfaces.IIocResolver,`0})">
             <summary>
             Pass a <see cref="T:System.Func`2"/> that will be invoked instead of creating an instance of this <see cref="T:System.Type"/> the default way
             </summary>
@@ -1717,7 +1717,7 @@
             <see cref="T:System.Func`2"/> that is invoked instead of creating an instance of this <see cref="T:System.Type"/> the default way
             </summary>
         </member>
-        <member name="M:LightweightIocContainer.Registrations.SingleTypeRegistration`1.WithFactoryMethod(System.Func{LightweightIocContainer.Interfaces.IResolver,`0})">
+        <member name="M:LightweightIocContainer.Registrations.SingleTypeRegistration`1.WithFactoryMethod(System.Func{LightweightIocContainer.Interfaces.IIocResolver,`0})">
             <summary>
             Pass a <see cref="T:System.Func`2"/> that will be invoked instead of creating an instance of this <see cref="T:System.Type"/> the default way
             </summary>
