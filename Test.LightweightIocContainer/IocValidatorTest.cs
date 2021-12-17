@@ -81,7 +81,7 @@ namespace Test.LightweightIocContainer
             
             validator.Validate();
             
-            parameterMock.Verify(p => p.Method(), Times.Once);
+            parameterMock.Verify(p => p.Method(), Times.Never);
         }
         
         [Test]

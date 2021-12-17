@@ -72,7 +72,7 @@ namespace LightweightIocContainer.Validation
         {
             try
             {
-                _iocContainer.Resolve(type, arguments, null);
+                _iocContainer.TryResolveNonGeneric(type, arguments, null);
             }
             catch (Exception exception)
             {
@@ -81,7 +81,22 @@ namespace LightweightIocContainer.Validation
         }
 
         private T GetMock<T>() where T : class => new Mock<T>().Object;
-        private object? GetMockOrDefault(Type type) => 
-            type.IsValueType ? Activator.CreateInstance(type) : GenericMethodCaller.CallPrivate(this, nameof(GetMock), type);
+        private object? GetMockOrDefault(Type type)
+        {
+            if (type.IsValueType)
+                return Activator.CreateInstance(type);
+
+            if (type == typeof(string))
+                return string.Empty;
+            
+            try
+            {
+                return GenericMethodCaller.CallPrivate(this, nameof(GetMock), type);
+            }
+            catch (Exception)
+            {
+                return null; 
+            }
+        }
     }
 }

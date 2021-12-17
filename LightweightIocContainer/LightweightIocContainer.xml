@@ -935,16 +935,6 @@
             <param name="arguments">The constructor arguments</param>
             <returns>An instance of the given <see cref="T:System.Type"/></returns>
         </member>
-        <member name="M:LightweightIocContainer.IocContainer.Resolve(System.Type,System.Object[],System.Collections.Generic.List{System.Type})">
-            <summary>
-            Gets an instance of the given <see cref="T:System.Type"/>
-            </summary>
-            <param name="type">The given <see cref="T:System.Type"/></param>
-            <param name="arguments">The constructor arguments</param>
-            <param name="resolveStack">The current resolve stack</param>
-            <returns>An instance of the given <see cref="T:System.Type"/></returns>
-            <exception cref="T:LightweightIocContainer.Exceptions.InternalResolveException">Could not find function <see cref="M:LightweightIocContainer.IocContainer.ResolveInternal``1(System.Object[],System.Collections.Generic.List{System.Type})"/></exception>
-        </member>
         <member name="M:LightweightIocContainer.IocContainer.ResolveInternal``1(System.Object[],System.Collections.Generic.List{System.Type})">
             <summary>
             Gets an instance of a given registered <see cref="T:System.Type"/>

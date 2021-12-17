@@ -114,17 +114,6 @@ namespace LightweightIocContainer
         public T Resolve<T>(params object[] arguments) => ResolveInternal<T>(arguments);
 
         /// <summary>
-        /// Gets an instance of the given <see cref="Type"/>
-        /// </summary>
-        /// <param name="type">The given <see cref="Type"/></param>
-        /// <param name="arguments">The constructor arguments</param>
-        /// <param name="resolveStack">The current resolve stack</param>
-        /// <returns>An instance of the given <see cref="Type"/></returns>
-        /// <exception cref="InternalResolveException">Could not find function <see cref="ResolveInternal{T}"/></exception>
-        internal object? Resolve(Type type, object?[]? arguments, List<Type>? resolveStack) => 
-            GenericMethodCaller.CallPrivate(this, nameof(ResolveInternal), type, arguments, resolveStack);
-
-        /// <summary>
         /// Gets an instance of a given registered <see cref="Type"/>
         /// </summary>
         /// <typeparam name="T">The registered <see cref="Type"/></typeparam>
@@ -145,7 +134,7 @@ namespace LightweightIocContainer
         /// <exception cref="MultitonResolveException">Tried resolving a multiton without scope argument</exception>
         /// <exception cref="NoMatchingConstructorFoundException">No matching constructor for the given <see cref="Type"/> found</exception>
         /// <exception cref="InternalResolveException">Getting resolve stack failed without exception</exception>
-        private object TryResolve<T>(object[]? arguments, List<Type>? resolveStack)
+        private object TryResolve<T>(object?[]? arguments, List<Type>? resolveStack)
         {
             IRegistration registration = FindRegistration<T>() ?? throw new TypeNotRegisteredException(typeof(T));
 
@@ -204,7 +193,7 @@ namespace LightweightIocContainer
         /// <exception cref="MultitonResolveException">Tried resolving a multiton without scope argument</exception>
         /// <exception cref="NoMatchingConstructorFoundException">No matching constructor for the given <see cref="Type"/> found</exception>
         /// <exception cref="InternalResolveException">Getting resolve stack failed without exception</exception>
-        private object? TryResolveNonGeneric(Type type, object[]? arguments, List<Type> resolveStack) => 
+        internal object? TryResolveNonGeneric(Type type, object?[]? arguments, List<Type>? resolveStack) => 
             GenericMethodCaller.CallPrivate(this, nameof(TryResolve), type, arguments, resolveStack);
         
         /// <summary>
@@ -301,7 +290,7 @@ namespace LightweightIocContainer
         /// <param name="arguments">The given arguments</param>
         /// <typeparam name="T">The <see cref="Type"/> of the instance</typeparam>
         /// <returns>An already existing instance if possible, null if not</returns>
-        private object? TryGetExistingInstance<T>(IRegistration registration, IReadOnlyList<object>? arguments) =>
+        private object? TryGetExistingInstance<T>(IRegistration registration, IReadOnlyList<object?>? arguments) =>
             registration switch
             {
                 ITypedFactoryRegistration<T> typedFactoryRegistration => typedFactoryRegistration.Factory.Factory,
@@ -325,7 +314,7 @@ namespace LightweightIocContainer
         /// <param name="arguments">The given arguments</param>
         /// <returns>A multiton instance if existing for the given <see cref="IRegistration"/>, null if not</returns>
         /// <exception cref="MultitonResolveException">Tried resolving a multiton without scope argument</exception>
-        private object? TryGetMultitonInstance(IMultitonRegistration registration, IReadOnlyList<object>? arguments)
+        private object? TryGetMultitonInstance(IMultitonRegistration registration, IReadOnlyList<object?>? arguments)
         {
             if (arguments == null || !arguments.Any())
                 throw new MultitonResolveException("Can not resolve multiton without arguments.", registration.InterfaceType);
@@ -394,7 +383,7 @@ namespace LightweightIocContainer
         /// <param name="registration">The <see cref="IRegistrationBase"/> of the given <see cref="Type"/></param>
         /// <param name="arguments">The constructor arguments</param>
         /// <returns>The argument list updated with the <see cref="IWithParametersInternal.Parameters"/></returns>
-        private object[]? UpdateArgumentsWithRegistrationParameters(IWithParametersInternal registration, object[]? arguments)
+        private object?[]? UpdateArgumentsWithRegistrationParameters(IWithParametersInternal registration, object?[]? arguments)
         {
             if (registration.Parameters == null)
                 return arguments;
@@ -402,7 +391,7 @@ namespace LightweightIocContainer
             if (arguments != null && arguments.Any()) //if more arguments were passed to resolve
             {
                 int argumentsSize = registration.Parameters.Length + arguments.Length;
-                object[] newArguments = new object[argumentsSize];
+                object?[] newArguments = new object[argumentsSize];
 
                 for (int i = 0; i < argumentsSize; i++)
                 {
@@ -416,7 +405,7 @@ namespace LightweightIocContainer
                         }
                     }
 
-                    object firstArgument = arguments.FirstOrGiven<object, InternalResolvePlaceholder>(a => a is not InternalResolvePlaceholder); //find the first argument that is not a placeholder
+                    object? firstArgument = arguments.FirstOrGiven<object?, InternalResolvePlaceholder>(a => a is not InternalResolvePlaceholder); //find the first argument that is not a placeholder
                     if (firstArgument is InternalResolvePlaceholder) //no more arguments available
                         break; //there won't be any more arguments
 
@@ -445,7 +434,7 @@ namespace LightweightIocContainer
         /// <para>parameters: The parameters needed to resolve the given <see cref="Type"/></para>
         /// <para>exception: A <see cref="NoMatchingConstructorFoundException"/> if no matching constructor was found</para>
         /// </returns>
-        private (bool result, List<object?>? parameters, NoMatchingConstructorFoundException? exception) TryGetTypeResolveStack(Type type, object[]? arguments, List<Type> resolveStack)
+        private (bool result, List<object?>? parameters, NoMatchingConstructorFoundException? exception) TryGetTypeResolveStack(Type type, object?[]? arguments, List<Type> resolveStack)
         {
             NoMatchingConstructorFoundException? noMatchingConstructorFoundException = null;
             
@@ -477,7 +466,7 @@ namespace LightweightIocContainer
         /// <para>parameters: The parameters needed to resolve the given <see cref="Type"/></para>
         /// <para>exception: A List of <see cref="ConstructorNotMatchingException"/>s if the constructor is not matching</para>
         /// </returns>
-        private (bool result, List<object?>? parameters, List<ConstructorNotMatchingException>? exceptions) TryGetConstructorResolveStack(ConstructorInfo constructor, object[]? arguments, List<Type> resolveStack)
+        private (bool result, List<object?>? parameters, List<ConstructorNotMatchingException>? exceptions) TryGetConstructorResolveStack(ConstructorInfo constructor, object?[]? arguments, List<Type> resolveStack)
         {
             List<ParameterInfo> constructorParameters = constructor.GetParameters().ToList();
             if (!constructorParameters.Any())
@@ -486,17 +475,17 @@ namespace LightweightIocContainer
             List<ConstructorNotMatchingException> exceptions = new();
             List<object?> parameters = new();
 
-            List<object>? passedArguments = null;
+            List<object?>? passedArguments = null;
             if (arguments != null)
-                passedArguments = new List<object>(arguments);
+                passedArguments = new List<object?>(arguments);
 
             foreach (ParameterInfo parameter in constructorParameters)
             {
                 object? fittingArgument = new InternalResolvePlaceholder();
                 if (passedArguments != null)
                 {
-                    fittingArgument = passedArguments.FirstOrGiven<object, InternalResolvePlaceholder>(a =>
-                        a.GetType() == parameter.ParameterType || parameter.ParameterType.IsInstanceOfType(a));
+                    fittingArgument = passedArguments.FirstOrGiven<object?, InternalResolvePlaceholder>(a =>
+                        a?.GetType() == parameter.ParameterType || parameter.ParameterType.IsInstanceOfType(a));
                     
                     if (fittingArgument is not InternalResolvePlaceholder)
                         passedArguments.Remove(fittingArgument);
@@ -515,7 +504,7 @@ namespace LightweightIocContainer
 
                     if (fittingArgument is InternalResolvePlaceholder && passedArguments != null)
                     {
-                        fittingArgument = passedArguments.FirstOrGiven<object, InternalResolvePlaceholder>(a => parameter.ParameterType.GetDefault() == a);
+                        fittingArgument = passedArguments.FirstOrGiven<object?, InternalResolvePlaceholder>(a => parameter.ParameterType.GetDefault() == a);
 
                         if (fittingArgument is not InternalResolvePlaceholder)
                             passedArguments.Remove(fittingArgument);
