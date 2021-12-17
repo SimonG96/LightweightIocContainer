@@ -44,7 +44,7 @@ namespace LightweightIocContainer.Exceptions
             get
             {
                 StringBuilder message = new($"Circular dependency has been detected when trying to resolve `{ResolvingType}`.\n");
-                if (ResolveStack == null || !ResolveStack.Any())
+                if (!ResolveStack.Any())
                     return message.ToString();
 
                 message.Append("Resolve stack that resulted in the circular dependency:\n");
