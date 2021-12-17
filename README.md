@@ -16,13 +16,13 @@ The easiest way to [install](https://github.com/SimonG96/LightweightIocContainer
 You can either use the [`PackageManager`](https://github.com/SimonG96/LightweightIocContainer/wiki/Install-Lightweight-IOC-Container#packagemanager) in VisualStudio:
 
 ```PM
-PM> Install-Package LightweightIocContainer -Version 3.0.0-beta2
+PM> Install-Package LightweightIocContainer -Version 3.0.0
 ```
 
 or you can use the [`.NET CLI`](https://github.com/SimonG96/LightweightIocContainer/wiki/Install-Lightweight-IOC-Container#net-cli):
 
 ```.net
-> dotnet add package LightweightIocContainer --version 3.0.0-beta2
+> dotnet add package LightweightIocContainer --version 3.0.0
 ```
 
 ### Example usage
@@ -30,7 +30,7 @@ or you can use the [`.NET CLI`](https://github.com/SimonG96/LightweightIocContai
   1. [Instantiate `IocContainer`](https://github.com/SimonG96/LightweightIocContainer/wiki/Simple-Usage-of-Lightweight-IOC-Container#instantiate-container):
   
       ```c#
-      IocContainer container = new IocContainer();
+      IocContainer container = new();
       ```
 
   2. Install [`IIocInstaller`s](https://github.com/SimonG96/LightweightIocContainer/wiki/IIocInstaller) for the container:
@@ -56,6 +56,28 @@ or you can use the [`.NET CLI`](https://github.com/SimonG96/LightweightIocContai
       ```c#
       container.Dispose();
       ```
+
+### Validation
+
+You can validate your `IocContainer` setup by using the `IocValidator` in a unit test:
+
+```c#
+[TestFixture]
+public class IocValidationTest
+{
+    [Test]
+    public void ValidateIocContainerSetup()
+    {
+        IocContainer container = new();
+        container.Install(new Installer());
+
+        IocValidator validator = new(container);
+        validator.Validate();
+    }
+}
+```
+
+If this test is successful, everything is correctly installed and can be resolved by the `IocContainer`. By going through the thrown exceptions in case of a failed test you will see what is not working correctly with your current setup.
 
 ### Demo Project
 

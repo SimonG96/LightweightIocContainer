@@ -3,10 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <Version>3.0.0-beta3</Version>
     <Authors>SimonG</Authors>
     <LangVersion>default</LangVersion>
-    <PackageVersion>3.0.0-beta3</PackageVersion>
+    <VersionPrefix>3.0.0</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
