@@ -13,12 +13,12 @@ public class MultiLayerResolveTest
 {
     public interface IA
     {
-        
+        IB BProperty { get; }
     }
     
     public interface IB
     {
-        
+        C C { get; }
     }
     
     [UsedImplicitly]
@@ -36,19 +36,28 @@ public class MultiLayerResolveTest
     [UsedImplicitly]
     private class A : IA
     {
-        [UsedImplicitly]
-        private readonly IB _b;
-        
-        public A(IBFactory bFactory) => _b = bFactory.Create(new C("from A"));
+        public A(IBFactory bFactory) => BProperty = bFactory.Create(new C("from A"));
+        public IB BProperty { get; }
+    }
+    
+    private class OtherA : IA
+    {
+        public OtherA(IB bProperty, IB secondB)
+        {
+            BProperty = bProperty;
+            SecondB = secondB;
+        }
+
+        public IB BProperty { get; }
+        public IB SecondB { get; }
     }
 
     [UsedImplicitly]
     private class B : IB
     {
-        public B(C c)
-        {
-            
-        }
+        public B(C c) => C = c;
+
+        public C C { get; }
     }
     
     [UsedImplicitly]
@@ -81,5 +90,17 @@ public class MultiLayerResolveTest
 
         IB b = container.Resolve<IB>();
         Assert.IsInstanceOf<B>(b);
+    }
+
+    [Test]
+    public void TestResolveSingletonTwiceAsCtorParameterInSameCtor()
+    {
+        IocContainer container = new();
+        container.Register(r => r.Add<IA, OtherA>());
+        container.Register(r => r.Add<IB, B>());
+        container.Register(r => r.Add<C>(Lifestyle.Singleton).WithParameters("test"));
+
+        OtherA a = container.Resolve<OtherA>();
+        Assert.AreEqual(a.BProperty.C, a.SecondB.C);
     }
 }

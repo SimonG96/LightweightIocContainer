@@ -9,7 +9,7 @@
     <LangVersion>default</LangVersion>
     <Nullable>enable</Nullable>
     <DocumentationFile>LightweightIocContainer.xml</DocumentationFile>
-    <VersionPrefix>3.0.0</VersionPrefix>
+    <VersionPrefix>3.0.1</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>

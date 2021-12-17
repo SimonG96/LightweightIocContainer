@@ -203,6 +203,10 @@ namespace LightweightIocContainer
         /// <returns>A recursively resolved instance of the given <see cref="Type"/></returns>
         private T ResolvePlaceholder<T>(InternalToBeResolvedPlaceholder toBeResolvedPlaceholder)
         {
+            object? existingInstance = TryGetExistingInstance<T>(toBeResolvedPlaceholder.ResolvedRegistration, toBeResolvedPlaceholder.Parameters);
+            if (existingInstance is T instance)
+                return instance;
+
             if (toBeResolvedPlaceholder.Parameters == null)
                 return CreateInstance<T>(toBeResolvedPlaceholder.ResolvedRegistration, null);
             
