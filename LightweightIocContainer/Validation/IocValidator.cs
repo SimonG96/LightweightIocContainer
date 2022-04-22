@@ -61,7 +61,11 @@ namespace LightweightIocContainer.Validation
                         .ForEach(p => TryResolve(registration.InterfaceType, p, validationExceptions));
                 }
                 else
-                    TryResolve(registration.InterfaceType, null, validationExceptions);
+                {
+                    var parameters = _parameters.Where(p => p.type == registration.InterfaceType);
+                    var arguments = parameters.Select(p => p.parameter).ToArray();
+                    TryResolve(registration.InterfaceType, arguments, validationExceptions);
+                }
             }
 
             if (validationExceptions.Any())

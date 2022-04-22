@@ -45,12 +45,17 @@ namespace Test.LightweightIocContainer
             ITest Create();
         }
         
-        private class TestInstaller : IIocInstaller
+        private class TestInstallerNoFactory : IIocInstaller
+        {
+            public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>();
+        }
+        
+        private class TestInstallerWithFactory : IIocInstaller
         {
             public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>().WithFactory<ITestFactory>();
         }
         
-        private class InvalidTestInstaller : IIocInstaller
+        private class TestInstallerWithInvalidFactory : IIocInstaller
         {
             public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>().WithFactory<IInvalidFactory>();
         }
@@ -59,7 +64,18 @@ namespace Test.LightweightIocContainer
         public void TestValidate()
         {
             IocContainer iocContainer = new();
-            iocContainer.Install(new TestInstaller());
+            iocContainer.Install(new TestInstallerNoFactory());
+            
+            IocValidator validator = new(iocContainer);
+            
+            validator.Validate();
+        }
+        
+        [Test]
+        public void TestValidate_WithFactory()
+        {
+            IocContainer iocContainer = new();
+            iocContainer.Install(new TestInstallerWithFactory());
             
             IocValidator validator = new(iocContainer);
             
@@ -70,7 +86,7 @@ namespace Test.LightweightIocContainer
         public void TestValidateWithParameter()
         {
             IocContainer iocContainer = new();
-            iocContainer.Install(new TestInstaller());
+            iocContainer.Install(new TestInstallerNoFactory());
             
             IocValidator validator = new(iocContainer);
 
@@ -88,7 +104,7 @@ namespace Test.LightweightIocContainer
         public void TestValidateInvalidFactory()
         {
             IocContainer iocContainer = new();
-            iocContainer.Install(new InvalidTestInstaller());
+            iocContainer.Install(new TestInstallerWithInvalidFactory());
             
             IocValidator validator = new(iocContainer);
             
