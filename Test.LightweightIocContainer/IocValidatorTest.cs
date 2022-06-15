@@ -68,7 +68,9 @@ namespace Test.LightweightIocContainer
             
             IocValidator validator = new(iocContainer);
             
-            validator.Validate();
+            var aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
+            
+            AssertNoMatchingConstructorFoundForType<Test>(aggregateException);
         }
         
         [Test]
@@ -108,13 +110,18 @@ namespace Test.LightweightIocContainer
             
             IocValidator validator = new(iocContainer);
             
-            AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
+            var aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
             
-            Exception exception =  aggregateException?.InnerExceptions[0];
+            AssertNoMatchingConstructorFoundForType<Test>(aggregateException);
+        }
+
+        private static void AssertNoMatchingConstructorFoundForType<T>(AggregateException aggregateException)
+        {
+            Exception exception = aggregateException?.InnerExceptions[0];
             Assert.IsInstanceOf<NoMatchingConstructorFoundException>(exception);
-            
-            NoMatchingConstructorFoundException noMatchingConstructorFoundException = (NoMatchingConstructorFoundException) exception;
-            Assert.AreEqual(typeof(Test), noMatchingConstructorFoundException?.Type);
+
+            NoMatchingConstructorFoundException noMatchingConstructorFoundException = (NoMatchingConstructorFoundException)exception;
+            Assert.AreEqual(typeof(T), noMatchingConstructorFoundException?.Type);
         }
     }
 }
