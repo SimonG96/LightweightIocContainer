@@ -47,12 +47,13 @@ namespace LightweightIocContainer.Validation
             
             foreach (IRegistration registration in _iocContainer.Registrations)
             {
+                var definedParameters = _parameters.Where(p => p.type == registration.InterfaceType);
+                
                 if (registration is IWithFactoryInternal { Factory: { } } withFactoryRegistration)
                 {
                     (from createMethod in withFactoryRegistration.Factory.CreateMethods
                         select createMethod.GetParameters().Select(p => p.ParameterType)
                         into parameterTypes 
-                        let definedParameters = _parameters.Where(p => p.type == registration.InterfaceType)
                         select (from parameterType in parameterTypes
                             let definedParameter = definedParameters
                                 .FirstOrDefault(p => parameterType.IsInstanceOfType(p.parameter))
@@ -62,8 +63,7 @@ namespace LightweightIocContainer.Validation
                 }
                 else
                 {
-                    var parameters = _parameters.Where(p => p.type == registration.InterfaceType);
-                    var arguments = parameters.Select(p => p.parameter).ToArray();
+                    var arguments = definedParameters.Select(p => p.parameter).ToArray();
                     TryResolve(registration.InterfaceType, arguments, validationExceptions);
                 }
             }

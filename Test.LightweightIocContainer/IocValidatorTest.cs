@@ -72,7 +72,7 @@ namespace Test.LightweightIocContainer
         }
         
         [Test]
-        public void TestValidate_WithFactory()
+        public void TestValidateWithFactory()
         {
             IocContainer iocContainer = new();
             iocContainer.Install(new TestInstallerWithFactory());
