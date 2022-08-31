@@ -130,6 +130,22 @@
             The constructor that does not match
             </summary>
         </member>
+        <member name="T:LightweightIocContainer.Exceptions.DirectResolveWithRegisteredFactoryNotAllowed">
+            <summary>
+            A direct resolve with a registered factory is not allowed
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Exceptions.DirectResolveWithRegisteredFactoryNotAllowed.#ctor(System.Type)">
+            <summary>
+            A direct resolve with a registered factory is not allowed
+            </summary>
+            <param name="type">The type that can't be resolved directly</param>
+        </member>
+        <member name="P:LightweightIocContainer.Exceptions.DirectResolveWithRegisteredFactoryNotAllowed.Type">
+            <summary>
+            The <see cref="P:LightweightIocContainer.Exceptions.DirectResolveWithRegisteredFactoryNotAllowed.Type"/> that can't be resolved directly
+            </summary>
+        </member>
         <member name="T:LightweightIocContainer.Exceptions.GenericMethodNotFoundException">
             <summary>
             Could not find generic method
@@ -341,7 +357,7 @@
             </summary>
             <typeparam name="TFactory">The type of the abstract factory</typeparam>
         </member>
-        <member name="M:LightweightIocContainer.Factories.TypedFactory`1.#ctor(LightweightIocContainer.Interfaces.IIocContainer)">
+        <member name="M:LightweightIocContainer.Factories.TypedFactory`1.#ctor(LightweightIocContainer.IocContainer)">
             <summary>
             The 
             </summary>
@@ -352,7 +368,7 @@
             The implemented abstract typed factory/>
             </summary>
         </member>
-        <member name="M:LightweightIocContainer.Factories.TypedFactory`1.CreateFactory(LightweightIocContainer.Interfaces.IIocContainer)">
+        <member name="M:LightweightIocContainer.Factories.TypedFactory`1.CreateFactory(LightweightIocContainer.IocContainer)">
             <summary>
             Creates the factory from the given abstract factory type
             </summary>
@@ -935,21 +951,31 @@
             <param name="arguments">The constructor arguments</param>
             <returns>An instance of the given <see cref="T:System.Type"/></returns>
         </member>
-        <member name="M:LightweightIocContainer.IocContainer.ResolveInternal``1(System.Object[],System.Collections.Generic.List{System.Type})">
+        <member name="M:LightweightIocContainer.IocContainer.FactoryResolve``1(System.Object[])">
+            <summary>
+            Gets an instance of the given <see cref="T:System.Type"/> for a factory
+            </summary>
+            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
+            <param name="arguments">The constructor arguments</param>
+            <returns>An instance of the given <see cref="T:System.Type"/></returns>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.ResolveInternal``1(System.Object[],System.Collections.Generic.List{System.Type},System.Boolean)">
             <summary>
             Gets an instance of a given registered <see cref="T:System.Type"/>
             </summary>
             <typeparam name="T">The registered <see cref="T:System.Type"/></typeparam>
             <param name="arguments">The constructor arguments</param>
             <param name="resolveStack">The current resolve stack</param>
+            <param name="isFactoryResolve">True if resolve is called from factory, false (default) if not</param>
             <returns>An instance of the given registered <see cref="T:System.Type"/></returns>
         </member>
-        <member name="M:LightweightIocContainer.IocContainer.TryResolve``1(System.Object[],System.Collections.Generic.List{System.Type})">
+        <member name="M:LightweightIocContainer.IocContainer.TryResolve``1(System.Object[],System.Collections.Generic.List{System.Type},System.Boolean)">
             <summary>
             Tries to resolve the given <see cref="T:System.Type"/> with the given arguments
             </summary>
             <param name="arguments">The given arguments</param>
             <param name="resolveStack">The current resolve stack</param>
+            <param name="isFactoryResolve">True if resolve is called from factory, false (default) if not</param>
             <typeparam name="T">The registered <see cref="T:System.Type"/></typeparam>
             <returns>An instance of the given registered <see cref="T:System.Type"/>, an <see cref="T:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder"/> if parameters need to be resolved or an <see cref="T:LightweightIocContainer.ResolvePlaceholders.InternalFactoryMethodPlaceholder`1"/> if a factory method is used to create an instance</returns>
             <exception cref="T:LightweightIocContainer.Exceptions.TypeNotRegisteredException">The given <see cref="T:System.Type"/> is not registered</exception>
@@ -958,13 +984,14 @@
             <exception cref="T:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException">No matching constructor for the given <see cref="T:System.Type"/> found</exception>
             <exception cref="T:LightweightIocContainer.Exceptions.InternalResolveException">Getting resolve stack failed without exception</exception>
         </member>
-        <member name="M:LightweightIocContainer.IocContainer.TryResolveNonGeneric(System.Type,System.Object[],System.Collections.Generic.List{System.Type})">
+        <member name="M:LightweightIocContainer.IocContainer.TryResolveNonGeneric(System.Type,System.Object[],System.Collections.Generic.List{System.Type},System.Boolean)">
             <summary>
             Tries to resolve the given <see cref="T:System.Type"/> with the given arguments without generic arguments
             </summary>
             <param name="type">The registered <see cref="T:System.Type"/></param>
             <param name="arguments">The given arguments</param>
             <param name="resolveStack">The current resolve stack</param>
+            <param name="isFactoryResolve"></param>
             <returns>An instance of the given registered <see cref="T:System.Type"/>, an <see cref="T:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder"/> if parameters need to be resolved or an <see cref="T:LightweightIocContainer.ResolvePlaceholders.InternalFactoryMethodPlaceholder`1"/> if a factory method is used to create an instance</returns>
             <exception cref="T:LightweightIocContainer.Exceptions.TypeNotRegisteredException">The given <see cref="T:System.Type"/> is not registered</exception>
             <exception cref="T:LightweightIocContainer.Exceptions.InvalidRegistrationException">An interface was registered without an implementation or factory method</exception>

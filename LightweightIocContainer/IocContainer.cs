@@ -114,19 +114,29 @@ namespace LightweightIocContainer
         public T Resolve<T>(params object[] arguments) => ResolveInternal<T>(arguments);
 
         /// <summary>
+        /// Gets an instance of the given <see cref="Type"/> for a factory
+        /// </summary>
+        /// <typeparam name="T">The given <see cref="Type"/></typeparam>
+        /// <param name="arguments">The constructor arguments</param>
+        /// <returns>An instance of the given <see cref="Type"/></returns>
+        public T FactoryResolve<T>(params object[] arguments) => ResolveInternal<T>(arguments, null, true);
+
+        /// <summary>
         /// Gets an instance of a given registered <see cref="Type"/>
         /// </summary>
         /// <typeparam name="T">The registered <see cref="Type"/></typeparam>
         /// <param name="arguments">The constructor arguments</param>
         /// <param name="resolveStack">The current resolve stack</param>
+        /// <param name="isFactoryResolve">True if resolve is called from factory, false (default) if not</param>
         /// <returns>An instance of the given registered <see cref="Type"/></returns>
-        private T ResolveInternal<T>(object[]? arguments, List<Type>? resolveStack = null) => ResolveInstance<T>(TryResolve<T>(arguments, resolveStack)); 
+        private T ResolveInternal<T>(object[]? arguments, List<Type>? resolveStack = null, bool isFactoryResolve = false) => ResolveInstance<T>(TryResolve<T>(arguments, resolveStack, isFactoryResolve));
 
         /// <summary>
         /// Tries to resolve the given <see cref="Type"/> with the given arguments
         /// </summary>
         /// <param name="arguments">The given arguments</param>
         /// <param name="resolveStack">The current resolve stack</param>
+        /// <param name="isFactoryResolve">True if resolve is called from factory, false (default) if not</param>
         /// <typeparam name="T">The registered <see cref="Type"/></typeparam>
         /// <returns>An instance of the given registered <see cref="Type"/>, an <see cref="InternalToBeResolvedPlaceholder"/> if parameters need to be resolved or an <see cref="InternalFactoryMethodPlaceholder{T}"/> if a factory method is used to create an instance</returns>
         /// <exception cref="TypeNotRegisteredException">The given <see cref="Type"/> is not registered</exception>
@@ -134,7 +144,7 @@ namespace LightweightIocContainer
         /// <exception cref="MultitonResolveException">Tried resolving a multiton without scope argument</exception>
         /// <exception cref="NoMatchingConstructorFoundException">No matching constructor for the given <see cref="Type"/> found</exception>
         /// <exception cref="InternalResolveException">Getting resolve stack failed without exception</exception>
-        private object TryResolve<T>(object?[]? arguments, List<Type>? resolveStack)
+        private object TryResolve<T>(object?[]? arguments, List<Type>? resolveStack, bool isFactoryResolve = false)
         {
             IRegistration registration = FindRegistration<T>() ?? throw new TypeNotRegisteredException(typeof(T));
 
@@ -145,12 +155,13 @@ namespace LightweightIocContainer
             if (existingInstance != null)
                 return existingInstance;
 
-            if (registration is ISingleTypeRegistration<T> singleTypeRegistration)
+            switch (registration)
             {
-                if (singleTypeRegistration.InterfaceType.IsInterface && singleTypeRegistration.FactoryMethod == null)
+                case IWithFactoryInternal { Factory: { } } when !isFactoryResolve:
+                    throw new DirectResolveWithRegisteredFactoryNotAllowed(typeof(T));
+                case ISingleTypeRegistration<T> singleTypeRegistration when singleTypeRegistration.InterfaceType.IsInterface && singleTypeRegistration.FactoryMethod == null:
                     throw new InvalidRegistrationException($"Can't register an interface without its implementation type or without a factory method (Type: {singleTypeRegistration.InterfaceType}).");
-                
-                if (singleTypeRegistration.FactoryMethod != null)
+                case ISingleTypeRegistration<T> { FactoryMethod: { } } singleTypeRegistration:
                     return new InternalFactoryMethodPlaceholder<T>(singleTypeRegistration);
             }
 
@@ -187,14 +198,15 @@ namespace LightweightIocContainer
         /// <param name="type">The registered <see cref="Type"/></param>
         /// <param name="arguments">The given arguments</param>
         /// <param name="resolveStack">The current resolve stack</param>
+        /// <param name="isFactoryResolve"></param>
         /// <returns>An instance of the given registered <see cref="Type"/>, an <see cref="InternalToBeResolvedPlaceholder"/> if parameters need to be resolved or an <see cref="InternalFactoryMethodPlaceholder{T}"/> if a factory method is used to create an instance</returns>
         /// <exception cref="TypeNotRegisteredException">The given <see cref="Type"/> is not registered</exception>
         /// <exception cref="InvalidRegistrationException">An interface was registered without an implementation or factory method</exception>
         /// <exception cref="MultitonResolveException">Tried resolving a multiton without scope argument</exception>
         /// <exception cref="NoMatchingConstructorFoundException">No matching constructor for the given <see cref="Type"/> found</exception>
         /// <exception cref="InternalResolveException">Getting resolve stack failed without exception</exception>
-        internal object? TryResolveNonGeneric(Type type, object?[]? arguments, List<Type>? resolveStack) => 
-            GenericMethodCaller.CallPrivate(this, nameof(TryResolve), type, arguments, resolveStack);
+        internal object? TryResolveNonGeneric(Type type, object?[]? arguments, List<Type>? resolveStack, bool isFactoryResolve = false) => 
+            GenericMethodCaller.CallPrivate(this, nameof(TryResolve), type, arguments, resolveStack, isFactoryResolve);
         
         /// <summary>
         /// Recursively resolve a <see cref="Type"/> with the given parameters for an <see cref="InternalToBeResolvedPlaceholder"/>

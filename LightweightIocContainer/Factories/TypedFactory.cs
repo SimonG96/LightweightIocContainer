@@ -24,7 +24,7 @@ namespace LightweightIocContainer.Factories
         /// The 
         /// </summary>
         /// <param name="container">The current instance of the <see cref="IIocContainer"/></param>
-        public TypedFactory(IIocContainer container) => Factory = CreateFactory(container);
+        public TypedFactory(IocContainer container) => Factory = CreateFactory(container);
 
         /// <summary>
         /// The implemented abstract typed factory/>
@@ -36,7 +36,7 @@ namespace LightweightIocContainer.Factories
         /// </summary>
         /// <exception cref="InvalidFactoryRegistrationException">Factory registration is invalid</exception>
         /// <exception cref="IllegalAbstractMethodCreationException">Creation of abstract methods are illegal in their current state</exception>
-        private TFactory CreateFactory(IIocContainer container)
+        private TFactory CreateFactory(IocContainer container)
         {
             Type factoryType = typeof(TFactory);
             
@@ -47,10 +47,10 @@ namespace LightweightIocContainer.Factories
             typeBuilder.AddInterfaceImplementation(factoryType);
 
             //add `private readonly IIocContainer _container` field
-            FieldBuilder containerFieldBuilder = typeBuilder.DefineField("_container", typeof(IIocContainer), FieldAttributes.Private | FieldAttributes.InitOnly);
+            FieldBuilder containerFieldBuilder = typeBuilder.DefineField("_container", typeof(IocContainer), FieldAttributes.Private | FieldAttributes.InitOnly);
 
             //add ctor
-            ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, new[] {typeof(IIocContainer)});
+            ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, new[] {typeof(IocContainer)});
             ILGenerator constructorGenerator = constructorBuilder.GetILGenerator();
             constructorGenerator.Emit(OpCodes.Ldarg_0);
             constructorGenerator.Emit(OpCodes.Ldarg_1);
@@ -96,7 +96,7 @@ namespace LightweightIocContainer.Factories
                     generator.EmitCall(OpCodes.Call, emptyArray, null);
                 }
 
-                generator.EmitCall(OpCodes.Callvirt, typeof(IIocResolver).GetMethod(nameof(IIocResolver.Resolve), new[] { typeof(object[]) })!.MakeGenericMethod(createMethod.ReturnType), null);
+                generator.EmitCall(OpCodes.Call, typeof(IocContainer).GetMethod(nameof(IocContainer.FactoryResolve), new[] { typeof(object[]) })!.MakeGenericMethod(createMethod.ReturnType), null);
                 generator.Emit(OpCodes.Castclass, createMethod.ReturnType);
                 generator.Emit(OpCodes.Ret);
             }
@@ -127,7 +127,7 @@ namespace LightweightIocContainer.Factories
                     multitonClearGenerator.Emit(OpCodes.Ldarg_0);
                     multitonClearGenerator.Emit(OpCodes.Ldfld, containerFieldBuilder);
 
-                    multitonClearGenerator.EmitCall(OpCodes.Callvirt, typeof(IIocContainer).GetMethod(nameof(IIocContainer.ClearMultitonInstances))!.MakeGenericMethod(typeToClear), null);
+                    multitonClearGenerator.EmitCall(OpCodes.Call, typeof(IocContainer).GetMethod(nameof(IocContainer.ClearMultitonInstances))!.MakeGenericMethod(typeToClear), null);
                     multitonClearGenerator.Emit(OpCodes.Ret);
                 }
                 else

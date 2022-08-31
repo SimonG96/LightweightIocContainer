@@ -58,7 +58,7 @@ namespace LightweightIocContainer.Validation
                                 .FirstOrDefault(p => parameterType.IsInstanceOfType(p.parameter))
                             select definedParameter == default ? GetMockOrDefault(parameterType) : definedParameter.parameter).ToArray())
                         .ToList()
-                        .ForEach(p => TryResolve(registration.InterfaceType, p, validationExceptions));
+                        .ForEach(p => TryResolve(registration.InterfaceType, p, validationExceptions, true));
                 }
                 else
                     TryResolve(registration.InterfaceType, null, validationExceptions);
@@ -68,11 +68,11 @@ namespace LightweightIocContainer.Validation
                 throw new AggregateException("Validation failed.", validationExceptions);
         }
 
-        private void TryResolve(Type type, object?[]? arguments, List<Exception> validationExceptions)
+        private void TryResolve(Type type, object?[]? arguments, List<Exception> validationExceptions, bool isFactoryResolve = false)
         {
             try
             {
-                _iocContainer.TryResolveNonGeneric(type, arguments, null);
+                _iocContainer.TryResolveNonGeneric(type, arguments, null, isFactoryResolve);
             }
             catch (Exception exception)
             {

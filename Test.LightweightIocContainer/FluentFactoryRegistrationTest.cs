@@ -112,7 +112,7 @@ namespace Test.LightweightIocContainer
             _iocContainer.Register(r => r.Add<ITest, Test>().WithFactory<ITestFactory>());
 
             ITestFactory factory = _iocContainer.Resolve<ITestFactory>();
-            ITest test = _iocContainer.Resolve<ITest>();
+            ITest test = factory.Create();
             
             Assert.IsInstanceOf<ITestFactory>(factory);
             Assert.IsInstanceOf<ITest>(test);
@@ -124,7 +124,7 @@ namespace Test.LightweightIocContainer
             _iocContainer.Register(r => r.Add<ITest, Test>().WithFactory<ITestFactory, TestFactory>());
 
             ITestFactory factory = _iocContainer.Resolve<ITestFactory>();
-            ITest test = _iocContainer.Resolve<ITest>();
+            ITest test = factory.Create();
             
             Assert.IsInstanceOf<ITestFactory>(factory);
             Assert.IsInstanceOf<ITest>(test);

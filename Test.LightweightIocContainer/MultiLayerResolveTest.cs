@@ -30,6 +30,7 @@ public class MultiLayerResolveTest
     [UsedImplicitly]
     public interface IBFactory
     {
+        IB Create();
         IB Create(C c);
     }
 
@@ -76,7 +77,8 @@ public class MultiLayerResolveTest
         container.Register(r => r.Add<IA, A>().WithFactory<IAFactory>());
         container.Register(r => r.Add<IB, B>().WithFactory<IBFactory>());
 
-        IA a = container.Resolve<IA>();
+        IAFactory aFactory = container.Resolve<IAFactory>();
+        IA a = aFactory.Create();
         Assert.IsInstanceOf<A>(a);
     }
 
@@ -88,7 +90,8 @@ public class MultiLayerResolveTest
         container.Register(r => r.Add<IB, B>().WithFactory<IBFactory>());
         container.Register(r => r.Add<C>().WithFactoryMethod(_ => new C("test")));
 
-        IB b = container.Resolve<IB>();
+        IBFactory bFactory = container.Resolve<IBFactory>();
+        IB b = bFactory.Create();
         Assert.IsInstanceOf<B>(b);
     }
 
