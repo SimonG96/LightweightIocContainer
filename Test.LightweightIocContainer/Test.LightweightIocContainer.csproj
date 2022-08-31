@@ -6,7 +6,6 @@
     <Authors>SimonG</Authors>
     <LangVersion>default</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
-    <VersionPrefix>4.0.0-beta</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
