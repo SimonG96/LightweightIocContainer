@@ -9,63 +9,62 @@ using LightweightIocContainer.Registrations;
 using Moq;
 using NUnit.Framework;
 
-namespace Test.LightweightIocContainer
+namespace Test.LightweightIocContainer;
+
+[TestFixture]
+// ReSharper disable MemberHidesStaticFromOuterClass
+public class SingleTypeRegistrationTest
 {
-    [TestFixture]
-    // ReSharper disable MemberHidesStaticFromOuterClass
-    public class SingleTypeRegistrationTest
+    private interface IFoo
     {
-        private interface IFoo
-        {
-            IBar Bar { get; }
-        }
+        IBar Bar { get; }
+    }
 
-        private interface IBar
-        {
+    private interface IBar
+    {
             
-        }
+    }
 
-        [UsedImplicitly]
-        private class Foo : IFoo
-        {
-            public Foo(IBar bar) => Bar = bar;
+    [UsedImplicitly]
+    private class Foo : IFoo
+    {
+        public Foo(IBar bar) => Bar = bar;
 
-            public IBar Bar { get; }
-        }
+        public IBar Bar { get; }
+    }
 
-        [UsedImplicitly]
-        private class Bar : IBar
-        {
+    [UsedImplicitly]
+    private class Bar : IBar
+    {
             
-        }
+    }
 
-        [Test]
-        public void TestSingleTypeRegistrationWithFactoryMethod()
-        {
-            IBar bar = new Bar();
+    [Test]
+    public void TestSingleTypeRegistrationWithFactoryMethod()
+    {
+        IBar bar = new Bar();
 
-            Mock<IocContainer> iocContainerMock = new();
-            iocContainerMock.Setup(c => c.Resolve<IBar>()).Returns(bar);
+        Mock<IocContainer> iocContainerMock = new();
+        iocContainerMock.Setup(c => c.Resolve<IBar>()).Returns(bar);
 
-            RegistrationFactory registrationFactory = new(iocContainerMock.Object);
-            ISingleTypeRegistration<IFoo> registration = registrationFactory.Register<IFoo>(Lifestyle.Transient).WithFactoryMethod(c => new Foo(c.Resolve<IBar>()));
+        RegistrationFactory registrationFactory = new(iocContainerMock.Object);
+        ISingleTypeRegistration<IFoo> registration = registrationFactory.Register<IFoo>(Lifestyle.Transient).WithFactoryMethod(c => new Foo(c.Resolve<IBar>()));
 
-            IFoo foo = registration.FactoryMethod!(iocContainerMock.Object);
-            Assert.AreEqual(bar, foo.Bar);
-        }
+        IFoo foo = registration.FactoryMethod!(iocContainerMock.Object);
+        Assert.AreEqual(bar, foo.Bar);
+    }
 
-        [Test]
-        public void TestSingleTypeRegistrationResolveSingleton()
-        {
-            IocContainer container = new();
+    [Test]
+    public void TestSingleTypeRegistrationResolveSingleton()
+    {
+        IocContainer container = new();
 
-            IBar bar = new Bar();
-            container.Register(r => r.Add<IFoo>(Lifestyle.Singleton).WithFactoryMethod(_ => new Foo(bar)));
+        IBar bar = new Bar();
+        container.Register(r => r.Add<IFoo>(Lifestyle.Singleton).WithFactoryMethod(_ => new Foo(bar)));
 
-            IFoo foo = container.Resolve<IFoo>();
+        IFoo foo = container.Resolve<IFoo>();
 
-            Assert.IsInstanceOf<Foo>(foo);
-            Assert.AreEqual(bar, foo.Bar);
-        }
+        Assert.IsInstanceOf<Foo>(foo);
+        Assert.AreEqual(bar, foo.Bar);
     }
 }

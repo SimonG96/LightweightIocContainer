@@ -4,25 +4,24 @@
 
 using System.Reflection;
 
-namespace LightweightIocContainer.Exceptions
+namespace LightweightIocContainer.Exceptions;
+
+/// <summary>
+/// The creation of the abstract method is illegal in its current state
+/// </summary>
+internal class IllegalAbstractMethodCreationException : IocContainerException
 {
     /// <summary>
     /// The creation of the abstract method is illegal in its current state
     /// </summary>
-    internal class IllegalAbstractMethodCreationException : IocContainerException
-    {
-        /// <summary>
-        /// The creation of the abstract method is illegal in its current state
-        /// </summary>
-        /// <param name="message">The exception message</param>
-        /// <param name="method">The method that is illegal to create</param>
-        public IllegalAbstractMethodCreationException(string message, MethodInfo method)
-            : base(message) =>
-            Method = method;
+    /// <param name="message">The exception message</param>
+    /// <param name="method">The method that is illegal to create</param>
+    public IllegalAbstractMethodCreationException(string message, MethodInfo method)
+        : base(message) =>
+        Method = method;
 
-        /// <summary>
-        /// The Method whose creation is illegal
-        /// </summary>
-        public MethodInfo Method { get; }
-    }
+    /// <summary>
+    /// The Method whose creation is illegal
+    /// </summary>
+    public MethodInfo Method { get; }
 }

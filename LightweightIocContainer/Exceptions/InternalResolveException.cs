@@ -4,21 +4,20 @@
 
 using LightweightIocContainer.Interfaces;
 
-namespace LightweightIocContainer.Exceptions
+namespace LightweightIocContainer.Exceptions;
+
+/// <summary>
+/// An internal Error happened while the <see cref="IIocContainer"/> tried to resolve an instance
+/// </summary>
+internal class InternalResolveException : IocContainerException
 {
     /// <summary>
     /// An internal Error happened while the <see cref="IIocContainer"/> tried to resolve an instance
     /// </summary>
-    internal class InternalResolveException : IocContainerException
+    /// <param name="message">The exception message</param>
+    public InternalResolveException(string message)
+        : base(message)
     {
-        /// <summary>
-        /// An internal Error happened while the <see cref="IIocContainer"/> tried to resolve an instance
-        /// </summary>
-        /// <param name="message">The exception message</param>
-        public InternalResolveException(string message)
-            : base(message)
-        {
 
-        }
     }
 }

@@ -10,90 +10,89 @@ using LightweightIocContainer.ResolvePlaceholders;
 using Moq;
 using NUnit.Framework;
 
-namespace Test.LightweightIocContainer
+namespace Test.LightweightIocContainer;
+
+[TestFixture]
+public class RegistrationBaseTest
 {
-    [TestFixture]
-    public class RegistrationBaseTest
+    private interface ITest
     {
-        private interface ITest
+
+    }
+
+    private interface IFoo
+    {
+
+    }
+
+    private interface IBar
+    {
+
+    }
+
+    private class Test : ITest
+    {
+
+    }
+
+    [UsedImplicitly]
+    private class Foo : IFoo
+    {
+        public Foo(IBar bar, ITest test)
         {
 
         }
+    }
 
-        private interface IFoo
-        {
+    private class Bar : IBar
+    {
 
-        }
-
-        private interface IBar
-        {
-
-        }
-
-        private class Test : ITest
-        {
-
-        }
-
-        [UsedImplicitly]
-        private class Foo : IFoo
-        {
-            public Foo(IBar bar, ITest test)
-            {
-
-            }
-        }
-
-        private class Bar : IBar
-        {
-
-        }
+    }
 
 
-        [Test]
-        public void TestWithParameters()
-        {
-            RegistrationFactory registrationFactory = new(new Mock<IocContainer>().Object);
+    [Test]
+    public void TestWithParameters()
+    {
+        RegistrationFactory registrationFactory = new(new Mock<IocContainer>().Object);
 
-            IBar bar = new Bar();
-            ITest test = new Test();
+        IBar bar = new Bar();
+        ITest test = new Test();
 
-            RegistrationBase testRegistration = (RegistrationBase) registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters(bar, test);
+        RegistrationBase testRegistration = (RegistrationBase) registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters(bar, test);
 
-            Assert.AreEqual(bar, testRegistration.Parameters![0]);
-            Assert.AreEqual(test, testRegistration.Parameters[1]);
-        }
+        Assert.AreEqual(bar, testRegistration.Parameters![0]);
+        Assert.AreEqual(test, testRegistration.Parameters[1]);
+    }
 
-        [Test]
-        public void TestWithParametersDifferentOrder()
-        {
-            RegistrationFactory registrationFactory = new(new Mock<IocContainer>().Object);
+    [Test]
+    public void TestWithParametersDifferentOrder()
+    {
+        RegistrationFactory registrationFactory = new(new Mock<IocContainer>().Object);
 
-            IBar bar = new Bar();
-            ITest test = new Test();
+        IBar bar = new Bar();
+        ITest test = new Test();
 
-            RegistrationBase testRegistration = (RegistrationBase) registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters((0, bar), (3, test), (2, "SomeString"));
+        RegistrationBase testRegistration = (RegistrationBase) registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters((0, bar), (3, test), (2, "SomeString"));
 
-            Assert.AreEqual(bar, testRegistration.Parameters![0]);
-            Assert.IsInstanceOf<InternalResolvePlaceholder>(testRegistration.Parameters[1]);
-            Assert.AreEqual("SomeString", testRegistration.Parameters[2]);
-            Assert.AreEqual(test, testRegistration.Parameters[3]);
-        }
+        Assert.AreEqual(bar, testRegistration.Parameters![0]);
+        Assert.IsInstanceOf<InternalResolvePlaceholder>(testRegistration.Parameters[1]);
+        Assert.AreEqual("SomeString", testRegistration.Parameters[2]);
+        Assert.AreEqual(test, testRegistration.Parameters[3]);
+    }
 
-        [Test]
-        public void TestWithParametersCalledTwice()
-        {
-            RegistrationFactory registrationFactory = new(new Mock<IocContainer>().Object);
-            Assert.Throws<InvalidRegistrationException>(() => registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters(new Bar()).WithParameters(new Test()));
-            Assert.Throws<InvalidRegistrationException>(() => registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters((0, new Bar())).WithParameters((1, new Test())));
-        }
+    [Test]
+    public void TestWithParametersCalledTwice()
+    {
+        RegistrationFactory registrationFactory = new(new Mock<IocContainer>().Object);
+        Assert.Throws<InvalidRegistrationException>(() => registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters(new Bar()).WithParameters(new Test()));
+        Assert.Throws<InvalidRegistrationException>(() => registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters((0, new Bar())).WithParameters((1, new Test())));
+    }
 
-        [Test]
-        public void TestWithParametersNoParametersGiven()
-        {
-            RegistrationFactory registrationFactory = new(new Mock<IocContainer>().Object);
-            Assert.Throws<InvalidRegistrationException>(() => registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters((object[])null));
-            Assert.Throws<InvalidRegistrationException>(() => registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters(((int index, object parameter)[])null));
-        }
+    [Test]
+    public void TestWithParametersNoParametersGiven()
+    {
+        RegistrationFactory registrationFactory = new(new Mock<IocContainer>().Object);
+        Assert.Throws<InvalidRegistrationException>(() => registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters((object[])null));
+        Assert.Throws<InvalidRegistrationException>(() => registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters(((int index, object parameter)[])null));
     }
 }

@@ -5,28 +5,27 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace LightweightIocContainer.Interfaces.Factories
+namespace LightweightIocContainer.Interfaces.Factories;
+
+/// <summary>
+/// Non-generic <see cref="ITypedFactory{TFactory}"/>
+/// </summary>
+public interface ITypedFactory
 {
     /// <summary>
-    /// Non-generic <see cref="ITypedFactory{TFactory}"/>
+    /// The create methods of this <see cref="ITypedFactory"/>
     /// </summary>
-    public interface ITypedFactory
-    {
-        /// <summary>
-        /// The create methods of this <see cref="ITypedFactory"/>
-        /// </summary>
-        List<MethodInfo> CreateMethods { get; }
-    }
+    List<MethodInfo> CreateMethods { get; }
+}
     
+/// <summary>
+/// Class to help implement an abstract typed factory
+/// </summary>
+/// <typeparam name="TFactory">The type of the abstract factory</typeparam>
+public interface ITypedFactory<TFactory> : ITypedFactory
+{
     /// <summary>
-    /// Class to help implement an abstract typed factory
+    /// The implemented abstract typed factory
     /// </summary>
-    /// <typeparam name="TFactory">The type of the abstract factory</typeparam>
-    public interface ITypedFactory<TFactory> : ITypedFactory
-    {
-        /// <summary>
-        /// The implemented abstract typed factory
-        /// </summary>
-        TFactory Factory { get; set; }
-    }
+    TFactory Factory { get; set; }
 }

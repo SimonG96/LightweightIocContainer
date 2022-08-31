@@ -4,21 +4,20 @@
 
 using LightweightIocContainer.Interfaces.Registrations;
 
-namespace LightweightIocContainer.Exceptions
+namespace LightweightIocContainer.Exceptions;
+
+/// <summary>
+/// An unknown <see cref="IRegistration"/> was used
+/// </summary>
+internal class UnknownRegistrationException : IocContainerException
 {
     /// <summary>
     /// An unknown <see cref="IRegistration"/> was used
     /// </summary>
-    internal class UnknownRegistrationException : IocContainerException
+    /// <param name="message">The exception message</param>
+    public UnknownRegistrationException(string message)
+        : base(message)
     {
-        /// <summary>
-        /// An unknown <see cref="IRegistration"/> was used
-        /// </summary>
-        /// <param name="message">The exception message</param>
-        public UnknownRegistrationException(string message)
-            : base(message)
-        {
 
-        }
     }
 }

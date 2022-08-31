@@ -6,96 +6,95 @@ using JetBrains.Annotations;
 using LightweightIocContainer;
 using NUnit.Framework;
 
-namespace Test.LightweightIocContainer
+namespace Test.LightweightIocContainer;
+
+[TestFixture]
+public class MultipleMultitonRegistrationTest
 {
-    [TestFixture]
-    public class MultipleMultitonRegistrationTest
+    private IocContainer _iocContainer;
+        
+    [UsedImplicitly]
+    public interface ITest : IProvider
     {
-        private IocContainer _iocContainer;
-        
-        [UsedImplicitly]
-        public interface ITest : IProvider
-        {
             
-        }
+    }
         
-        public interface IProvider
-        {
-            int Number { get; }
-            void DoSomething(int number);
-        }
+    public interface IProvider
+    {
+        int Number { get; }
+        void DoSomething(int number);
+    }
         
-        [UsedImplicitly]
-        public class Test : ITest
-        {
-            public int Number { get; private set; }
+    [UsedImplicitly]
+    public class Test : ITest
+    {
+        public int Number { get; private set; }
 
-            public void DoSomething(int number) => Number = number;
-        }
+        public void DoSomething(int number) => Number = number;
+    }
 
-        private class MultitonScope
-        {
+    private class MultitonScope
+    {
             
-        }
+    }
         
         
-        [SetUp]
-        public void SetUp() => _iocContainer = new IocContainer();
+    [SetUp]
+    public void SetUp() => _iocContainer = new IocContainer();
 
-        [TearDown]
-        public void TearDown() => _iocContainer.Dispose();
+    [TearDown]
+    public void TearDown() => _iocContainer.Dispose();
 
-        [Test]
-        public void TestRegisterAndResolveMultipleMultitonRegistration()
-        {
-            _iocContainer.Register(r => r.AddMultiton<IProvider, ITest, Test, MultitonScope>());
+    [Test]
+    public void TestRegisterAndResolveMultipleMultitonRegistration()
+    {
+        _iocContainer.Register(r => r.AddMultiton<IProvider, ITest, Test, MultitonScope>());
 
-            MultitonScope scope = new();
+        MultitonScope scope = new();
             
-            ITest test = _iocContainer.Resolve<ITest>(scope);
-            Assert.NotNull(test);
+        ITest test = _iocContainer.Resolve<ITest>(scope);
+        Assert.NotNull(test);
 
-            IProvider provider = _iocContainer.Resolve<IProvider>(scope);
-            Assert.NotNull(provider);
-            Assert.AreEqual(test, provider);
-            Assert.AreSame(test, provider);
-        }
+        IProvider provider = _iocContainer.Resolve<IProvider>(scope);
+        Assert.NotNull(provider);
+        Assert.AreEqual(test, provider);
+        Assert.AreSame(test, provider);
+    }
 
-        [Test]
-        public void TestRegisterAndResolveMultipleMultitonRegistrationWithDifferentScope()
-        {
-            _iocContainer.Register(r => r.AddMultiton<IProvider, ITest, Test, MultitonScope>());
+    [Test]
+    public void TestRegisterAndResolveMultipleMultitonRegistrationWithDifferentScope()
+    {
+        _iocContainer.Register(r => r.AddMultiton<IProvider, ITest, Test, MultitonScope>());
 
-            MultitonScope scope = new();
-            MultitonScope differentScope = new();
+        MultitonScope scope = new();
+        MultitonScope differentScope = new();
             
-            ITest test = _iocContainer.Resolve<ITest>(scope);
-            Assert.NotNull(test);
+        ITest test = _iocContainer.Resolve<ITest>(scope);
+        Assert.NotNull(test);
 
-            IProvider provider = _iocContainer.Resolve<IProvider>(differentScope);
-            Assert.NotNull(provider);
+        IProvider provider = _iocContainer.Resolve<IProvider>(differentScope);
+        Assert.NotNull(provider);
             
-            Assert.AreNotEqual(test, provider);
-            Assert.AreNotSame(test, provider);
-        }
+        Assert.AreNotEqual(test, provider);
+        Assert.AreNotSame(test, provider);
+    }
 
-        [Test]
-        public void TestMultipleMultitonRegistrationOnCreate()
-        {
-            _iocContainer.Register(r => r.AddMultiton<IProvider, ITest, Test, MultitonScope>().OnCreate(t => t.DoSomething(1)));
+    [Test]
+    public void TestMultipleMultitonRegistrationOnCreate()
+    {
+        _iocContainer.Register(r => r.AddMultiton<IProvider, ITest, Test, MultitonScope>().OnCreate(t => t.DoSomething(1)));
             
-            MultitonScope scope = new();
+        MultitonScope scope = new();
             
-            ITest test = _iocContainer.Resolve<ITest>(scope);
-            Assert.NotNull(test);
-            Assert.AreEqual(1, test.Number);
+        ITest test = _iocContainer.Resolve<ITest>(scope);
+        Assert.NotNull(test);
+        Assert.AreEqual(1, test.Number);
 
-            IProvider provider = _iocContainer.Resolve<IProvider>(scope);
-            Assert.NotNull(provider);
-            Assert.AreEqual(1, provider.Number);
+        IProvider provider = _iocContainer.Resolve<IProvider>(scope);
+        Assert.NotNull(provider);
+        Assert.AreEqual(1, provider.Number);
             
-            Assert.AreEqual(test, provider);
-            Assert.AreSame(test, provider);
-        }
+        Assert.AreEqual(test, provider);
+        Assert.AreSame(test, provider);
     }
 }

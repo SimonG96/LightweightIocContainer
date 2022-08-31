@@ -2,13 +2,12 @@
 // Created: 2020-09-18
 // Copyright(c) 2020 SimonG. All Rights Reserved.
 
-namespace LightweightIocContainer.Interfaces.Registrations
+namespace LightweightIocContainer.Interfaces.Registrations;
+
+/// <summary>
+/// <see cref="IRegistration"/> for open generic types
+/// </summary>
+public interface IOpenGenericRegistration : ITypedRegistration
 {
-    /// <summary>
-    /// <see cref="IRegistration"/> for open generic types
-    /// </summary>
-    public interface IOpenGenericRegistration : ITypedRegistration
-    {
         
-    }
 }

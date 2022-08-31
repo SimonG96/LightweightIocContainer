@@ -6,41 +6,40 @@ using System;
 using LightweightIocContainer;
 using NUnit.Framework;
 
-namespace Test.LightweightIocContainer
+namespace Test.LightweightIocContainer;
+
+[TestFixture]
+public class ActionExtensionTest
 {
-    [TestFixture]
-    public class ActionExtensionTest
+    private interface IBar
     {
-        private interface IBar
-        {
-            void Throw();
-        }
+        void Throw();
+    }
 
-        private interface IFoo : IBar
-        {
+    private interface IFoo : IBar
+    {
 
-        }
+    }
 
-        private class Foo : IFoo
-        {
-            public void Throw() => throw new Exception();
-        }
+    private class Foo : IFoo
+    {
+        public void Throw() => throw new Exception();
+    }
         
 
-        [Test]
-        public void TestConvert()
-        {
-            Action<IBar> barAction = bar => bar.Throw();
-            Action<IFoo> action = barAction.Convert<IFoo, IBar>();
+    [Test]
+    public void TestConvert()
+    {
+        Action<IBar> barAction = bar => bar.Throw();
+        Action<IFoo> action = barAction.Convert<IFoo, IBar>();
 
-            Assert.Throws<Exception>(() => action(new Foo()));
-        }
+        Assert.Throws<Exception>(() => action(new Foo()));
+    }
 
-        [Test]
-        public void TestConvertActionNull()
-        {
-            Action<IBar> barAction = null;
-            Assert.Null(barAction.Convert<IFoo, IBar>());
-        }
+    [Test]
+    public void TestConvertActionNull()
+    {
+        Action<IBar> barAction = null;
+        Assert.Null(barAction.Convert<IFoo, IBar>());
     }
 }

@@ -4,17 +4,16 @@
 
 using LightweightIocContainer.Interfaces.Factories;
 
-namespace LightweightIocContainer.Interfaces.Registrations
+namespace LightweightIocContainer.Interfaces.Registrations;
+
+/// <summary>
+/// The registration that is used to register an abstract typed factory
+/// </summary>
+/// <typeparam name="TFactory">The type of the abstract typed factory</typeparam>
+public interface ITypedFactoryRegistration<TFactory> : IRegistration
 {
     /// <summary>
-    /// The registration that is used to register an abstract typed factory
+    /// The class that contains the implemented abstract factory of this <see cref="ITypedFactoryRegistration{TFactory}"/>
     /// </summary>
-    /// <typeparam name="TFactory">The type of the abstract typed factory</typeparam>
-    public interface ITypedFactoryRegistration<TFactory> : IRegistration
-    {
-        /// <summary>
-        /// The class that contains the implemented abstract factory of this <see cref="ITypedFactoryRegistration{TFactory}"/>
-        /// </summary>
-        ITypedFactory<TFactory> Factory { get; }
-    }
+    ITypedFactory<TFactory> Factory { get; }
 }

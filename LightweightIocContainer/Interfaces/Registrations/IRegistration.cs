@@ -4,16 +4,15 @@
 
 using System;
 
-namespace LightweightIocContainer.Interfaces.Registrations
+namespace LightweightIocContainer.Interfaces.Registrations;
+
+/// <summary>
+/// The base registration that is used to register an Interface
+/// </summary>
+public interface IRegistration
 {
     /// <summary>
-    /// The base registration that is used to register an Interface
+    /// The <see cref="Type"/> of the Interface that is registered with this <see cref="IRegistration"/>
     /// </summary>
-    public interface IRegistration
-    {
-        /// <summary>
-        /// The <see cref="Type"/> of the Interface that is registered with this <see cref="IRegistration"/>
-        /// </summary>
-        Type InterfaceType { get; }
-    }
+    Type InterfaceType { get; }
 }

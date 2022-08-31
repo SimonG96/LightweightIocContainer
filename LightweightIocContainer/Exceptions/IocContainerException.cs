@@ -5,38 +5,37 @@
 using System;
 using System.Collections.Generic;
 
-namespace LightweightIocContainer.Exceptions
+namespace LightweightIocContainer.Exceptions;
+
+/// <summary>
+/// A base <see cref="Exception"/> for the <see cref="LightweightIocContainer"/>
+/// </summary>
+public abstract class IocContainerException : Exception
 {
     /// <summary>
     /// A base <see cref="Exception"/> for the <see cref="LightweightIocContainer"/>
     /// </summary>
-    public abstract class IocContainerException : Exception
-    {
-        /// <summary>
-        /// A base <see cref="Exception"/> for the <see cref="LightweightIocContainer"/>
-        /// </summary>
-        protected IocContainerException() => InnerExceptions = new List<Exception>();
+    protected IocContainerException() => InnerExceptions = new List<Exception>();
 
-        /// <summary>
-        /// A base <see cref="Exception"/> for the <see cref="LightweightIocContainer"/>
-        /// </summary>
-        /// <param name="message">The message of the <see cref="Exception"/></param>
-        protected IocContainerException(string message)
-            : base(message) =>
-            InnerExceptions = new List<Exception>();
+    /// <summary>
+    /// A base <see cref="Exception"/> for the <see cref="LightweightIocContainer"/>
+    /// </summary>
+    /// <param name="message">The message of the <see cref="Exception"/></param>
+    protected IocContainerException(string message)
+        : base(message) =>
+        InnerExceptions = new List<Exception>();
 
-        /// <summary>
-        /// A base <see cref="Exception"/> for the <see cref="LightweightIocContainer"/>
-        /// </summary>
-        /// <param name="message">The message of the <see cref="Exception"/></param>
-        /// <param name="innerException">The inner <see cref="Exception"/></param>
-        protected IocContainerException(string message, Exception innerException)
-            : base(message, innerException) =>
-            InnerExceptions = new List<Exception> {innerException};
+    /// <summary>
+    /// A base <see cref="Exception"/> for the <see cref="LightweightIocContainer"/>
+    /// </summary>
+    /// <param name="message">The message of the <see cref="Exception"/></param>
+    /// <param name="innerException">The inner <see cref="Exception"/></param>
+    protected IocContainerException(string message, Exception innerException)
+        : base(message, innerException) =>
+        InnerExceptions = new List<Exception> {innerException};
 
-        /// <summary>
-        /// The inner exceptions of the <see cref="IocContainerException"/>
-        /// </summary>
-        public List<Exception> InnerExceptions { get; protected init; }
-    }
+    /// <summary>
+    /// The inner exceptions of the <see cref="IocContainerException"/>
+    /// </summary>
+    public List<Exception> InnerExceptions { get; protected init; }
 }

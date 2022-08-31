@@ -4,13 +4,12 @@
 
 using LightweightIocContainer.Interfaces.Factories;
 
-namespace LightweightIocContainer.Factories
+namespace LightweightIocContainer.Factories;
+
+/// <summary>
+/// <see cref="ITypedFactory"/> implementation for custom implemented factories
+/// </summary>
+public class CustomTypedFactory<TFactory> : TypedFactoryBase<TFactory>
 {
-    /// <summary>
-    /// <see cref="ITypedFactory"/> implementation for custom implemented factories
-    /// </summary>
-    public class CustomTypedFactory<TFactory> : TypedFactoryBase<TFactory>
-    {
         
-    }
 }

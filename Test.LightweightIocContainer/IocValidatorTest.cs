@@ -12,177 +12,176 @@ using LightweightIocContainer.Validation;
 using Moq;
 using NUnit.Framework;
 
-namespace Test.LightweightIocContainer
+namespace Test.LightweightIocContainer;
+
+[TestFixture]
+public class IocValidatorTest
 {
-    [TestFixture]
-    public class IocValidatorTest
+    public interface ITest
     {
-        public interface ITest
-        {
             
-        }
+    }
         
-        public interface ITest2
-        {
+    public interface ITest2
+    {
             
-        }
+    }
         
-        [UsedImplicitly]
-        public interface IParameter
-        {
-            bool Method();
-        }
+    [UsedImplicitly]
+    public interface IParameter
+    {
+        bool Method();
+    }
 
-        private class Test : ITest
-        {
-            public Test(IParameter parameter) => parameter.Method();
-        }
+    private class Test : ITest
+    {
+        public Test(IParameter parameter) => parameter.Method();
+    }
         
         
         
-        [UsedImplicitly]
-        public interface ITestFactory
-        {
-            ITest Create(IParameter parameter);
-        }
+    [UsedImplicitly]
+    public interface ITestFactory
+    {
+        ITest Create(IParameter parameter);
+    }
         
-        [UsedImplicitly]
-        public interface ITest2Factory
-        {
-            ITest2 InvalidCreate();
-            ITest2 Create(ITest test);
-        }
+    [UsedImplicitly]
+    public interface ITest2Factory
+    {
+        ITest2 InvalidCreate();
+        ITest2 Create(ITest test);
+    }
 
 
-        private class Test2 : ITest2
+    private class Test2 : ITest2
+    {
+        public Test2(ITest parameter)
         {
-            public Test2(ITest parameter)
-            {
                 
-            }
         }
+    }
         
-        [UsedImplicitly]
-        public interface IInvalidFactory
+    [UsedImplicitly]
+    public interface IInvalidFactory
+    {
+        ITest Create();
+    }
+        
+    private class TestInstallerNoFactory : IIocInstaller
+    {
+        public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>();
+    }
+        
+    private class TestInstallerWithFactory : IIocInstaller
+    {
+        public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>().WithFactory<ITestFactory>();
+    }
+        
+    private class TestInstallerWithInvalidFactory : IIocInstaller
+    {
+        public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>().WithFactory<IInvalidFactory>();
+    }
+        
+    private class InvalidTestClassInstaller : IIocInstaller
+    {
+        public void Install(IRegistrationCollector registration)
         {
-            ITest Create();
+            registration.Add<ITest, Test>().WithFactory<ITestFactory>();
+            registration.Add<ITest2, Test2>().WithFactory<ITest2Factory>();
         }
+    }
         
-        private class TestInstallerNoFactory : IIocInstaller
-        {
-            public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>();
-        }
-        
-        private class TestInstallerWithFactory : IIocInstaller
-        {
-            public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>().WithFactory<ITestFactory>();
-        }
-        
-        private class TestInstallerWithInvalidFactory : IIocInstaller
-        {
-            public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>().WithFactory<IInvalidFactory>();
-        }
-        
-        private class InvalidTestClassInstaller : IIocInstaller
-        {
-            public void Install(IRegistrationCollector registration)
-            {
-                registration.Add<ITest, Test>().WithFactory<ITestFactory>();
-                registration.Add<ITest2, Test2>().WithFactory<ITest2Factory>();
-            }
-        }
-        
-        [Test]
-        public void TestValidateWithoutFactory()
-        {
-            IocContainer iocContainer = new();
-            iocContainer.Install(new TestInstallerNoFactory());
+    [Test]
+    public void TestValidateWithoutFactory()
+    {
+        IocContainer iocContainer = new();
+        iocContainer.Install(new TestInstallerNoFactory());
             
-            IocValidator validator = new(iocContainer);
+        IocValidator validator = new(iocContainer);
             
-            AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
+        AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
             
-            AssertNoMatchingConstructorFoundForType<Test>(aggregateException);
-        }
+        AssertNoMatchingConstructorFoundForType<Test>(aggregateException);
+    }
         
-        [Test]
-        public void TestValidateWithFactory()
-        {
-            IocContainer iocContainer = new();
-            iocContainer.Install(new TestInstallerWithFactory());
+    [Test]
+    public void TestValidateWithFactory()
+    {
+        IocContainer iocContainer = new();
+        iocContainer.Install(new TestInstallerWithFactory());
             
-            IocValidator validator = new(iocContainer);
+        IocValidator validator = new(iocContainer);
             
-            validator.Validate();
-        }
+        validator.Validate();
+    }
         
-        [Test]
-        public void TestValidateWithParameter()
-        {
-            IocContainer iocContainer = new();
-            iocContainer.Install(new TestInstallerNoFactory());
+    [Test]
+    public void TestValidateWithParameter()
+    {
+        IocContainer iocContainer = new();
+        iocContainer.Install(new TestInstallerNoFactory());
             
-            IocValidator validator = new(iocContainer);
+        IocValidator validator = new(iocContainer);
 
-            Mock<IParameter> parameterMock = new();
-            parameterMock.Setup(p => p.Method()).Returns(true);
+        Mock<IParameter> parameterMock = new();
+        parameterMock.Setup(p => p.Method()).Returns(true);
 
-            validator.AddParameter<ITest, IParameter>(parameterMock.Object);
+        validator.AddParameter<ITest, IParameter>(parameterMock.Object);
             
-            validator.Validate();
+        validator.Validate();
             
-            parameterMock.Verify(p => p.Method(), Times.Never);
-        }
+        parameterMock.Verify(p => p.Method(), Times.Never);
+    }
         
            
-        [Test]
-        public void TestValidateWithInvalidParameterWithFactory()
+    [Test]
+    public void TestValidateWithInvalidParameterWithFactory()
+    {
+        IocContainer iocContainer = new();
+        iocContainer.Install(new InvalidTestClassInstaller());
+            
+        IocValidator validator = new(iocContainer);
+
+        Mock<IParameter> parameterMock = new();
+        validator.AddParameter<ITest, IParameter>(parameterMock.Object);
+            
+        AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
+
+        if (aggregateException?.InnerExceptions[0] is not NoMatchingConstructorFoundException noMatchingConstructorFoundException)
         {
-            IocContainer iocContainer = new();
-            iocContainer.Install(new InvalidTestClassInstaller());
-            
-            IocValidator validator = new(iocContainer);
-
-            Mock<IParameter> parameterMock = new();
-            validator.AddParameter<ITest, IParameter>(parameterMock.Object);
-            
-            AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
-
-            if (aggregateException?.InnerExceptions[0] is not NoMatchingConstructorFoundException noMatchingConstructorFoundException)
-            {
-                Assert.Fail();
-                return;
-            }
-            
-            if (noMatchingConstructorFoundException.InnerExceptions[0] is not ConstructorNotMatchingException iTest2CtorNotMatchingException)
-            {
-                Assert.Fail();
-                return;
-            }
-            
-            Assert.IsInstanceOf<DirectResolveWithRegisteredFactoryNotAllowed>(iTest2CtorNotMatchingException.InnerExceptions[0]);
+            Assert.Fail();
+            return;
         }
+            
+        if (noMatchingConstructorFoundException.InnerExceptions[0] is not ConstructorNotMatchingException iTest2CtorNotMatchingException)
+        {
+            Assert.Fail();
+            return;
+        }
+            
+        Assert.IsInstanceOf<DirectResolveWithRegisteredFactoryNotAllowed>(iTest2CtorNotMatchingException.InnerExceptions[0]);
+    }
         
-        [Test]
-        public void TestValidateInvalidFactory()
-        {
-            IocContainer iocContainer = new();
-            iocContainer.Install(new TestInstallerWithInvalidFactory());
+    [Test]
+    public void TestValidateInvalidFactory()
+    {
+        IocContainer iocContainer = new();
+        iocContainer.Install(new TestInstallerWithInvalidFactory());
             
-            IocValidator validator = new(iocContainer);
+        IocValidator validator = new(iocContainer);
             
-            AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
+        AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
             
-            AssertNoMatchingConstructorFoundForType<Test>(aggregateException);
-        }
+        AssertNoMatchingConstructorFoundForType<Test>(aggregateException);
+    }
 
-        private void AssertNoMatchingConstructorFoundForType<T>(AggregateException aggregateException)
-        {
-            Exception exception = aggregateException?.InnerExceptions[0];
-            if (exception is NoMatchingConstructorFoundException noMatchingConstructorFoundException)
-                Assert.AreEqual(typeof(T), noMatchingConstructorFoundException.Type);
-            else
-                Assert.Fail($"Exception is no NoMatchingConstructorFoundException, actual type: {exception?.GetType()}");
-        }
+    private void AssertNoMatchingConstructorFoundForType<T>(AggregateException aggregateException)
+    {
+        Exception exception = aggregateException?.InnerExceptions[0];
+        if (exception is NoMatchingConstructorFoundException noMatchingConstructorFoundException)
+            Assert.AreEqual(typeof(T), noMatchingConstructorFoundException.Type);
+        else
+            Assert.Fail($"Exception is no NoMatchingConstructorFoundException, actual type: {exception?.GetType()}");
     }
 }

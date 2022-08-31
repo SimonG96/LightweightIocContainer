@@ -9,28 +9,27 @@ using System.Reflection;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces.Factories;
 
-namespace LightweightIocContainer.Factories
+namespace LightweightIocContainer.Factories;
+
+/// <summary>
+/// Base class for the <see cref="ITypedFactory"/>
+/// </summary>
+public abstract class TypedFactoryBase<TFactory> : ITypedFactory
 {
     /// <summary>
-    /// Base class for the <see cref="ITypedFactory"/>
+    /// The create methods of this <see cref="ITypedFactory"/>
     /// </summary>
-    public abstract class TypedFactoryBase<TFactory> : ITypedFactory
+    public List<MethodInfo> CreateMethods
     {
-        /// <summary>
-        /// The create methods of this <see cref="ITypedFactory"/>
-        /// </summary>
-        public List<MethodInfo> CreateMethods
+        get
         {
-            get
-            {
-                Type factoryType = typeof(TFactory);
+            Type factoryType = typeof(TFactory);
 
-                List<MethodInfo> createMethods = factoryType.GetMethods().Where(m => m.ReturnType != typeof(void)).ToList();
-                if (!createMethods.Any())
-                    throw new InvalidFactoryRegistrationException($"Factory {factoryType.Name} has no create methods.");
+            List<MethodInfo> createMethods = factoryType.GetMethods().Where(m => m.ReturnType != typeof(void)).ToList();
+            if (!createMethods.Any())
+                throw new InvalidFactoryRegistrationException($"Factory {factoryType.Name} has no create methods.");
 
-                return createMethods;
-            }
+            return createMethods;
         }
     }
 }

@@ -5,24 +5,23 @@
 using System;
 using LightweightIocContainer.Interfaces;
 
-namespace LightweightIocContainer.Exceptions
+namespace LightweightIocContainer.Exceptions;
+
+/// <summary>
+/// The <see cref="System.Type"/> is not registered in this <see cref="IIocContainer"/>
+/// </summary>
+internal class TypeNotRegisteredException : IocContainerException
 {
     /// <summary>
     /// The <see cref="System.Type"/> is not registered in this <see cref="IIocContainer"/>
     /// </summary>
-    internal class TypeNotRegisteredException : IocContainerException
-    {
-        /// <summary>
-        /// The <see cref="System.Type"/> is not registered in this <see cref="IIocContainer"/>
-        /// </summary>
-        /// <param name="type">The unregistered <see cref="System.Type"/></param>
-        public TypeNotRegisteredException(Type type)
-            : base($"Type {type.Name} is not registered in this IocContainer.") =>
-            Type = type;
+    /// <param name="type">The unregistered <see cref="System.Type"/></param>
+    public TypeNotRegisteredException(Type type)
+        : base($"Type {type.Name} is not registered in this IocContainer.") =>
+        Type = type;
 
-        /// <summary>
-        /// The unregistered <see cref="System.Type"/>
-        /// </summary>
-        public Type Type { get; }
-    }
+    /// <summary>
+    /// The unregistered <see cref="System.Type"/>
+    /// </summary>
+    public Type Type { get; }
 }

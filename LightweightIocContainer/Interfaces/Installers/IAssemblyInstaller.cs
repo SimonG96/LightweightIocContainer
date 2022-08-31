@@ -5,16 +5,15 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace LightweightIocContainer.Interfaces.Installers
+namespace LightweightIocContainer.Interfaces.Installers;
+
+/// <summary>
+/// An <see cref="IIocInstaller"/> that installs all <see cref="IIocInstaller"/>s for its given <see cref="Assembly"/>
+/// </summary>
+public interface IAssemblyInstaller : IIocInstaller
 {
     /// <summary>
-    /// An <see cref="IIocInstaller"/> that installs all <see cref="IIocInstaller"/>s for its given <see cref="Assembly"/>
+    /// The <see cref="IIocInstaller"/>s of the <see cref="Assembly"/> that this <see cref="IAssemblyInstaller"/> is installing
     /// </summary>
-    public interface IAssemblyInstaller : IIocInstaller
-    {
-        /// <summary>
-        /// The <see cref="IIocInstaller"/>s of the <see cref="Assembly"/> that this <see cref="IAssemblyInstaller"/> is installing
-        /// </summary>
-        List<IIocInstaller> Installers { get; }
-    }
+    List<IIocInstaller> Installers { get; }
 }
