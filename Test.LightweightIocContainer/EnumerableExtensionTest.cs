@@ -2,7 +2,6 @@
 // Created: 2019-07-03
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using LightweightIocContainer;

@@ -2,7 +2,6 @@
 // Created: 2019-12-10
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
-using System;
 using LightweightIocContainer;
 using LightweightIocContainer.Interfaces.Registrations;
 using LightweightIocContainer.Registrations;

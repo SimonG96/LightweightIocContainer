@@ -8,6 +8,7 @@
     <RepositoryUrl>https://github.com/SimonG96/LightweightIocContainer</RepositoryUrl>
     <LangVersion>default</LangVersion>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <DocumentationFile>LightweightIocContainer.xml</DocumentationFile>
     <VersionPrefix>4.0.0-beta</VersionPrefix>
   </PropertyGroup>

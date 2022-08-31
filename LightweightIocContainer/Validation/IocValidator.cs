@@ -2,9 +2,6 @@
 // Created: 2021-12-02
 // Copyright(c) 2021 SimonG. All Rights Reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using LightweightIocContainer.Interfaces.Registrations;
 using LightweightIocContainer.Interfaces.Registrations.Fluent;
 using Moq;

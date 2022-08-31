@@ -2,7 +2,6 @@
 // Created: 2019-11-05
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
-using System;
 using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Exceptions;

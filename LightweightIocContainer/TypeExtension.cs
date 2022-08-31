@@ -2,8 +2,6 @@
 // Created: 2019-07-01
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
-using System;
-
 namespace LightweightIocContainer;
 
 internal static class TypeExtension

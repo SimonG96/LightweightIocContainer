@@ -2,8 +2,6 @@
 // Created: 2022-08-31
 // Copyright(c) 2022 SimonG. All Rights Reserved.
 
-using System;
-
 namespace LightweightIocContainer.Exceptions;
 
 /// <summary>

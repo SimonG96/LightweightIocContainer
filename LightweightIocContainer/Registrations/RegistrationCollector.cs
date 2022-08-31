@@ -2,8 +2,6 @@
 // Created: 2021-12-15
 // Copyright(c) 2021 SimonG. All Rights Reserved.
 
-using System;
-using System.Collections.Generic;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces.Registrations;
 

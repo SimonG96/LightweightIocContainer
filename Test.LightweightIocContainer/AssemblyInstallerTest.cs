@@ -2,8 +2,6 @@
 // Created: 2019-06-12
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
-using System;
-using System.Collections.Generic;
 using System.Reflection;
 using JetBrains.Annotations;
 using LightweightIocContainer;

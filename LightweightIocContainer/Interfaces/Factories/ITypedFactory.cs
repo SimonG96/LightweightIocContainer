@@ -2,7 +2,6 @@
 // Created: 2019-05-20
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace LightweightIocContainer.Interfaces.Factories;

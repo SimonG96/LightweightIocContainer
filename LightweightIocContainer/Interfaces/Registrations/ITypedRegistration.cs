@@ -2,7 +2,6 @@
 // Created: 2019-12-08
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
-using System;
 using LightweightIocContainer.Interfaces.Registrations.Fluent;
 
 namespace LightweightIocContainer.Interfaces.Registrations;

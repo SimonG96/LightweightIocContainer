@@ -2,9 +2,6 @@
 // Created: 2021-12-03
 // Copyright(c) 2021 SimonG. All Rights Reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces.Factories;

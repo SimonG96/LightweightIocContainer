@@ -2,8 +2,6 @@
 // Created: 2019-06-07
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
-using System;
-using System.Linq;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Registrations;

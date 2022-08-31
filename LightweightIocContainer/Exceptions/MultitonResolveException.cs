@@ -2,8 +2,6 @@
 // Created: 2019-06-07
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
-using System;
-
 namespace LightweightIocContainer.Exceptions;
 
 /// <summary>

@@ -2,10 +2,6 @@
 // Created: 2019-07-02
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace LightweightIocContainer;
 
 internal static class EnumerableExtension
