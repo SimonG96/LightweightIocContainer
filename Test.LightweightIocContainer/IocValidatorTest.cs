@@ -22,6 +22,11 @@ namespace Test.LightweightIocContainer
             
         }
         
+        public interface ITest2
+        {
+            
+        }
+        
         [UsedImplicitly]
         public interface IParameter
         {
@@ -33,10 +38,28 @@ namespace Test.LightweightIocContainer
             public Test(IParameter parameter) => parameter.Method();
         }
         
+        
+        
         [UsedImplicitly]
         public interface ITestFactory
         {
             ITest Create(IParameter parameter);
+        }
+        
+        [UsedImplicitly]
+        public interface ITest2Factory
+        {
+            ITest2 InvalidCreate();
+            ITest2 Create(ITest test);
+        }
+
+
+        private class Test2 : ITest2
+        {
+            public Test2(ITest parameter)
+            {
+                
+            }
         }
         
         [UsedImplicitly]
@@ -58,6 +81,15 @@ namespace Test.LightweightIocContainer
         private class TestInstallerWithInvalidFactory : IIocInstaller
         {
             public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>().WithFactory<IInvalidFactory>();
+        }
+        
+        private class InvalidTestClassInstaller : IIocInstaller
+        {
+            public void Install(IRegistrationCollector registration)
+            {
+                registration.Add<ITest, Test>().WithFactory<ITestFactory>();
+                registration.Add<ITest2, Test2>().WithFactory<ITest2Factory>();
+            }
         }
         
         [Test]
@@ -100,6 +132,35 @@ namespace Test.LightweightIocContainer
             validator.Validate();
             
             parameterMock.Verify(p => p.Method(), Times.Never);
+        }
+        
+           
+        [Test]
+        public void TestValidateWithInvalidParameterWithFactory()
+        {
+            IocContainer iocContainer = new();
+            iocContainer.Install(new InvalidTestClassInstaller());
+            
+            IocValidator validator = new(iocContainer);
+
+            Mock<IParameter> parameterMock = new();
+            validator.AddParameter<ITest, IParameter>(parameterMock.Object);
+            
+            AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
+
+            if (aggregateException?.InnerExceptions[0] is not NoMatchingConstructorFoundException noMatchingConstructorFoundException)
+            {
+                Assert.Fail();
+                return;
+            }
+            
+            if (noMatchingConstructorFoundException.InnerExceptions[0] is not ConstructorNotMatchingException iTest2CtorNotMatchingException)
+            {
+                Assert.Fail();
+                return;
+            }
+            
+            Assert.IsInstanceOf<DirectResolveWithRegisteredFactoryNotAllowed>(iTest2CtorNotMatchingException.InnerExceptions[0]);
         }
         
         [Test]

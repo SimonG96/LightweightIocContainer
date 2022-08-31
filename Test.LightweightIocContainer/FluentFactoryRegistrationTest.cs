@@ -113,9 +113,18 @@ namespace Test.LightweightIocContainer
 
             ITestFactory factory = _iocContainer.Resolve<ITestFactory>();
             ITest test = factory.Create();
+            ITest test2 = factory.CreateTest();
             
             Assert.IsInstanceOf<ITestFactory>(factory);
             Assert.IsInstanceOf<ITest>(test);
+            Assert.IsInstanceOf<ITest>(test2);
+        }
+        
+        [Test]
+        public void TestFluentFactoryRegistrationResolveWithoutFactoryFails()
+        {
+            _iocContainer.Register(r => r.Add<ITest, Test>().WithFactory<ITestFactory>());
+            Assert.Throws<DirectResolveWithRegisteredFactoryNotAllowed>(()=>_iocContainer.Resolve<ITest>());
         }
         
         [Test]
@@ -129,6 +138,14 @@ namespace Test.LightweightIocContainer
             Assert.IsInstanceOf<ITestFactory>(factory);
             Assert.IsInstanceOf<ITest>(test);
         }
+        
+        [Test]
+        public void TestFluentFactoryRegistration_WithoutFactoryFails()
+        {
+            _iocContainer.Register(r => r.Add<ITest, Test>().WithFactory<ITestFactory, TestFactory>());
+            Assert.Throws<DirectResolveWithRegisteredFactoryNotAllowed>(()=>_iocContainer.Resolve<ITest>());
+        }
+
         
         [Test]
         public void TestRegisterFactoryWithoutCreate() => Assert.Throws<InvalidFactoryRegistrationException>(() => _iocContainer.Register(r => r.Add<ITest, Test>().WithFactory<ITestFactoryNoCreate>()));

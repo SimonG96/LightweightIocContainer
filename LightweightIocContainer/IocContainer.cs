@@ -140,6 +140,7 @@ namespace LightweightIocContainer
         /// <typeparam name="T">The registered <see cref="Type"/></typeparam>
         /// <returns>An instance of the given registered <see cref="Type"/>, an <see cref="InternalToBeResolvedPlaceholder"/> if parameters need to be resolved or an <see cref="InternalFactoryMethodPlaceholder{T}"/> if a factory method is used to create an instance</returns>
         /// <exception cref="TypeNotRegisteredException">The given <see cref="Type"/> is not registered</exception>
+        /// <exception cref="DirectResolveWithRegisteredFactoryNotAllowed">A direct resolve with a registered factory is not allowed</exception>
         /// <exception cref="InvalidRegistrationException">An interface was registered without an implementation or factory method</exception>
         /// <exception cref="MultitonResolveException">Tried resolving a multiton without scope argument</exception>
         /// <exception cref="NoMatchingConstructorFoundException">No matching constructor for the given <see cref="Type"/> found</exception>
@@ -201,6 +202,7 @@ namespace LightweightIocContainer
         /// <param name="isFactoryResolve"></param>
         /// <returns>An instance of the given registered <see cref="Type"/>, an <see cref="InternalToBeResolvedPlaceholder"/> if parameters need to be resolved or an <see cref="InternalFactoryMethodPlaceholder{T}"/> if a factory method is used to create an instance</returns>
         /// <exception cref="TypeNotRegisteredException">The given <see cref="Type"/> is not registered</exception>
+        /// <exception cref="DirectResolveWithRegisteredFactoryNotAllowed">A direct resolve with a registered factory is not allowed</exception>
         /// <exception cref="InvalidRegistrationException">An interface was registered without an implementation or factory method</exception>
         /// <exception cref="MultitonResolveException">Tried resolving a multiton without scope argument</exception>
         /// <exception cref="NoMatchingConstructorFoundException">No matching constructor for the given <see cref="Type"/> found</exception>
@@ -464,8 +466,7 @@ namespace LightweightIocContainer
                     return (true, parameters, null);
                 
                 noMatchingConstructorFoundException ??= new NoMatchingConstructorFoundException(type);
-                exceptions?.ForEach(e => 
-                    noMatchingConstructorFoundException.AddInnerException(new ConstructorNotMatchingException(constructor, e)));
+                exceptions?.ForEach(e => noMatchingConstructorFoundException.AddInnerException(e));
             }
 
             return (false, null, noMatchingConstructorFoundException);

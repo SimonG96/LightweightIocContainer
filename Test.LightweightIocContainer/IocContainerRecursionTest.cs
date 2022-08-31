@@ -115,12 +115,10 @@ namespace Test.LightweightIocContainer
 
             NoMatchingConstructorFoundException noMatchingConstructorFoundException = Assert.Throws<NoMatchingConstructorFoundException>(() => _iocContainer.Resolve<IFoo>());
             ConstructorNotMatchingException fooConstructorNotMatchingException = (ConstructorNotMatchingException) noMatchingConstructorFoundException?.InnerExceptions[0];
-            ConstructorNotMatchingException barConstructorNotMatchingException = (ConstructorNotMatchingException) fooConstructorNotMatchingException?.InnerExceptions[0];
-            NoMatchingConstructorFoundException noMatchingBarConstructorFoundException = (NoMatchingConstructorFoundException) barConstructorNotMatchingException?.InnerExceptions[0]; 
-            ConstructorNotMatchingException secondFooConstructorNotMatchingException = (ConstructorNotMatchingException) noMatchingBarConstructorFoundException?.InnerExceptions[0];
-            ConstructorNotMatchingException secondBarConstructorNotMatchingException = (ConstructorNotMatchingException) secondFooConstructorNotMatchingException?.InnerExceptions[0];
+            NoMatchingConstructorFoundException noMatchingBarConstructorFoundException = (NoMatchingConstructorFoundException) fooConstructorNotMatchingException?.InnerExceptions[0]; 
+            ConstructorNotMatchingException barConstructorNotMatchingException = (ConstructorNotMatchingException) noMatchingBarConstructorFoundException?.InnerExceptions[0];
             
-            CircularDependencyException exception = (CircularDependencyException) secondBarConstructorNotMatchingException?.InnerExceptions[0];
+            CircularDependencyException exception = (CircularDependencyException) barConstructorNotMatchingException?.InnerExceptions[0];
             
             Assert.AreEqual(typeof(IFoo), exception?.ResolvingType);
             Assert.AreEqual(2, exception.ResolveStack.Count);
