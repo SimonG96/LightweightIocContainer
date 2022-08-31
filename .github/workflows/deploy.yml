@@ -17,9 +17,8 @@ jobs:
       env:
         NUGET_KEY: ${{ secrets.NUGET_KEY }}
       run: |
-           dotnet pack -c Release
-           cd bin\Release
-           dotnet nuget push LightweightIocContainer.*.nupkg -k NUGET_KEY -s https://api.nuget.org/v3/index.json
+           dotnet pack -c Release -o nugetOut
+           dotnet nuget push nugetOut\LightweightIocContainer.*.nupkg -k $env:NUGET_KEY -s https://api.nuget.org/v3/index.json
 
   github:
     name: GitHub
@@ -35,7 +34,12 @@ jobs:
       env:
         GH_PACKAGE_REGISTRY_KEY: ${{ secrets.GH_PACKAGE_REGISTRY_KEY }}
       run: |
-           dotnet pack -c Release
-           nuget sources Add -Name "GithubPackageRegistry" -Source "https://nuget.pkg.github.com/SimonG96/index.json" -UserName SimonG96 -Password GH_PACKAGE_REGISTRY_KEY
-           cd bin\Release
-           dotnet nuget push LightweightIocContainer.*.nupkg -Source "GithubPackageRegistry"
+           dotnet pack -c Release -o githubOut
+           dotnet nuget add source "https://nuget.pkg.github.com/SimonG96/index.json" --name "GithubPackageRegistry" --username SimonG96 --password $env:GH_PACKAGE_REGISTRY_KEY
+           dotnet nuget push githubOut\LightweightIocContainer.*.nupkg -s "GithubPackageRegistry"
+    - name: Upload the artifacts to release
+      uses: skx/github-action-publish-binaries@master
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+          args: 'LightweightIocContainer.*nupkg'
