@@ -8,7 +8,7 @@ A lightweight IOC Container that is powerful enough to do all the things you nee
 [![Nuget](https://img.shields.io/nuget/v/LightweightIocContainer.svg?label=NuGet%20Version&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer/)
 [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/LightweightIocContainer.svg?label=NuGet%20Pre-Release&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer/)
 
-## Get started with the Lightweight IOC Container
+## Get started with the Lightweight IOC Container Validator
 
 ### How to install
 
@@ -16,46 +16,36 @@ The easiest way to [install](https://github.com/SimonG96/LightweightIocContainer
 You can either use the [`PackageManager`](https://github.com/SimonG96/LightweightIocContainer/wiki/Install-Lightweight-IOC-Container#packagemanager) in VisualStudio:
 
 ```PM
-PM> Install-Package LightweightIocContainer -Version 4.0.0-beta4
+PM> Install-Package LightweightIocContainer.Validator -Version 4.0.0-beta4
 ```
 
 or you can use the [`.NET CLI`](https://github.com/SimonG96/LightweightIocContainer/wiki/Install-Lightweight-IOC-Container#net-cli):
 
 ```.net
-> dotnet add package LightweightIocContainer --version 4.0.0-beta4
+> dotnet add package LightweightIocContainer.Validator --version 4.0.0-beta4
 ```
 
-### Example usage
+### Validation
 
-  1. [Instantiate `IocContainer`](https://github.com/SimonG96/LightweightIocContainer/wiki/Simple-Usage-of-Lightweight-IOC-Container#instantiate-container):
-  
-      ```c#
-      IocContainer container = new();
-      ```
+You can validate your `IocContainer` setup by using the `IocValidator` in a unit test:
 
-  2. Install [`IIocInstaller`s](https://github.com/SimonG96/LightweightIocContainer/wiki/IIocInstaller) for the container:
+```c#
+[TestFixture]
+public class IocValidationTest
+{
+    [Test]
+    public void ValidateIocContainerSetup()
+    {
+        IocContainer container = new();
+        container.Install(new Installer());
 
-      ```c#
-      container.Install(new Installer());
-      ```
+        IocValidator validator = new(container);
+        validator.Validate();
+    }
+}
+```
 
-  3. [Resolve](https://github.com/SimonG96/LightweightIocContainer/wiki/Simple-Usage-of-Lightweight-IOC-Container#resolving-instances) one instance from the container:
-
-      ```c#
-      IFooFactory fooFactory = container.Resolve<IFooFactory>();
-      ```
-
-  4. Use this instance to [create](https://github.com/SimonG96/LightweightIocContainer/wiki/Advanced-Usage-of-Lightweight-IOC-Container#use-factories-to-resolve-instances) what your application needs:
-
-      ```c#
-      IFoo foo = fooFactory.Create();
-      ```
-
-  5. When your application is finished, don't forget to [dispose](https://github.com/SimonG96/LightweightIocContainer/wiki/Simple-Usage-of-Lightweight-IOC-Container#Disposing-Container) your `IocContainer`:
-
-      ```c#
-      container.Dispose();
-      ```
+If this test is successful, everything is correctly installed and can be resolved by the `IocContainer`. By going through the thrown exceptions in case of a failed test you will see what is not working correctly with your current setup.
 
 ### Demo Project
 

@@ -36,6 +36,14 @@ public class IocValidatorTest
     {
         public Test(IParameter parameter) => parameter.Method();
     }
+    
+    private class Test2 : ITest2
+    {
+        public Test2(ITest dependency)
+        {
+                
+        }
+    }
         
         
         
@@ -52,14 +60,7 @@ public class IocValidatorTest
         ITest2 Create(ITest test);
     }
 
-
-    private class Test2 : ITest2
-    {
-        public Test2(ITest parameter)
-        {
-                
-        }
-    }
+   
         
     [UsedImplicitly]
     public interface IInvalidFactory

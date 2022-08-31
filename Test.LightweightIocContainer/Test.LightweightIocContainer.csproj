@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LightweightIocContainer\LightweightIocContainer.csproj" />
+    <ProjectReference Include="..\LightweightIocContainer.Validation\LightweightIocContainer.Validation.csproj" />
   </ItemGroup>
 
 </Project>

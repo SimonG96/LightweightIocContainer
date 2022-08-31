@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LightweightIocContainer.Validation</name>
+    </assembly>
+    <members>
+        <member name="T:LightweightIocContainer.Validation.IocValidator">
+            <summary>
+            Validator for your <see cref="T:LightweightIocContainer.IocContainer"/> to check if everything can be resolved with your current setup
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Validation.IocValidator.#ctor(LightweightIocContainer.IocContainer)">
+            <summary>
+            Validator for your <see cref="T:LightweightIocContainer.IocContainer"/> to check if everything can be resolved with your current setup
+            </summary>
+            <param name="iocContainer">The <see cref="T:LightweightIocContainer.IocContainer"/></param>
+        </member>
+        <member name="M:LightweightIocContainer.Validation.IocValidator.AddParameter``2(``1)">
+            <summary>
+            Add parameters that can't be default for your type to be created successfully
+            </summary>
+            <param name="parameter">The new value of the parameter</param>
+            <typeparam name="TInterface">The <see cref="T:System.Type"/> of your registered interface</typeparam>
+            <typeparam name="TParameter">The <see cref="T:System.Type"/> of your <paramref name="parameter"></paramref></typeparam>
+        </member>
+        <member name="M:LightweightIocContainer.Validation.IocValidator.Validate">
+            <summary>
+            Validates your given <see cref="T:LightweightIocContainer.IocContainer"/> and checks if everything can be resolved with the current setup
+            <exception cref="T:System.AggregateException">Collection of all exceptions that are thrown during validation</exception>
+            </summary>
+        </member>
+    </members>
+</doc>
