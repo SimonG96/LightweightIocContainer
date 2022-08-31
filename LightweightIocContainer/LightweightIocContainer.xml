@@ -979,6 +979,7 @@
             <typeparam name="T">The registered <see cref="T:System.Type"/></typeparam>
             <returns>An instance of the given registered <see cref="T:System.Type"/>, an <see cref="T:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder"/> if parameters need to be resolved or an <see cref="T:LightweightIocContainer.ResolvePlaceholders.InternalFactoryMethodPlaceholder`1"/> if a factory method is used to create an instance</returns>
             <exception cref="T:LightweightIocContainer.Exceptions.TypeNotRegisteredException">The given <see cref="T:System.Type"/> is not registered</exception>
+            <exception cref="T:LightweightIocContainer.Exceptions.DirectResolveWithRegisteredFactoryNotAllowed">A direct resolve with a registered factory is not allowed</exception>
             <exception cref="T:LightweightIocContainer.Exceptions.InvalidRegistrationException">An interface was registered without an implementation or factory method</exception>
             <exception cref="T:LightweightIocContainer.Exceptions.MultitonResolveException">Tried resolving a multiton without scope argument</exception>
             <exception cref="T:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException">No matching constructor for the given <see cref="T:System.Type"/> found</exception>
@@ -994,6 +995,7 @@
             <param name="isFactoryResolve"></param>
             <returns>An instance of the given registered <see cref="T:System.Type"/>, an <see cref="T:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder"/> if parameters need to be resolved or an <see cref="T:LightweightIocContainer.ResolvePlaceholders.InternalFactoryMethodPlaceholder`1"/> if a factory method is used to create an instance</returns>
             <exception cref="T:LightweightIocContainer.Exceptions.TypeNotRegisteredException">The given <see cref="T:System.Type"/> is not registered</exception>
+            <exception cref="T:LightweightIocContainer.Exceptions.DirectResolveWithRegisteredFactoryNotAllowed">A direct resolve with a registered factory is not allowed</exception>
             <exception cref="T:LightweightIocContainer.Exceptions.InvalidRegistrationException">An interface was registered without an implementation or factory method</exception>
             <exception cref="T:LightweightIocContainer.Exceptions.MultitonResolveException">Tried resolving a multiton without scope argument</exception>
             <exception cref="T:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException">No matching constructor for the given <see cref="T:System.Type"/> found</exception>
