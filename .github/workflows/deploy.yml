@@ -5,8 +5,8 @@ on:
     types: [published]
 
 jobs:
-  nuget:
-    name: NuGet
+  Deploy:
+    name: Deploy
     runs-on: windows-latest
     
     steps:
@@ -15,32 +15,20 @@ jobs:
     - uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '6.0.x'
-    - name: Deploy to NuGet Gallery
+    - name: Build
+      run: dotnet build -c Release -o output
+    - name: Deploy to nuGet gallery
       env:
         NUGET_KEY: ${{ secrets.NUGET_KEY }}
-      run: |
-           dotnet build -c Release -o nugetOut
-           dotnet nuget push nugetOut\LightweightIocContainer.*.nupkg -k $env:NUGET_KEY -s https://api.nuget.org/v3/index.json
-
-  github:
-    name: GitHub
-    runs-on: windows-latest
-    
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v1
-    - uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.0.x'
-    - name: Deploy to GitHub Package Registry
+      run: dotnet nuget push output\LightweightIocContainer.*.nupkg -k $env:NUGET_KEY -s https://api.nuget.org/v3/index.json
+    - name: Deploy to gitHub package registry
       env:
         GH_PACKAGE_REGISTRY_KEY: ${{ secrets.GH_PACKAGE_REGISTRY_KEY }}
       run: |
-           dotnet build -c Release -o githubOut
            dotnet nuget add source "https://nuget.pkg.github.com/SimonG96/index.json" --name "GithubPackageRegistry" --username SimonG96 --password $env:GH_PACKAGE_REGISTRY_KEY
-           dotnet nuget push githubOut\LightweightIocContainer.*.nupkg -s "GithubPackageRegistry"
-    - name: Upload the artifacts to release
+           dotnet nuget push output\LightweightIocContainer.*.nupkg -s "GithubPackageRegistry"
+    - name: Upload the artifacts to github release
       uses: AButler/upload-release-assets@v2.0
       with:
-          files: 'githubOut\LightweightIocContainer.*nupkg'
+          files: 'output/LightweightIocContainer*nupkg'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
