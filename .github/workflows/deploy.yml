@@ -16,10 +16,9 @@ jobs:
     - name: Deploy to NuGet Gallery
       env:
         NUGET_KEY: ${{ secrets.NUGET_KEY }}
-      run:
-        dotnet pack -c Release
-        cd bin\Release
-        dotnet nuget push LightweightIocContainer.*.nupkg -k NUGET_KEY -s https://api.nuget.org/v3/index.json
+    - run: dotnet pack -c Release
+    - run: cd bin\Release
+    - run: dotnet nuget push LightweightIocContainer.*.nupkg -k NUGET_KEY -s https://api.nuget.org/v3/index.json
 
   github:
     name: GitHub
@@ -34,8 +33,7 @@ jobs:
     - name: Deploy to GitHub Package Registry
       env:
         GH_PACKAGE_REGISTRY_KEY: ${{ secrets.GH_PACKAGE_REGISTRY_KEY }}
-      run:
-        dotnet pack -c Release
-        nuget sources Add -Name "GithubPackageRegistry" -Source "https://nuget.pkg.github.com/SimonG96/index.json" -UserName SimonG96 -Password GH_PACKAGE_REGISTRY_KEY
-        cd bin\Release
-        dotnet nuget push LightweightIocContainer.*.nupkg -Source "GithubPackageRegistry"
+    - run: dotnet pack -c Release
+    - run: nuget sources Add -Name "GithubPackageRegistry" -Source "https://nuget.pkg.github.com/SimonG96/index.json" -UserName SimonG96 -Password GH_PACKAGE_REGISTRY_KEY
+    - run: cd bin\Release
+    - run: dotnet nuget push LightweightIocContainer.*.nupkg -Source "GithubPackageRegistry"
