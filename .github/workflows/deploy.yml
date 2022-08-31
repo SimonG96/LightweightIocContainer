@@ -38,8 +38,7 @@ jobs:
            dotnet nuget add source "https://nuget.pkg.github.com/SimonG96/index.json" --name "GithubPackageRegistry" --username SimonG96 --password $env:GH_PACKAGE_REGISTRY_KEY
            dotnet nuget push githubOut\LightweightIocContainer.*.nupkg -s "GithubPackageRegistry"
     - name: Upload the artifacts to release
-      uses: skx/github-action-publish-binaries@master
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: AButler/upload-release-assets@v2.0
       with:
-          args: 'githubOut\LightweightIocContainer.*nupkg'
+          files: 'githubOut\LightweightIocContainer.*nupkg'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
