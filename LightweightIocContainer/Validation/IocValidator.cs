@@ -63,7 +63,7 @@ namespace LightweightIocContainer.Validation
                 }
                 else
                 {
-                    var arguments = definedParameters.Select(p => p.parameter).ToArray();
+                    object?[] arguments = definedParameters.Select(p => p.parameter).ToArray();
                     TryResolve(registration.InterfaceType, arguments, validationExceptions);
                 }
             }

@@ -30,7 +30,7 @@ namespace Test.LightweightIocContainer
 
         private class Test : ITest
         {
-            public Test(IParameter parameter) => parameter?.Method();
+            public Test(IParameter parameter) => parameter.Method();
         }
         
         [UsedImplicitly]
@@ -61,14 +61,14 @@ namespace Test.LightweightIocContainer
         }
         
         [Test]
-        public void TestValidate()
+        public void TestValidateWithoutFactory()
         {
             IocContainer iocContainer = new();
             iocContainer.Install(new TestInstallerNoFactory());
             
             IocValidator validator = new(iocContainer);
             
-            var aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
+            AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
             
             AssertNoMatchingConstructorFoundForType<Test>(aggregateException);
         }
@@ -110,18 +110,18 @@ namespace Test.LightweightIocContainer
             
             IocValidator validator = new(iocContainer);
             
-            var aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
+            AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
             
             AssertNoMatchingConstructorFoundForType<Test>(aggregateException);
         }
 
-        private static void AssertNoMatchingConstructorFoundForType<T>(AggregateException aggregateException)
+        private void AssertNoMatchingConstructorFoundForType<T>(AggregateException aggregateException)
         {
             Exception exception = aggregateException?.InnerExceptions[0];
-            Assert.IsInstanceOf<NoMatchingConstructorFoundException>(exception);
-
-            NoMatchingConstructorFoundException noMatchingConstructorFoundException = (NoMatchingConstructorFoundException)exception;
-            Assert.AreEqual(typeof(T), noMatchingConstructorFoundException?.Type);
+            if (exception is NoMatchingConstructorFoundException noMatchingConstructorFoundException)
+                Assert.AreEqual(typeof(T), noMatchingConstructorFoundException.Type);
+            else
+                Assert.Fail($"Exception is no NoMatchingConstructorFoundException, actual type: {exception?.GetType()}");
         }
     }
 }
