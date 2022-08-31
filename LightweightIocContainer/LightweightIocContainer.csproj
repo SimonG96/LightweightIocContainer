@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Authors>SimonG</Authors>
     <Copyright>Copyright(c) 2019 SimonG. All Rights Reserved.</Copyright>
     <Description>A lightweight IOC Container that is powerful enough to do all the things you need it to do.</Description>
@@ -9,7 +9,7 @@
     <LangVersion>default</LangVersion>
     <Nullable>enable</Nullable>
     <DocumentationFile>LightweightIocContainer.xml</DocumentationFile>
-    <VersionPrefix>3.0.1</VersionPrefix>
+    <VersionPrefix>4.0.0-beta</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -26,7 +26,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="Moq" Version="4.18.2" />
     <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
   </ItemGroup>
 
