@@ -45,12 +45,17 @@ namespace Test.LightweightIocContainer
             ITest Create();
         }
         
-        private class TestInstaller : IIocInstaller
+        private class TestInstallerNoFactory : IIocInstaller
+        {
+            public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>();
+        }
+        
+        private class TestInstallerWithFactory : IIocInstaller
         {
             public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>().WithFactory<ITestFactory>();
         }
         
-        private class InvalidTestInstaller : IIocInstaller
+        private class TestInstallerWithInvalidFactory : IIocInstaller
         {
             public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>().WithFactory<IInvalidFactory>();
         }
@@ -59,7 +64,20 @@ namespace Test.LightweightIocContainer
         public void TestValidate()
         {
             IocContainer iocContainer = new();
-            iocContainer.Install(new TestInstaller());
+            iocContainer.Install(new TestInstallerNoFactory());
+            
+            IocValidator validator = new(iocContainer);
+            
+            var aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
+            
+            AssertNoMatchingConstructorFoundForType<Test>(aggregateException);
+        }
+        
+        [Test]
+        public void TestValidateWithFactory()
+        {
+            IocContainer iocContainer = new();
+            iocContainer.Install(new TestInstallerWithFactory());
             
             IocValidator validator = new(iocContainer);
             
@@ -70,7 +88,7 @@ namespace Test.LightweightIocContainer
         public void TestValidateWithParameter()
         {
             IocContainer iocContainer = new();
-            iocContainer.Install(new TestInstaller());
+            iocContainer.Install(new TestInstallerNoFactory());
             
             IocValidator validator = new(iocContainer);
 
@@ -88,17 +106,22 @@ namespace Test.LightweightIocContainer
         public void TestValidateInvalidFactory()
         {
             IocContainer iocContainer = new();
-            iocContainer.Install(new InvalidTestInstaller());
+            iocContainer.Install(new TestInstallerWithInvalidFactory());
             
             IocValidator validator = new(iocContainer);
             
-            AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
+            var aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
             
-            Exception exception =  aggregateException?.InnerExceptions[0];
+            AssertNoMatchingConstructorFoundForType<Test>(aggregateException);
+        }
+
+        private static void AssertNoMatchingConstructorFoundForType<T>(AggregateException aggregateException)
+        {
+            Exception exception = aggregateException?.InnerExceptions[0];
             Assert.IsInstanceOf<NoMatchingConstructorFoundException>(exception);
-            
-            NoMatchingConstructorFoundException noMatchingConstructorFoundException = (NoMatchingConstructorFoundException) exception;
-            Assert.AreEqual(typeof(Test), noMatchingConstructorFoundException?.Type);
+
+            NoMatchingConstructorFoundException noMatchingConstructorFoundException = (NoMatchingConstructorFoundException)exception;
+            Assert.AreEqual(typeof(T), noMatchingConstructorFoundException?.Type);
         }
     }
 }
