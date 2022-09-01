@@ -150,13 +150,13 @@ public class IocValidatorTest
 
         if (aggregateException?.InnerExceptions[0] is not NoMatchingConstructorFoundException noMatchingConstructorFoundException)
         {
-            Assert.Fail();
+            Assert.Fail("inner exception is not of type NoMatchingConstructorFoundException");
             return;
         }
             
         if (noMatchingConstructorFoundException.InnerExceptions[0] is not ConstructorNotMatchingException iTest2CtorNotMatchingException)
         {
-            Assert.Fail();
+            Assert.Fail("inner exception is not of type ConstructorNotMatchingException");
             return;
         }
             
