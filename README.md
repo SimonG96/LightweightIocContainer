@@ -8,9 +8,9 @@ A lightweight IOC Container that is powerful enough to do all the things you nee
 [![Nuget](https://img.shields.io/nuget/v/LightweightIocContainer.svg?label=IocContainer%20NuGet%20Version&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer/)
 [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/LightweightIocContainer.svg?label=IocContainer%20NuGet%20Pre-Release&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer/)
 
-[![Nuget](https://img.shields.io/nuget/dt/LightweightIocContainer.svg?label=Validation%20NuGet%20Downloads&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.Validation/)
-[![Nuget](https://img.shields.io/nuget/v/LightweightIocContainer.svg?label=Validation%20NuGet%20Version&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.Validation/)
-[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/Validation.svg?label=IocContainer%20NuGet%20Pre-Release&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.Validation/)
+[![Nuget](https://img.shields.io/nuget/dt/LightweightIocContainer.Validation.svg?label=Validation%20NuGet%20Downloads&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.Validation/)
+[![Nuget](https://img.shields.io/nuget/v/LightweightIocContainer.Validation.svg?label=Validation%20NuGet%20Version&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.Validation/)
+[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/LightweightIocContainer.Validation.svg?label=Validation%20NuGet%20Pre-Release&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.Validation/)
 
 ## Get started with the Lightweight IOC Container
 
