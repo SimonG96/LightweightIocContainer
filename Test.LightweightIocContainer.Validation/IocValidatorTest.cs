@@ -36,6 +36,14 @@ public class IocValidatorTest
     {
         public Test(IParameter parameter) => parameter.Method();
     }
+    
+    private class Test2 : ITest2
+    {
+        public Test2(ITest dependency)
+        {
+                
+        }
+    }
         
         
         
@@ -52,14 +60,7 @@ public class IocValidatorTest
         ITest2 Create(ITest test);
     }
 
-
-    private class Test2 : ITest2
-    {
-        public Test2(ITest parameter)
-        {
-                
-        }
-    }
+   
         
     [UsedImplicitly]
     public interface IInvalidFactory
@@ -149,13 +150,13 @@ public class IocValidatorTest
 
         if (aggregateException?.InnerExceptions[0] is not NoMatchingConstructorFoundException noMatchingConstructorFoundException)
         {
-            Assert.Fail();
+            Assert.Fail($"First element of {nameof(aggregateException.InnerExceptions)} is not of type {nameof(NoMatchingConstructorFoundException)}.");
             return;
         }
             
         if (noMatchingConstructorFoundException.InnerExceptions[0] is not ConstructorNotMatchingException iTest2CtorNotMatchingException)
         {
-            Assert.Fail();
+            Assert.Fail($"First element of {nameof(noMatchingConstructorFoundException.InnerExceptions)} is not of type {nameof(ConstructorNotMatchingException)}.");
             return;
         }
             
@@ -181,6 +182,6 @@ public class IocValidatorTest
         if (exception is NoMatchingConstructorFoundException noMatchingConstructorFoundException)
             Assert.AreEqual(typeof(T), noMatchingConstructorFoundException.Type);
         else
-            Assert.Fail($"Exception is no NoMatchingConstructorFoundException, actual type: {exception?.GetType()}");
+            Assert.Fail($"Exception is no {nameof(NoMatchingConstructorFoundException)}, actual type: {exception?.GetType()}");
     }
 }
