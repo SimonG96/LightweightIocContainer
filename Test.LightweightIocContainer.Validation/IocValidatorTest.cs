@@ -11,7 +11,7 @@ using LightweightIocContainer.Validation;
 using Moq;
 using NUnit.Framework;
 
-namespace Test.LightweightIocContainer;
+namespace Test.LightweightIocContainer.Validation;
 
 [TestFixture]
 public class IocValidatorTest
