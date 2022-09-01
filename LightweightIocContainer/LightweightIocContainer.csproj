@@ -11,7 +11,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <DocumentationFile>LightweightIocContainer.xml</DocumentationFile>
     <VersionPrefix>4.0.0</VersionPrefix>
-    <VersionSuffix>beta4</VersionSuffix>
+    <VersionSuffix>beta5</VersionSuffix>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -23,12 +23,6 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>LightweightIocContainer.Validation</_Parameter1>
-    </AssemblyAttribute>
-  </ItemGroup>
-  
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
