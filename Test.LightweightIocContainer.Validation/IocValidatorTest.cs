@@ -45,8 +45,6 @@ public class IocValidatorTest
         }
     }
         
-        
-        
     [UsedImplicitly]
     public interface ITestFactory
     {
@@ -59,8 +57,6 @@ public class IocValidatorTest
         ITest2 InvalidCreate();
         ITest2 Create(ITest test);
     }
-
-   
         
     [UsedImplicitly]
     public interface IInvalidFactory
@@ -134,7 +130,6 @@ public class IocValidatorTest
         parameterMock.Verify(p => p.Method(), Times.Never);
     }
         
-           
     [Test]
     public void TestValidateWithInvalidParameterWithFactory()
     {
