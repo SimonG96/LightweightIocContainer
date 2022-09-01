@@ -36,6 +36,7 @@ public class IocContainerParameterRegistrationTest
     {
         IA A { get; }
         IA A2 { get; }
+        IA A3 { get; }
         IB B { get; }
         IC C { get; }
     }
@@ -71,16 +72,18 @@ public class IocContainerParameterRegistrationTest
     [UsedImplicitly]
     private class D : ID
     {
-        public D(IA a, IA a2, IB b, IC c)
+        public D(IA a, IA a2, IA a3, IB b, IC c)
         {
             A = a;
             A2 = a2;
+            A3 = a3;
             B = b;
             C = c;
         }
 
         public IA A { get; }
         public IA A2 { get; }
+        public IA A3 { get; }
         public IB B { get; }
         public IC C { get; }
     }
@@ -104,8 +107,8 @@ public class IocContainerParameterRegistrationTest
         _iocContainer.Register(r => r.Add<IA, A>().WithParameters(b, c));
         IA a = _iocContainer.Resolve<IA>();
             
-        Assert.AreEqual(b, a.B);
-        Assert.AreEqual(c, a.C);
+        Assert.AreSame(b, a.B);
+        Assert.AreSame(c, a.C);
     }
 
     [Test]
@@ -117,8 +120,8 @@ public class IocContainerParameterRegistrationTest
         _iocContainer.Register(r => r.Add<IA, A>().WithParameters(b));
         IA a = _iocContainer.Resolve<IA>(c);
 
-        Assert.AreEqual(b, a.B);
-        Assert.AreEqual(c, a.C);
+        Assert.AreSame(b, a.B);
+        Assert.AreSame(c, a.C);
     }
 
     [Test]
@@ -128,14 +131,16 @@ public class IocContainerParameterRegistrationTest
         IB b = new B(c);
         IA a = new A(b, c);
         IA a2 = new A(b, c);
+        IA a3 = new A(b, c);
 
-        _iocContainer.Register(r => r.Add<ID, D>().WithParameters((0, a), (2, b), (3, c)));
+        _iocContainer.Register(r => r.Add<ID, D>().WithParameters((0, a), (2, a3), (3, b), (4, c)));
         ID d = _iocContainer.Resolve<ID>(a2);
 
-        Assert.AreEqual(a, d.A);
-        Assert.AreEqual(a2, d.A2);
-        Assert.AreEqual(b, d.B);
-        Assert.AreEqual(c, d.C);
+        Assert.AreSame(a, d.A);
+        Assert.AreSame(a2, d.A2);
+        Assert.AreSame(a3, d.A3);
+        Assert.AreSame(b, d.B);
+        Assert.AreSame(c, d.C);
     }
 
     [Test]
@@ -147,12 +152,15 @@ public class IocContainerParameterRegistrationTest
         IA a2 = new A(b, c);
 
         _iocContainer.Register(r => r.Add<ID, D>().WithParameters(a2));
+        _iocContainer.Register(r => r.Add<IA, A>());
         _iocContainer.Register(r => r.Add<IB, B>());
         _iocContainer.Register(r => r.Add<IC, C>());
 
         ID d = _iocContainer.Resolve<ID>(a);
 
-        Assert.AreEqual(a, d.A2);
-        Assert.AreEqual(a2, d.A);
+        Assert.AreSame(a, d.A2);
+        Assert.AreSame(a2, d.A);
+        Assert.AreNotSame(a, d.A3);
+        Assert.AreNotSame(a2, d.A3);
     }
 }

@@ -406,7 +406,7 @@ public class IocContainer : IIocContainer, IIocResolver
             
         if (arguments != null && arguments.Any()) //if more arguments were passed to resolve
         {
-            int argumentsSize = registration.Parameters.Length + arguments.Length;
+            int argumentsSize = registration.Parameters.Count(p => p is not InternalResolvePlaceholder) + arguments.Length;
             object?[] newArguments = new object[argumentsSize];
 
             for (int i = 0; i < argumentsSize; i++)
@@ -532,7 +532,12 @@ public class IocContainer : IIocContainer, IIocResolver
                 parameters.Add(fittingArgument);
         }
 
-        return (!parameters.Any(p => p is InternalResolvePlaceholder), parameters, exceptions);
+        if (passedArguments == null || !passedArguments.Any())
+            return (!parameters.Any(p => p is InternalResolvePlaceholder), parameters, exceptions);
+        
+        exceptions.Add(new ConstructorNotMatchingException(constructor, new Exception("Not all given arguments were used!")));
+        return (false, parameters, exceptions);
+
     }
 
     /// <summary>

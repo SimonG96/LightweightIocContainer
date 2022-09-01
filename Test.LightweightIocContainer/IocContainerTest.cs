@@ -73,6 +73,8 @@ public class IocContainerTest
     private class TestWithFoo : ITest
     {
         public TestWithFoo(IFoo testFoo) => TestFoo = testFoo;
+        
+        [UsedImplicitly]
         public IFoo TestFoo { get; }
     }
 
@@ -333,18 +335,21 @@ public class IocContainerTest
             
         Assert.IsInstanceOf<TestConstructor>(test);
     }
-
+    
     [Test]
-    public void TestResolveParameterWithParameterThatIsAlreadyExistingSingleton()
+    public void TestResolveParameterWithTwoParameters()
     {
-        _iocContainer.Register(r => r.Add<ITest, TestWithFoo>());
+        _iocContainer.Register(r => r.Add<ITest, TestWithFoo>().WithParameters(new Foo()));
         _iocContainer.Register(r => r.Add<IFoo, FooConstructor>(Lifestyle.Singleton).WithParameters("TestString"));
 
-        IFoo foo = _iocContainer.Resolve<IFoo>();
-        ITest test = _iocContainer.Resolve<ITest>("testName");
-            
-        Assert.IsInstanceOf<TestWithFoo>(test);
-        Assert.AreSame(foo, ((TestWithFoo) test).TestFoo);
+        _iocContainer.Resolve<ITest>();
+    }
+
+    [Test]
+    public void TestResolveTypeWithToManyParameters()
+    {
+        _iocContainer.Register(r => r.Add<ITest, TestWithFoo>().WithParameters(new Foo()));
+        Assert.Throws<NoMatchingConstructorFoundException>(() => _iocContainer.Resolve<ITest>(new Foo()));
     }
 
     [Test]
