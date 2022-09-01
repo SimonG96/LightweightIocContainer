@@ -13,6 +13,11 @@
             <param name="action">The given <see cref="T:System.Action`1"/> to convert</param>
             <returns>An <see cref="T:System.Action`1"/> converted from the given <see cref="T:System.Action`1"/></returns>
         </member>
+        <member name="T:LightweightIocContainer.Annotations.IocIgnoreConstructorAttribute">
+            <summary>
+            If a constructor is annotated with this attribute it will be ignored by the <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/>
+            </summary>
+        </member>
         <member name="T:LightweightIocContainer.Creator">
             <summary>
             Helper for dynamic instance creation

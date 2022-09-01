@@ -4,6 +4,7 @@
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using LightweightIocContainer.Annotations;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Factories;
@@ -572,7 +573,11 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <exception cref="NoPublicConstructorFoundException">No public constructor was found for the given <see cref="Type"/></exception>
     private List<ConstructorInfo> TryGetSortedConstructors(Type type)
     {
-        List<ConstructorInfo> sortedConstructors = type.GetConstructors().OrderByDescending(c => c.GetParameters().Length).ToList();
+        List<ConstructorInfo> sortedConstructors = type.GetConstructors()
+            .Where(c => c.GetCustomAttribute<IocIgnoreConstructorAttribute>() == null)
+            .OrderByDescending(c => c.GetParameters().Length)
+            .ToList();
+        
         if (!sortedConstructors.Any()) //no public constructor available
             throw new NoPublicConstructorFoundException(type);
             

@@ -4,6 +4,7 @@
 
 using JetBrains.Annotations;
 using LightweightIocContainer;
+using LightweightIocContainer.Annotations;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
@@ -21,11 +22,6 @@ public class IocValidatorTest
             
     }
         
-    public interface ITest2
-    {
-            
-    }
-        
     [UsedImplicitly]
     public interface IParameter
     {
@@ -36,32 +32,36 @@ public class IocValidatorTest
     {
         public Test(IParameter parameter) => parameter.Method();
     }
-    
-    private class Test2 : ITest2
+
+    private class TestViewModel : ITest
     {
-        public Test2(ITest dependency)
-        {
-                
-        }
-    }
+        public TestViewModel(IParameter parameter) => parameter.Method();
         
+        [IocIgnoreConstructor]
+        public TestViewModel() => throw new Exception();
+    }
+
+    private class Parameter : IParameter
+    {
+        public bool Method() => throw new NotImplementedException();
+    }
+    
     [UsedImplicitly]
     public interface ITestFactory
     {
         ITest Create(IParameter parameter);
     }
-        
+    
     [UsedImplicitly]
-    public interface ITest2Factory
-    {
-        ITest2 InvalidCreate();
-        ITest2 Create(ITest test);
-    }
-        
-    [UsedImplicitly]
-    public interface IInvalidFactory
+    public interface IInvalidTestFactory
     {
         ITest Create();
+    }
+    
+    [UsedImplicitly]
+    public interface IParameterFactory
+    {
+        IParameter Create();
     }
         
     private class TestInstallerNoFactory : IIocInstaller
@@ -76,18 +76,36 @@ public class IocValidatorTest
         
     private class TestInstallerWithInvalidFactory : IIocInstaller
     {
-        public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>().WithFactory<IInvalidFactory>();
+        public void Install(IRegistrationCollector registration) => registration.Add<ITest, Test>().WithFactory<IInvalidTestFactory>();
     }
-        
-    private class InvalidTestClassInstaller : IIocInstaller
+    
+    private class TestInstallerInvalidFactoryParameterRegisteredWithoutFactory : IIocInstaller
     {
         public void Install(IRegistrationCollector registration)
         {
-            registration.Add<ITest, Test>().WithFactory<ITestFactory>();
-            registration.Add<ITest2, Test2>().WithFactory<ITest2Factory>();
+            registration.Add<ITest, Test>().WithFactory<IInvalidTestFactory>();
+            registration.Add<IParameter, Parameter>();
         }
     }
         
+    private class TestInstallerInvalidFactoryParameterRegisteredWithFactory : IIocInstaller
+    {
+        public void Install(IRegistrationCollector registration)
+        {
+            registration.Add<ITest, Test>().WithFactory<IInvalidTestFactory>();
+            registration.Add<IParameter, Parameter>().WithFactory<IParameterFactory>();
+        }
+    }
+    
+    private class TestInstallerInvalidFactoryViewModel : IIocInstaller
+    {
+        public void Install(IRegistrationCollector registration)
+        {
+            registration.Add<ITest, TestViewModel>().WithFactory<IInvalidTestFactory>();
+            registration.Add<IParameter, Parameter>().WithFactory<IParameterFactory>();
+        }
+    }
+
     [Test]
     public void TestValidateWithoutFactory()
     {
@@ -129,12 +147,23 @@ public class IocValidatorTest
             
         parameterMock.Verify(p => p.Method(), Times.Never);
     }
+
+    [Test]
+    public void TestValidateWithInvalidFactoryParameterWithoutFactory()
+    {
+        IocContainer iocContainer = new();
+        iocContainer.Install(new TestInstallerInvalidFactoryParameterRegisteredWithoutFactory());
+            
+        IocValidator validator = new(iocContainer);
+            
+        validator.Validate();
+    }
         
     [Test]
     public void TestValidateWithInvalidParameterWithFactory()
     {
         IocContainer iocContainer = new();
-        iocContainer.Install(new InvalidTestClassInstaller());
+        iocContainer.Install(new TestInstallerInvalidFactoryParameterRegisteredWithFactory());
             
         IocValidator validator = new(iocContainer);
 
@@ -143,6 +172,31 @@ public class IocValidatorTest
             
         AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
 
+        if (aggregateException?.InnerExceptions[0] is not NoMatchingConstructorFoundException noMatchingConstructorFoundException)
+        {
+            Assert.Fail($"First element of {nameof(aggregateException.InnerExceptions)} is not of type {nameof(NoMatchingConstructorFoundException)}.");
+            return;
+        }
+            
+        if (noMatchingConstructorFoundException.InnerExceptions[0] is not ConstructorNotMatchingException iTest2CtorNotMatchingException)
+        {
+            Assert.Fail($"First element of {nameof(noMatchingConstructorFoundException.InnerExceptions)} is not of type {nameof(ConstructorNotMatchingException)}.");
+            return;
+        }
+            
+        Assert.IsInstanceOf<DirectResolveWithRegisteredFactoryNotAllowed>(iTest2CtorNotMatchingException.InnerExceptions[0]);
+    }
+    
+    [Test]
+    public void TestValidateViewModelWithInvalidParameterWithFactory()
+    {
+        IocContainer iocContainer = new();
+        iocContainer.Install(new TestInstallerInvalidFactoryViewModel());
+            
+        IocValidator validator = new(iocContainer);
+
+        AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
+        
         if (aggregateException?.InnerExceptions[0] is not NoMatchingConstructorFoundException noMatchingConstructorFoundException)
         {
             Assert.Fail($"First element of {nameof(aggregateException.InnerExceptions)} is not of type {nameof(NoMatchingConstructorFoundException)}.");
