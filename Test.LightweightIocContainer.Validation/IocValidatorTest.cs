@@ -33,12 +33,21 @@ public class IocValidatorTest
         public Test(IParameter parameter) => parameter.Method();
     }
 
-    private class TestViewModel : ITest
+    [UsedImplicitly]
+    private class TestViewModelIgnoreDesignTimeCtor : ITest
     {
-        public TestViewModel(IParameter parameter) => parameter.Method();
+        public TestViewModelIgnoreDesignTimeCtor(IParameter parameter) => parameter.Method();
         
         [IocIgnoreConstructor]
-        public TestViewModel() => throw new Exception();
+        public TestViewModelIgnoreDesignTimeCtor() => throw new Exception();
+    }
+    
+    [UsedImplicitly]
+    private class TestViewModelDontIgnoreDesignTimeCtor : ITest
+    {
+        public TestViewModelDontIgnoreDesignTimeCtor(string name, IParameter parameter) => parameter.Method();
+        
+        public TestViewModelDontIgnoreDesignTimeCtor() => throw new Exception();
     }
 
     private class Parameter : IParameter
@@ -50,6 +59,12 @@ public class IocValidatorTest
     public interface ITestFactory
     {
         ITest Create(IParameter parameter);
+    }
+    
+    [UsedImplicitly]
+    public interface ITestMissingParamFactory
+    {
+        ITest Create(string name);
     }
     
     [UsedImplicitly]
@@ -97,11 +112,20 @@ public class IocValidatorTest
         }
     }
     
+    private class TestInstallerInvalidFactoryParameterDesignTimeCtorNotIgnoredRegisteredWithFactory : IIocInstaller
+    {
+        public void Install(IRegistrationCollector registration)
+        {
+            registration.Add<ITest, Test>().WithFactory<IInvalidTestFactory>();
+            registration.Add<IParameter, Parameter>().WithFactory<IParameterFactory>();
+        }
+    }
+    
     private class TestInstallerInvalidFactoryViewModel : IIocInstaller
     {
         public void Install(IRegistrationCollector registration)
         {
-            registration.Add<ITest, TestViewModel>().WithFactory<IInvalidTestFactory>();
+            registration.Add<ITest, TestViewModelDontIgnoreDesignTimeCtor>().WithFactory<ITestMissingParamFactory>();
             registration.Add<IParameter, Parameter>().WithFactory<IParameterFactory>();
         }
     }
@@ -192,6 +216,31 @@ public class IocValidatorTest
     {
         IocContainer iocContainer = new();
         iocContainer.Install(new TestInstallerInvalidFactoryViewModel());
+            
+        IocValidator validator = new(iocContainer);
+
+        AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
+        
+        if (aggregateException?.InnerExceptions[0] is not NoMatchingConstructorFoundException noMatchingConstructorFoundException)
+        {
+            Assert.Fail($"First element of {nameof(aggregateException.InnerExceptions)} is not of type {nameof(NoMatchingConstructorFoundException)}.");
+            return;
+        }
+            
+        if (noMatchingConstructorFoundException.InnerExceptions[0] is not ConstructorNotMatchingException iTest2CtorNotMatchingException)
+        {
+            Assert.Fail($"First element of {nameof(noMatchingConstructorFoundException.InnerExceptions)} is not of type {nameof(ConstructorNotMatchingException)}.");
+            return;
+        }
+            
+        Assert.IsInstanceOf<DirectResolveWithRegisteredFactoryNotAllowed>(iTest2CtorNotMatchingException.InnerExceptions[0]);
+    }
+    
+    [Test]
+    public void TestValidateViewModelWithInvalidParameterDesignTimeCtorNotIgnoredWithFactory()
+    {
+        IocContainer iocContainer = new();
+        iocContainer.Install(new TestInstallerInvalidFactoryParameterDesignTimeCtorNotIgnoredRegisteredWithFactory());
             
         IocValidator validator = new(iocContainer);
 

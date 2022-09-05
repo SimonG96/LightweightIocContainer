@@ -43,7 +43,36 @@ public class FluentFactoryRegistrationTest
 
         }
     }
+    
+    private class TestNull : ITest
+    {
+
+        public TestNull(object obj, string content, string optional1, string optional2, ITestNullFactory testNullFactory)
+        {
+            Obj = obj;
+            Content = content;
+            Optional1 = optional1;
+            Optional2 = optional2;
+            TestNullFactory = testNullFactory;
+        }
         
+        public object Obj { get; }
+        public string Content { get; }
+        public string Optional1 { get; }
+        public string Optional2 { get; }
+        public ITestNullFactory TestNullFactory { get; }
+    }
+        
+    public interface ITestNullFactory
+    {
+        ITest Create(object obj, string content, string optional1, string optional2);
+    }
+    
+    public interface ITestDefaultFactory
+    {
+        ITest Create(object obj, string content, string optional1, string optional2, ITestNullFactory testNullFactory = null);
+    }
+    
     private interface ITestFactoryNoCreate
     {
             
@@ -68,9 +97,9 @@ public class FluentFactoryRegistrationTest
     private class TestFactory : ITestFactory
     {
         public ITest Create() => new Test();
-        public ITest Create(string name) => throw new System.NotImplementedException();
-        public ITest CreateTest(string name = null) => throw new System.NotImplementedException();
-        public ITest Create(byte id) => throw new System.NotImplementedException();
+        public ITest Create(string name) => throw new NotImplementedException();
+        public ITest CreateTest(string name = null) => throw new NotImplementedException();
+        public ITest Create(byte id) => throw new NotImplementedException();
     }
         
     [UsedImplicitly]
@@ -209,6 +238,55 @@ public class FluentFactoryRegistrationTest
         ITest createdTest = testFactory.Create(1);
         
         Assert.IsInstanceOf<TestByte>(createdTest);
+    }
+
+    [Test]
+    public void TestPassingNullAsMiddleParameter()
+    {
+        _iocContainer.Register(r => r.Add<ITest, TestNull>().WithFactory<ITestNullFactory>());
+
+        ITestNullFactory testNullFactory = _iocContainer.Resolve<ITestNullFactory>();
+
+        object obj = new();
+        string content = "TestContent";
+        string optional2 = "optionalParameter2";
+
+        ITest createdTest = testNullFactory.Create(obj, content, null, optional2);
+        if (createdTest is not TestNull testNull)
+        {
+            Assert.Fail();
+            return;
+        }
+        
+        Assert.AreSame(obj, testNull.Obj);
+        Assert.AreEqual(content, testNull.Content);
+        Assert.AreEqual(null, testNull.Optional1);
+        Assert.AreEqual(optional2, testNull.Optional2);
+    }
+    
+    [Test]
+    public void TestPassingNullAsDefaultParameter()
+    {
+        _iocContainer.Register(r => r.Add<ITest, TestNull>().WithFactory<ITestDefaultFactory>());
+
+        ITestDefaultFactory testDefaultFactory = _iocContainer.Resolve<ITestDefaultFactory>();
+
+        object obj = new();
+        string content = "TestContent";
+        string optional2 = "optionalParameter2";
+
+        ITest createdTest = testDefaultFactory.Create(obj, content, null, optional2);
+        if (createdTest is not TestNull testNull)
+        {
+            Assert.Fail();
+            return;
+        }
+        
+        Assert.AreSame(obj, testNull.Obj);
+        Assert.AreEqual(content, testNull.Content);
+        Assert.AreEqual(null, testNull.Optional1);
+        Assert.AreEqual(optional2, testNull.Optional2);
+        Assert.AreEqual(null, testNull.TestNullFactory);
     }
         
     [Test]

@@ -37,22 +37,28 @@ public class TypedFactory<TFactory> : TypedFactoryBase<TFactory>, ITypedFactory<
     private TFactory CreateFactory(IocContainer container)
     {
         Type factoryType = typeof(TFactory);
-            
+        
         AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Factory"), AssemblyBuilderAccess.Run);
         ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("Factory");
         TypeBuilder typeBuilder = moduleBuilder.DefineType($"TypedFactory.{factoryType.Name}");
             
         typeBuilder.AddInterfaceImplementation(factoryType);
 
-        //add `private readonly IIocContainer _container` field
+        //add `private readonly IocContainer _container` field
         FieldBuilder containerFieldBuilder = typeBuilder.DefineField("_container", typeof(IocContainer), FieldAttributes.Private | FieldAttributes.InitOnly);
+        
+        //add `private readonly FactoryHelper _helper` field
+        FieldBuilder helperFieldBuilder = typeBuilder.DefineField("_helper", typeof(FactoryHelper), FieldAttributes.Private | FieldAttributes.InitOnly);
 
         //add ctor
-        ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, new[] {typeof(IocContainer)});
+        ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, new[] {typeof(IocContainer), typeof(FactoryHelper)});
         ILGenerator constructorGenerator = constructorBuilder.GetILGenerator();
         constructorGenerator.Emit(OpCodes.Ldarg_0);
         constructorGenerator.Emit(OpCodes.Ldarg_1);
         constructorGenerator.Emit(OpCodes.Stfld, containerFieldBuilder); //set `_container` field
+        constructorGenerator.Emit(OpCodes.Ldarg_0);
+        constructorGenerator.Emit(OpCodes.Ldarg_2);
+        constructorGenerator.Emit(OpCodes.Stfld, helperFieldBuilder); //set `_helper` field
         constructorGenerator.Emit(OpCodes.Ret);
 
         foreach (MethodInfo createMethod in CreateMethods)
@@ -60,7 +66,9 @@ public class TypedFactory<TFactory> : TypedFactoryBase<TFactory>, ITypedFactory<
             //create a method that looks like this
             //public `createMethod.ReturnType` Create(`createMethod.GetParameters()`)
             //{
-            //    return IIocContainer.Resolve(`createMethod.ReturnType`, params);
+            //    createMethod = MethodBase.GetCurrentMethod();
+            //    object[] args = _helper.ConvertPassedNull(createMethod, params);
+            //    return IocContainer.Resolve(`createMethod.ReturnType`, args);
             //}
 
             ParameterInfo[] args = createMethod.GetParameters();
@@ -70,9 +78,16 @@ public class TypedFactory<TFactory> : TypedFactoryBase<TFactory>, ITypedFactory<
             typeBuilder.DefineMethodOverride(methodBuilder, createMethod);
 
             ILGenerator generator = methodBuilder.GetILGenerator();
+            generator.DeclareLocal(typeof(MethodBase));
+            generator.DeclareLocal(typeof(object[]));
 
+            generator.EmitCall(OpCodes.Call, typeof(MethodBase).GetMethod(nameof(MethodBase.GetCurrentMethod))!, null);
+            generator.Emit(OpCodes.Stloc_0);
+            
             generator.Emit(OpCodes.Ldarg_0);
-            generator.Emit(OpCodes.Ldfld, containerFieldBuilder);
+            generator.Emit(OpCodes.Ldfld, helperFieldBuilder);
+            
+            generator.Emit(OpCodes.Ldloc_0);
 
             if (args.Any())
             {
@@ -93,8 +108,14 @@ public class TypedFactory<TFactory> : TypedFactoryBase<TFactory>, ITypedFactory<
                 MethodInfo emptyArray = typeof(Array).GetMethod(nameof(Array.Empty))!.MakeGenericMethod(typeof(object));
                 generator.EmitCall(OpCodes.Call, emptyArray, null);
             }
+            
+            generator.EmitCall(OpCodes.Call, typeof(FactoryHelper).GetMethod(nameof(FactoryHelper.ConvertPassedNull), new[] { typeof(MethodBase), typeof(object?[]) })!, null);
+            generator.Emit(OpCodes.Stloc_1);
+            generator.Emit(OpCodes.Ldarg_0);
+            generator.Emit(OpCodes.Ldfld, containerFieldBuilder);
+            generator.Emit(OpCodes.Ldloc_1);
 
-            generator.EmitCall(OpCodes.Call, typeof(IocContainer).GetMethod(nameof(IocContainer.FactoryResolve), new[] { typeof(object[]) })!.MakeGenericMethod(createMethod.ReturnType), null);
+            generator.EmitCall(OpCodes.Call, typeof(IocContainer).GetMethod(nameof(IocContainer.FactoryResolve), new[] { typeof(object?[]) })!.MakeGenericMethod(createMethod.ReturnType), null);
             generator.Emit(OpCodes.Castclass, createMethod.ReturnType);
             generator.Emit(OpCodes.Ret);
         }
@@ -106,7 +127,7 @@ public class TypedFactory<TFactory> : TypedFactoryBase<TFactory>, ITypedFactory<
             //create a method that looks like this
             //public void ClearMultitonInstance<typeToClear>()
             //{
-            //    IIocContainer.ClearMultitonInstances<typeToClear>();
+            //    IocContainer.ClearMultitonInstances<typeToClear>();
             //}
 
             if (multitonClearMethod.IsGenericMethod)
@@ -134,6 +155,6 @@ public class TypedFactory<TFactory> : TypedFactoryBase<TFactory>, ITypedFactory<
             }
         }
 
-        return Creator.CreateInstance<TFactory>(typeBuilder.CreateTypeInfo()!.AsType(), container);
+        return Creator.CreateInstance<TFactory>(typeBuilder.CreateTypeInfo()!.AsType(), container, new FactoryHelper());
     }
 }

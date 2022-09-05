@@ -356,6 +356,20 @@
             <see cref="T:LightweightIocContainer.Interfaces.Factories.ITypedFactory"/> implementation for custom implemented factories
             </summary>
         </member>
+        <member name="T:LightweightIocContainer.Factories.FactoryHelper">
+            <summary>
+            Helper class for the <see cref="T:LightweightIocContainer.Factories.TypedFactory`1"/>
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.Factories.FactoryHelper.ConvertPassedNull(System.Reflection.MethodBase,System.Object[])">
+            <summary>
+            Convert `null` passed as argument to <see cref="T:LightweightIocContainer.NullParameter"/> to handle it correctly
+            </summary>
+            <param name="createMethod">The create method of the factory</param>
+            <param name="arguments">The arguments passed to the create method</param>
+            <returns>List of arguments with converted null</returns>
+            <exception cref="T:System.Exception">Wrong parameters passed</exception>
+        </member>
         <member name="T:LightweightIocContainer.Factories.TypedFactory`1">
             <summary>
             Class to help implement an abstract typed factory
@@ -1195,6 +1209,22 @@
         <member name="F:LightweightIocContainer.Lifestyle.Multiton">
             <summary>
             A new instance gets created if the given scope has no created instance yet. Otherwise the already created instance is used.
+            </summary>
+        </member>
+        <member name="T:LightweightIocContainer.NullParameter">
+            <summary>
+            Wrapper class to handle null passed as an argument correctly
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.NullParameter.#ctor(System.Type)">
+            <summary>
+            Wrapper class to handle null passed as an argument correctly
+            </summary>
+            <param name="parameterType">The <see cref="T:System.Type"/> of the parameter</param>
+        </member>
+        <member name="P:LightweightIocContainer.NullParameter.ParameterType">
+            <summary>
+            The <see cref="T:System.Type"/> of the parameter
             </summary>
         </member>
         <member name="T:LightweightIocContainer.Registrations.MultipleMultitonRegistration`3">

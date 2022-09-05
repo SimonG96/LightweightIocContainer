@@ -117,7 +117,7 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <typeparam name="T">The given <see cref="Type"/></typeparam>
     /// <param name="arguments">The constructor arguments</param>
     /// <returns>An instance of the given <see cref="Type"/></returns>
-    public T FactoryResolve<T>(params object[] arguments) => ResolveInternal<T>(arguments, null, true);
+    public T FactoryResolve<T>(params object?[] arguments) => ResolveInternal<T>(arguments, null, true);
 
     /// <summary>
     /// Gets an instance of a given registered <see cref="Type"/>
@@ -127,7 +127,7 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <param name="resolveStack">The current resolve stack</param>
     /// <param name="isFactoryResolve">True if resolve is called from factory, false (default) if not</param>
     /// <returns>An instance of the given registered <see cref="Type"/></returns>
-    private T ResolveInternal<T>(object[]? arguments, List<Type>? resolveStack = null, bool isFactoryResolve = false) => ResolveInstance<T>(TryResolve<T>(arguments, resolveStack, isFactoryResolve));
+    private T ResolveInternal<T>(object?[]? arguments, List<Type>? resolveStack = null, bool isFactoryResolve = false) => ResolveInstance<T>(TryResolve<T>(arguments, resolveStack, isFactoryResolve));
 
     /// <summary>
     /// Tries to resolve the given <see cref="Type"/> with the given arguments
@@ -484,8 +484,6 @@ public class IocContainer : IIocContainer, IIocResolver
     private (bool result, List<object?>? parameters, List<ConstructorNotMatchingException>? exceptions) TryGetConstructorResolveStack(ConstructorInfo constructor, object?[]? arguments, List<Type> resolveStack)
     {
         List<ParameterInfo> constructorParameters = constructor.GetParameters().ToList();
-        if (!constructorParameters.Any())
-            return (true, null, null);
             
         List<ConstructorNotMatchingException> exceptions = new();
         List<object?> parameters = new();
@@ -500,10 +498,15 @@ public class IocContainer : IIocContainer, IIocResolver
             if (passedArguments != null)
             {
                 fittingArgument = passedArguments.FirstOrGiven<object?, InternalResolvePlaceholder>(a =>
-                    a?.GetType() == parameter.ParameterType || parameter.ParameterType.IsInstanceOfType(a));
-                    
+                    a?.GetType() == parameter.ParameterType ||
+                    parameter.ParameterType.IsInstanceOfType(a) ||
+                    a is NullParameter nullParameter && parameter.ParameterType.IsAssignableFrom(nullParameter.ParameterType));
+
                 if (fittingArgument is not InternalResolvePlaceholder)
                     passedArguments.Remove(fittingArgument);
+                
+                if (fittingArgument is NullParameter)
+                    fittingArgument = null;
             }
 
             if (fittingArgument is InternalResolvePlaceholder)
@@ -537,7 +540,6 @@ public class IocContainer : IIocContainer, IIocResolver
         
         exceptions.Add(new ConstructorNotMatchingException(constructor, new Exception("Not all given arguments were used!")));
         return (false, parameters, exceptions);
-
     }
 
     /// <summary>

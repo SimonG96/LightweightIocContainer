@@ -96,7 +96,7 @@ public class IocValidator
         }
         catch (Exception)
         {
-            return null; 
+            return new NullParameter(type); 
         }
     }
 }
