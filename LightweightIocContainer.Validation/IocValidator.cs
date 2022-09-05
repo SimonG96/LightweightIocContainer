@@ -90,7 +90,7 @@ public class IocValidator
         if (type == typeof(string))
             return string.Empty;
 
-        if (type.IsInterface)
+        if (!type.IsInterface)
             return new NullParameter(type);
             
         try
