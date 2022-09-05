@@ -48,7 +48,7 @@ public class IocValidator
                 
             if (registration is IWithFactoryInternal { Factory: { } } withFactoryRegistration)
             {
-                (from createMethod in withFactoryRegistration.Factory.CreateMethods
+                (from createMethod in withFactoryRegistration.Factory.CreateMethods.Where(m => m.ReturnType == registration.InterfaceType)
                         select createMethod.GetParameters().Select(p => p.ParameterType)
                         into parameterTypes 
                         select (from parameterType in parameterTypes
