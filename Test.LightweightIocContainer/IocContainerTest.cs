@@ -26,6 +26,14 @@ public class IocContainerTest
     {
 
     }
+    
+    private class TestMultiton : ITest
+    {
+        public TestMultiton(MultitonScope multitonScope)
+        {
+            
+        }
+    }
 
     [UsedImplicitly]
     private class TestConstructor : ITest
@@ -248,7 +256,7 @@ public class IocContainerTest
     [Test]
     public void TestResolveMultiton()
     {
-        _iocContainer.Register(r => r.AddMultiton<ITest, Test, MultitonScope>());
+        _iocContainer.Register(r => r.AddMultiton<ITest, TestMultiton, MultitonScope>());
 
         MultitonScope scope1 = new();
         MultitonScope scope2 = new();

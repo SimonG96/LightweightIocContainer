@@ -167,16 +167,9 @@ public class IocContainer : IIocContainer, IIocResolver
         if (registration is IWithParametersInternal { Parameters: { } } registrationWithParameters)
             arguments = UpdateArgumentsWithRegistrationParameters(registrationWithParameters, arguments);
 
-        List<object?>? resolveArguments = arguments?.ToList();
-        if (resolveArguments != null && registration is IMultitonRegistration multitonReg) //remove scope argument for multitions
-        {
-            object multitonScopeArgument = TryGetMultitonScopeArgument(multitonReg, resolveArguments);
-            resolveArguments.Remove(multitonScopeArgument);
-        }
-
         Type registeredType = GetType<T>(registration);
         (bool result, List<object?>? parametersToResolve, NoMatchingConstructorFoundException? exception) = 
-            TryGetTypeResolveStack(registeredType, resolveArguments, internalResolveStack);
+            TryGetTypeResolveStack(registeredType, arguments, internalResolveStack);
 
         if (registration is IMultitonRegistration multitonRegistration)
         {

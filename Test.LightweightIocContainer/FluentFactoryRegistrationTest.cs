@@ -101,6 +101,14 @@ public class FluentFactoryRegistrationTest
         public ITest CreateTest(string name = null) => throw new NotImplementedException();
         public ITest Create(byte id) => throw new NotImplementedException();
     }
+
+    public class TestMultiton : ITest
+    {
+        public TestMultiton(MultitonScope scope)
+        {
+            
+        }
+    }
         
     [UsedImplicitly]
     public interface IMultitonTestFactory
@@ -290,7 +298,7 @@ public class FluentFactoryRegistrationTest
     [Test]
     public void TestResolveMultitonFromFactory()
     {
-        _iocContainer.Register(r => r.AddMultiton<ITest, Test, MultitonScope>().WithFactory<IMultitonTestFactory>());
+        _iocContainer.Register(r => r.AddMultiton<ITest, TestMultiton, MultitonScope>().WithFactory<IMultitonTestFactory>());
         
         MultitonScope scope1 = new();
         MultitonScope scope2 = new();
@@ -309,7 +317,7 @@ public class FluentFactoryRegistrationTest
     [Test]
     public void TestResolveMultitonFromFactoryClearInstances()
     {
-        _iocContainer.Register(r => r.AddMultiton<ITest, Test, MultitonScope>().WithFactory<IMultitonTestFactory>());
+        _iocContainer.Register(r => r.AddMultiton<ITest, TestMultiton, MultitonScope>().WithFactory<IMultitonTestFactory>());
         
         MultitonScope scope1 = new();
         MultitonScope scope2 = new();

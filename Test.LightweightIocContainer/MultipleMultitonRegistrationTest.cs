@@ -26,8 +26,13 @@ public class MultipleMultitonRegistrationTest
     }
         
     [UsedImplicitly]
-    public class Test : ITest
+    private class Test : ITest
     {
+        public Test(MultitonScope scope)
+        {
+            
+        }
+        
         public int Number { get; private set; }
 
         public void DoSomething(int number) => Number = number;

@@ -23,6 +23,14 @@ public class DisposeStrategyTest
         public void Dispose() => throw new Exception();
     }
     
+    private class TestMultiton : Test
+    {
+        public TestMultiton(int scope)
+        {
+            
+        }
+    }
+    
     private class TestNotDisposable
     {
         
@@ -44,7 +52,7 @@ public class DisposeStrategyTest
     public void TestValidContainerDisposeStrategyMultiton()
     {
         IocContainer iocContainer = new();
-        iocContainer.Register(r => r.AddMultiton<ITest, Test, int>().WithDisposeStrategy(DisposeStrategy.Container));
+        iocContainer.Register(r => r.AddMultiton<ITest, TestMultiton, int>().WithDisposeStrategy(DisposeStrategy.Container));
 
         iocContainer.Resolve<ITest>(1);
         
@@ -66,7 +74,7 @@ public class DisposeStrategyTest
     public void TestValidAppDisposeStrategyMultiton()
     {
         IocContainer iocContainer = new();
-        iocContainer.Register(r => r.AddMultiton<ITest, Test, int>().WithDisposeStrategy(DisposeStrategy.Application));
+        iocContainer.Register(r => r.AddMultiton<ITest, TestMultiton, int>().WithDisposeStrategy(DisposeStrategy.Application));
 
         iocContainer.Resolve<ITest>(1);
         
