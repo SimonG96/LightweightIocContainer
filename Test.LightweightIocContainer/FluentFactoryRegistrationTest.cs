@@ -142,11 +142,9 @@ public class FluentFactoryRegistrationTest
 
         ITestFactory factory = _iocContainer.Resolve<ITestFactory>();
         ITest test = factory.Create();
-        ITest test2 = factory.CreateTest();
             
         Assert.IsInstanceOf<ITestFactory>(factory);
         Assert.IsInstanceOf<ITest>(test);
-        Assert.IsInstanceOf<ITest>(test2);
     }
         
     [Test]
