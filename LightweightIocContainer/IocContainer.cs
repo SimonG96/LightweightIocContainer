@@ -167,9 +167,13 @@ public class IocContainer : IIocContainer, IIocResolver
         if (registration is IWithParametersInternal { Parameters: { } } registrationWithParameters)
             arguments = UpdateArgumentsWithRegistrationParameters(registrationWithParameters, arguments);
 
+        List<object?>? resolveArguments = arguments?.ToList();
+        if (resolveArguments != null && registration is IMultitonRegistration)
+            resolveArguments.RemoveAt(0); //remove scope argument for multitions
+
         Type registeredType = GetType<T>(registration);
         (bool result, List<object?>? parametersToResolve, NoMatchingConstructorFoundException? exception) = 
-            TryGetTypeResolveStack(registeredType, arguments, internalResolveStack);
+            TryGetTypeResolveStack(registeredType, resolveArguments, internalResolveStack);
 
         if (registration is IMultitonRegistration multitonRegistration)
         {
@@ -450,7 +454,7 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <para>parameters: The parameters needed to resolve the given <see cref="Type"/></para>
     /// <para>exception: A <see cref="NoMatchingConstructorFoundException"/> if no matching constructor was found</para>
     /// </returns>
-    private (bool result, List<object?>? parameters, NoMatchingConstructorFoundException? exception) TryGetTypeResolveStack(Type type, object?[]? arguments, List<Type> resolveStack)
+    private (bool result, List<object?>? parameters, NoMatchingConstructorFoundException? exception) TryGetTypeResolveStack(Type type, IReadOnlyCollection<object?>? arguments, List<Type> resolveStack)
     {
         NoMatchingConstructorFoundException? noMatchingConstructorFoundException = null;
             
@@ -481,7 +485,7 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <para>parameters: The parameters needed to resolve the given <see cref="Type"/></para>
     /// <para>exception: A List of <see cref="ConstructorNotMatchingException"/>s if the constructor is not matching</para>
     /// </returns>
-    private (bool result, List<object?>? parameters, List<ConstructorNotMatchingException>? exceptions) TryGetConstructorResolveStack(ConstructorInfo constructor, object?[]? arguments, List<Type> resolveStack)
+    private (bool result, List<object?>? parameters, List<ConstructorNotMatchingException>? exceptions) TryGetConstructorResolveStack(ConstructorInfo constructor, IReadOnlyCollection<object?>? arguments, List<Type> resolveStack)
     {
         List<ParameterInfo> constructorParameters = constructor.GetParameters().ToList();
             
