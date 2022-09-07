@@ -159,7 +159,7 @@ internal abstract class RegistrationBase : IRegistrationBase, IWithFactoryIntern
     /// <summary>
     /// Validate that no registration that isn't derived from <see cref="IMultitonRegistration"/> has <see cref="LightweightIocContainer.Lifestyle.Multiton"/>
     /// </summary>
-    /// <exception cref="InvalidRegistrationException"></exception>
+    /// <exception cref="InvalidRegistrationException">Can't register a type as Lifestyle.Multiton without a scope (Registration is not of type IMultitonRegistration)</exception>
     private void ValidateMultiton()
     {
         //don't allow lifestyle.multiton without iMultitonRegistration
