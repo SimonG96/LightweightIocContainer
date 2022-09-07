@@ -2,6 +2,7 @@
 // Created: 2019-05-20
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
+using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
 
@@ -37,4 +38,11 @@ public interface IIocContainer : IDisposable
     /// <typeparam name="T">The given <see cref="Type"/></typeparam>
     /// <returns>True if the given <see cref="Type"/> is registered with this <see cref="IIocContainer"/>, false if not</returns>
     bool IsTypeRegistered<T>();
+
+    /// <summary>
+    /// Register a custom <see cref="Attribute"/> that can annotate a constructor to be ignored
+    /// </summary>
+    /// <typeparam name="T">The custom <see cref="Attribute"/></typeparam>
+    /// <exception cref="InvalidIgnoreConstructorAttributeException{T}">The passed <see cref="Attribute"/> can't be used on a constructor</exception>
+    void RegisterIgnoreConstructorAttribute<T>() where T : Attribute;
 }

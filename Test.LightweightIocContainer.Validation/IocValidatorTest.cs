@@ -4,7 +4,6 @@
 
 using JetBrains.Annotations;
 using LightweightIocContainer;
-using LightweightIocContainer.Annotations;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
@@ -33,15 +32,6 @@ public class IocValidatorTest
         public Test(IParameter parameter) => parameter.Method();
     }
 
-    [UsedImplicitly]
-    private class TestViewModelIgnoreDesignTimeCtor : ITest
-    {
-        public TestViewModelIgnoreDesignTimeCtor(IParameter parameter) => parameter.Method();
-        
-        [IocIgnoreConstructor]
-        public TestViewModelIgnoreDesignTimeCtor() => throw new Exception();
-    }
-    
     [UsedImplicitly]
     private class TestViewModelDontIgnoreDesignTimeCtor : ITest
     {

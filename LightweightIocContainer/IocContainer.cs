@@ -4,7 +4,6 @@
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using LightweightIocContainer.Annotations;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Factories;
@@ -26,17 +25,20 @@ public class IocContainer : IIocContainer, IIocResolver
     private readonly List<(Type type, object? instance)> _singletons = new();
     private readonly List<(Type type, Type scope, ConditionalWeakTable<object, object?> instances)> _multitons = new();
 
+    private readonly List<Type> _ignoreConstructorAttributes;
+
     /// <summary>
     /// The main container that carries all the <see cref="IRegistration"/>s and can resolve all the types you'll ever want
     /// </summary>
     public IocContainer()
     {
         _registrationFactory = new RegistrationFactory(this);
+        _ignoreConstructorAttributes = new List<Type>();
         Registrations = new List<IRegistration>();
     }
 
     internal List<IRegistration> Registrations { get; }
-
+    
     /// <summary>
     /// Install the given installers for the current <see cref="IocContainer"/>
     /// </summary>
@@ -197,7 +199,7 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <param name="type">The registered <see cref="Type"/></param>
     /// <param name="arguments">The given arguments</param>
     /// <param name="resolveStack">The current resolve stack</param>
-    /// <param name="isFactoryResolve"></param>
+    /// <param name="isFactoryResolve">True if resolve is called from factory, false (default) if not</param>
     /// <returns>An instance of the given registered <see cref="Type"/>, an <see cref="InternalToBeResolvedPlaceholder"/> if parameters need to be resolved or an <see cref="InternalFactoryMethodPlaceholder{T}"/> if a factory method is used to create an instance</returns>
     /// <exception cref="TypeNotRegisteredException">The given <see cref="Type"/> is not registered</exception>
     /// <exception cref="DirectResolveWithRegisteredFactoryNotAllowed">A direct resolve with a registered factory is not allowed</exception>
@@ -259,11 +261,11 @@ public class IocContainer : IIocContainer, IIocResolver
     /// Resolve the given object instance without generic arguments
     /// </summary>
     /// <param name="type">The <see cref="Type"/> of the returned instance</param>
-    /// <param name="resolveObject"></param>
+    /// <param name="resolvedObject">The given resolved object</param>
     /// <returns>An instance of the given resolved object</returns>
     /// <exception cref="InternalResolveException">Resolve returned wrong type</exception>
-    private object? ResolveInstanceNonGeneric(Type type, object resolveObject) => 
-        GenericMethodCaller.CallPrivate(this, nameof(ResolveInstance), type, resolveObject);
+    private object? ResolveInstanceNonGeneric(Type type, object resolvedObject) => 
+        GenericMethodCaller.CallPrivate(this, nameof(ResolveInstance), type, resolvedObject);
 
     /// <summary>
     /// Creates an instance of a given <see cref="Type"/>
@@ -581,7 +583,7 @@ public class IocContainer : IIocContainer, IIocResolver
     private List<ConstructorInfo> TryGetSortedConstructors(Type type)
     {
         List<ConstructorInfo> sortedConstructors = type.GetConstructors()
-            .Where(c => c.GetCustomAttribute<IocIgnoreConstructorAttribute>() == null)
+            .Where(c => !c.GetCustomAttributes().Any(a => _ignoreConstructorAttributes.Contains(a.GetType())))
             .OrderByDescending(c => c.GetParameters().Length)
             .ToList();
         
@@ -650,6 +652,20 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <typeparam name="T">The given <see cref="Type"/></typeparam>
     /// <returns>True if the given <see cref="Type"/> is registered with this <see cref="IocContainer"/>, false if not</returns>
     public bool IsTypeRegistered<T>() => FindRegistration<T>() != null;
+
+    /// <summary>
+    /// Register a custom <see cref="Attribute"/> that can annotate a constructor to be ignored
+    /// </summary>
+    /// <typeparam name="T">The custom <see cref="Attribute"/></typeparam>
+    /// <exception cref="InvalidIgnoreConstructorAttributeException{T}">The passed <see cref="Attribute"/> can't be used on a constructor</exception>
+    public void RegisterIgnoreConstructorAttribute<T>() where T : Attribute
+    {
+        AttributeUsageAttribute? attributeUsage = typeof(T).GetCustomAttribute<AttributeUsageAttribute>();
+        if (attributeUsage == null || !attributeUsage.ValidOn.HasFlag(AttributeTargets.Constructor))
+            throw new InvalidIgnoreConstructorAttributeException<T>();
+        
+        _ignoreConstructorAttributes.Add(typeof(T));
+    }
 
     /// <summary>
     /// The <see cref="IDisposable.Dispose"/> method

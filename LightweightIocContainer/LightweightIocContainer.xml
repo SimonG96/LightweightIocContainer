@@ -13,11 +13,6 @@
             <param name="action">The given <see cref="T:System.Action`1"/> to convert</param>
             <returns>An <see cref="T:System.Action`1"/> converted from the given <see cref="T:System.Action`1"/></returns>
         </member>
-        <member name="T:LightweightIocContainer.Annotations.IocIgnoreConstructorAttribute">
-            <summary>
-            If a constructor is annotated with this attribute it will be ignored by the <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/>
-            </summary>
-        </member>
         <member name="T:LightweightIocContainer.Creator">
             <summary>
             Helper for dynamic instance creation
@@ -213,6 +208,17 @@
             The registration of a Factory is not valid
             </summary>
             <param name="message">The exception message</param>
+        </member>
+        <member name="T:LightweightIocContainer.Exceptions.InvalidIgnoreConstructorAttributeException`1">
+            <summary>
+            The passed <see cref="T:System.Attribute"/> can't be used on a constructor
+            </summary>
+            <typeparam name="T">The used <see cref="T:System.Attribute"/></typeparam>
+        </member>
+        <member name="M:LightweightIocContainer.Exceptions.InvalidIgnoreConstructorAttributeException`1.#ctor">
+            <summary>
+            The passed <see cref="T:System.Attribute"/> can't be used on a constructor
+            </summary>
         </member>
         <member name="T:LightweightIocContainer.Exceptions.InvalidRegistrationException">
             <summary>
@@ -525,6 +531,13 @@
             </summary>
             <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
             <returns>True if the given <see cref="T:System.Type"/> is registered with this <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/>, false if not</returns>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocContainer.RegisterIgnoreConstructorAttribute``1">
+            <summary>
+            Register a custom <see cref="T:System.Attribute"/> that can annotate a constructor to be ignored
+            </summary>
+            <typeparam name="T">The custom <see cref="T:System.Attribute"/></typeparam>
+            <exception cref="T:LightweightIocContainer.Exceptions.InvalidIgnoreConstructorAttributeException`1">The passed <see cref="T:System.Attribute"/> can't be used on a constructor</exception>
         </member>
         <member name="T:LightweightIocContainer.Interfaces.IIocResolver">
             <summary>
@@ -1011,7 +1024,7 @@
             <param name="type">The registered <see cref="T:System.Type"/></param>
             <param name="arguments">The given arguments</param>
             <param name="resolveStack">The current resolve stack</param>
-            <param name="isFactoryResolve"></param>
+            <param name="isFactoryResolve">True if resolve is called from factory, false (default) if not</param>
             <returns>An instance of the given registered <see cref="T:System.Type"/>, an <see cref="T:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder"/> if parameters need to be resolved or an <see cref="T:LightweightIocContainer.ResolvePlaceholders.InternalFactoryMethodPlaceholder`1"/> if a factory method is used to create an instance</returns>
             <exception cref="T:LightweightIocContainer.Exceptions.TypeNotRegisteredException">The given <see cref="T:System.Type"/> is not registered</exception>
             <exception cref="T:LightweightIocContainer.Exceptions.DirectResolveWithRegisteredFactoryNotAllowed">A direct resolve with a registered factory is not allowed</exception>
@@ -1041,7 +1054,7 @@
             Resolve the given object instance without generic arguments
             </summary>
             <param name="type">The <see cref="T:System.Type"/> of the returned instance</param>
-            <param name="resolveObject"></param>
+            <param name="resolvedObject">The given resolved object</param>
             <returns>An instance of the given resolved object</returns>
             <exception cref="T:LightweightIocContainer.Exceptions.InternalResolveException">Resolve returned wrong type</exception>
         </member>
@@ -1185,6 +1198,13 @@
             </summary>
             <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
             <returns>True if the given <see cref="T:System.Type"/> is registered with this <see cref="T:LightweightIocContainer.IocContainer"/>, false if not</returns>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.RegisterIgnoreConstructorAttribute``1">
+            <summary>
+            Register a custom <see cref="T:System.Attribute"/> that can annotate a constructor to be ignored
+            </summary>
+            <typeparam name="T">The custom <see cref="T:System.Attribute"/></typeparam>
+            <exception cref="T:LightweightIocContainer.Exceptions.InvalidIgnoreConstructorAttributeException`1">The passed <see cref="T:System.Attribute"/> can't be used on a constructor</exception>
         </member>
         <member name="M:LightweightIocContainer.IocContainer.Dispose">
             <summary>
@@ -1528,7 +1548,7 @@
             <summary>
             Validate that no registration that isn't derived from <see cref="T:LightweightIocContainer.Interfaces.Registrations.IMultitonRegistration"/> has <see cref="F:LightweightIocContainer.Lifestyle.Multiton"/>
             </summary>
-            <exception cref="T:LightweightIocContainer.Exceptions.InvalidRegistrationException"></exception>
+            <exception cref="T:LightweightIocContainer.Exceptions.InvalidRegistrationException">Can't register a type as Lifestyle.Multiton without a scope (Registration is not of type IMultitonRegistration)</exception>
         </member>
         <member name="M:LightweightIocContainer.Registrations.RegistrationBase.ValidateFactory">
             <summary>
