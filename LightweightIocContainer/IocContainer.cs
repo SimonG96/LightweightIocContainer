@@ -227,7 +227,14 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <exception cref="InternalResolveException">Getting resolve stack failed without exception</exception>
     internal (bool success, object resolvedObject, Exception? exception) TryResolveNonGeneric(Type type, object?[]? arguments, List<Type>? resolveStack, bool isFactoryResolve = false)
     {
-        object? resolvedValue = GenericMethodCaller.CallPrivate(this, nameof(TryResolve), type, arguments, resolveStack, isFactoryResolve);
+        MethodInfo? method = typeof(IocContainer).GetMethod(nameof(TryResolve), BindingFlags.NonPublic | BindingFlags.Instance);
+        MethodInfo? genericMethod = method?.MakeGenericMethod(type);
+
+        if (genericMethod == null)
+            throw new GenericMethodNotFoundException(nameof(TryResolve));
+        
+        object? resolvedValue = genericMethod.Invoke(this, new object?[]{arguments, resolveStack, isFactoryResolve});
+        
         if (resolvedValue is not ValueTuple<bool, object, Exception?> resolvedTuple)
             throw new Exception("Invalid return value!");
 
