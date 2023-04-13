@@ -13,7 +13,7 @@ internal static class EnumerableExtension
     /// <typeparam name="TGiven">The given <see cref="Type"/> to return if the <see cref="IEnumerable{T}"/> contains no elements</typeparam>
     /// <param name="source">The given <see cref="IEnumerable{T}"/></param>
     /// <returns>The first element of the <see cref="IEnumerable{T}"/>, or a new instance of a given <see cref="Type"/> if the <see cref="IEnumerable{T}"/> contains no elements</returns>
-    public static TSource FirstOrGiven<TSource, TGiven>(this IEnumerable<TSource> source) where TGiven : TSource, new() =>
+    public static TSource FirstOrGiven<TSource, TGiven>(this IReadOnlyCollection<TSource> source) where TGiven : TSource, new() =>
         source.TryGetFirst<TSource, TGiven>(null);
 
     /// <summary>
@@ -24,7 +24,7 @@ internal static class EnumerableExtension
     /// <param name="source">The given <see cref="IEnumerable{T}"/></param>
     /// <param name="predicate">A function to test each element for a condition</param>
     /// <returns>The first element of the <see cref="IEnumerable{T}"/> that satisfies a condition, or a new instance of the given <see cref="Type"/> if no such element is found</returns>
-    public static TSource FirstOrGiven<TSource, TGiven>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) where TGiven : TSource, new() =>
+    public static TSource FirstOrGiven<TSource, TGiven>(this IReadOnlyCollection<TSource> source, Func<TSource, bool> predicate) where TGiven : TSource, new() =>
         source.TryGetFirst<TSource, TGiven>(predicate);
 
     /// <summary>
@@ -35,17 +35,12 @@ internal static class EnumerableExtension
     /// <param name="source">The given <see cref="IEnumerable{T}"/></param>
     /// <param name="predicate">A function to test each element for a condition</param>
     /// <returns>The first element of the <see cref="IEnumerable{T}"/> or a new instance of the given <see cref="Type"/> when no element is found</returns>
-    private static TSource TryGetFirst<TSource, TGiven>(this IEnumerable<TSource> source, Func<TSource, bool>? predicate) where TGiven : TSource, new()
-    {
-        try
-        {
-            return predicate == null ? source.First() : source.First(predicate);
-        }
-        catch (Exception)
-        {
-            return new TGiven();
-        }
-    }
+    private static TSource TryGetFirst<TSource, TGiven>(this IReadOnlyCollection<TSource> source, Func<TSource, bool>? predicate) where TGiven : TSource, new() => 
+        predicate is null ? 
+            !source.Any() ? new TGiven()
+                : source.First()
+            : source.Any(predicate) ? source.First(predicate)
+                : new TGiven();
 
     /// <summary>
     /// Executes an <see cref="Action{T}"/> for each item in an <see cref="IEnumerable{T}"/>
