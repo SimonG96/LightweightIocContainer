@@ -129,7 +129,17 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <param name="resolveStack">The current resolve stack</param>
     /// <param name="isFactoryResolve">True if resolve is called from factory, false (default) if not</param>
     /// <returns>An instance of the given registered <see cref="Type"/></returns>
-    private T ResolveInternal<T>(object?[]? arguments, List<Type>? resolveStack = null, bool isFactoryResolve = false) => ResolveInstance<T>(TryResolve<T>(arguments, resolveStack, isFactoryResolve));
+    private T ResolveInternal<T>(object?[]? arguments, List<Type>? resolveStack = null, bool isFactoryResolve = false)
+    {
+        (bool success, object resolvedObject, Exception? exception) = TryResolve<T>(arguments, resolveStack, isFactoryResolve);
+        if (success)
+            return ResolveInstance<T>(resolvedObject);
+
+        if (exception is not null)
+            throw exception;
+
+        throw new Exception("Resolve Error");
+    }
 
     /// <summary>
     /// Tries to resolve the given <see cref="Type"/> with the given arguments
@@ -145,28 +155,36 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <exception cref="MultitonResolveException">Tried resolving a multiton without scope argument</exception>
     /// <exception cref="NoMatchingConstructorFoundException">No matching constructor for the given <see cref="Type"/> found</exception>
     /// <exception cref="InternalResolveException">Getting resolve stack failed without exception</exception>
-    private object TryResolve<T>(object?[]? arguments, List<Type>? resolveStack, bool isFactoryResolve = false)
+    private (bool success, object resolvedObject, Exception? exception) TryResolve<T>(object?[]? arguments, List<Type>? resolveStack, bool isFactoryResolve = false)
     {
-        IRegistration registration = FindRegistration<T>() ?? throw new TypeNotRegisteredException(typeof(T));
+        IRegistration? registration = FindRegistration<T>();
+        if (registration == null)
+            return (false, new object(), new TypeNotRegisteredException(typeof(T)));
 
         List<Type> internalResolveStack = resolveStack == null ? new List<Type>() : new List<Type>(resolveStack);
-        internalResolveStack = CheckForCircularDependencies<T>(internalResolveStack);
+        (bool success, internalResolveStack, CircularDependencyException? circularDependencyException) = CheckForCircularDependencies<T>(internalResolveStack);
+        
+        if (!success && circularDependencyException is not null)
+            return (false, new object(), circularDependencyException);
+        
+        if (!success)
+            throw new Exception("Invalid return type!");
 
         object? existingInstance = TryGetExistingInstance<T>(registration, arguments);
         if (existingInstance != null)
-            return existingInstance;
+            return (true, existingInstance, null);
 
         switch (registration)
         {
-            case IWithFactoryInternal { Factory: { } } when !isFactoryResolve:
-                throw new DirectResolveWithRegisteredFactoryNotAllowed(typeof(T));
-            case ISingleTypeRegistration<T> singleTypeRegistration when singleTypeRegistration.InterfaceType.IsInterface && singleTypeRegistration.FactoryMethod == null:
-                throw new InvalidRegistrationException($"Can't register an interface without its implementation type or without a factory method (Type: {singleTypeRegistration.InterfaceType}).");
-            case ISingleTypeRegistration<T> { FactoryMethod: { } } singleTypeRegistration:
-                return new InternalFactoryMethodPlaceholder<T>(singleTypeRegistration);
+            case IWithFactoryInternal { Factory: not null } when !isFactoryResolve:
+                return (false, new object(), new DirectResolveWithRegisteredFactoryNotAllowed(typeof(T)));
+            case ISingleTypeRegistration<T> { InterfaceType.IsInterface: true, FactoryMethod: null } singleTypeRegistration:
+                return (false, new object(), new InvalidRegistrationException($"Can't register an interface without its implementation type or without a factory method (Type: {singleTypeRegistration.InterfaceType})."));
+            case ISingleTypeRegistration<T> { FactoryMethod: not null } singleTypeRegistration:
+                return (true, new InternalFactoryMethodPlaceholder<T>(singleTypeRegistration), null);
         }
 
-        if (registration is IWithParametersInternal { Parameters: { } } registrationWithParameters)
+        if (registration is IWithParametersInternal { Parameters: not null } registrationWithParameters)
             arguments = UpdateArgumentsWithRegistrationParameters(registrationWithParameters, arguments);
 
         Type registeredType = GetType<T>(registration);
@@ -176,7 +194,7 @@ public class IocContainer : IIocContainer, IIocResolver
         if (registration is IMultitonRegistration multitonRegistration)
         {
             if (arguments == null || !arguments.Any())
-                throw new MultitonResolveException("Can not resolve multiton without arguments.", registration.InterfaceType);
+                return (false, new object(), new MultitonResolveException("Can not resolve multiton without arguments.", registration.InterfaceType));
 
             object multitonScopeArgument = TryGetMultitonScopeArgument(multitonRegistration, arguments);
 
@@ -185,12 +203,12 @@ public class IocContainer : IIocContainer, IIocResolver
         }
             
         if (result) 
-            return new InternalToBeResolvedPlaceholder(registeredType, registration, parametersToResolve);
+            return (true, new InternalToBeResolvedPlaceholder(registeredType, registration, parametersToResolve), null);
             
         if (exception != null)
-            throw exception;
+            return (false, new object(), exception);
 
-        throw new InternalResolveException("Getting resolve stack failed without exception.");
+        return (false, new object(), new InternalResolveException("Getting resolve stack failed without exception."));
     }
 
     /// <summary>
@@ -207,9 +225,15 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <exception cref="MultitonResolveException">Tried resolving a multiton without scope argument</exception>
     /// <exception cref="NoMatchingConstructorFoundException">No matching constructor for the given <see cref="Type"/> found</exception>
     /// <exception cref="InternalResolveException">Getting resolve stack failed without exception</exception>
-    internal object? TryResolveNonGeneric(Type type, object?[]? arguments, List<Type>? resolveStack, bool isFactoryResolve = false) => 
-        GenericMethodCaller.CallPrivate(this, nameof(TryResolve), type, arguments, resolveStack, isFactoryResolve);
-        
+    internal (bool success, object resolvedObject, Exception? exception) TryResolveNonGeneric(Type type, object?[]? arguments, List<Type>? resolveStack, bool isFactoryResolve = false)
+    {
+        object? resolvedValue = GenericMethodCaller.CallPrivate(this, nameof(TryResolve), type, arguments, resolveStack, isFactoryResolve);
+        if (resolvedValue is not ValueTuple<bool, object, Exception?> resolvedTuple)
+            throw new Exception("Invalid return value!");
+
+        return resolvedTuple;
+    }
+
     /// <summary>
     /// Recursively resolve a <see cref="Type"/> with the given parameters for an <see cref="InternalToBeResolvedPlaceholder"/>
     /// </summary>
@@ -513,14 +537,13 @@ public class IocContainer : IIocContainer, IIocResolver
 
             if (fittingArgument is InternalResolvePlaceholder)
             {
-                try
-                {
-                    fittingArgument = TryResolveNonGeneric(parameter.ParameterType, null, resolveStack);
-                }
-                catch (Exception exception)
-                {
+                (bool success, object? resolvedObject, Exception? exception) = TryResolveNonGeneric(parameter.ParameterType, null, resolveStack);
+                if (success)
+                    fittingArgument = resolvedObject;
+                else if (!success && exception is not null)
                     exceptions.Add(new ConstructorNotMatchingException(constructor, exception));
-                }
+                else
+                    throw new Exception("Invalid return value!");
 
                 if (fittingArgument is InternalResolvePlaceholder && passedArguments != null)
                 {
@@ -615,16 +638,16 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <typeparam name="T">The given <see cref="Type"/></typeparam>
     /// <returns>The new resolve stack</returns>
     /// <exception cref="CircularDependencyException">A circular dependency was detected</exception>
-    private List<Type> CheckForCircularDependencies<T>(List<Type>? resolveStack)
+    private (bool success, List<Type> resolveStack, CircularDependencyException? exception) CheckForCircularDependencies<T>(List<Type>? resolveStack)
     {
         if (resolveStack == null) //first resolve call
             resolveStack = new List<Type> {typeof(T)}; //create new stack and add the currently resolving type to the stack
         else if (resolveStack.Contains(typeof(T)))
-            throw new CircularDependencyException(typeof(T), resolveStack); //currently resolving type is still resolving -> circular dependency
+            return (false, new List<Type>(), new CircularDependencyException(typeof(T), resolveStack)); //currently resolving type is still resolving -> circular dependency
         else //not the first resolve call in chain but no circular dependencies for now
             resolveStack.Add(typeof(T)); //add currently resolving type to the stack
             
-        return resolveStack;
+        return (true, resolveStack, null);
     }
 
     /// <summary>

@@ -71,14 +71,12 @@ public class IocValidator
 
     private void TryResolve(Type type, object?[]? arguments, List<Exception> validationExceptions, bool isFactoryResolve = false)
     {
-        try
-        {
-            _iocContainer.TryResolveNonGeneric(type, arguments, null, isFactoryResolve);
-        }
-        catch (Exception exception)
-        {
+        (bool success, object _, Exception? exception) = _iocContainer.TryResolveNonGeneric(type, arguments, null, isFactoryResolve);
+        if (success)
+            return;
+        
+        if (exception is not null)
             validationExceptions.Add(exception);
-        }
     }
 
     private T GetMock<T>() where T : class => new Mock<T>().Object;
