@@ -49,7 +49,7 @@
             The <see cref="T:LightweightIocContainer.IocContainer"/> is responsible for disposing the instance when itself is disposed
             </summary>
         </member>
-        <member name="M:LightweightIocContainer.EnumerableExtension.FirstOrGiven``2(System.Collections.Generic.IEnumerable{``0})">
+        <member name="M:LightweightIocContainer.EnumerableExtension.FirstOrGiven``2(System.Collections.Generic.IReadOnlyCollection{``0})">
             <summary>
             Returns the first element of a <see cref="T:System.Collections.Generic.IEnumerable`1"/>, or a new instance of a given <see cref="T:System.Type"/> if the <see cref="T:System.Collections.Generic.IEnumerable`1"/> contains no elements
             </summary>
@@ -58,7 +58,7 @@
             <param name="source">The given <see cref="T:System.Collections.Generic.IEnumerable`1"/></param>
             <returns>The first element of the <see cref="T:System.Collections.Generic.IEnumerable`1"/>, or a new instance of a given <see cref="T:System.Type"/> if the <see cref="T:System.Collections.Generic.IEnumerable`1"/> contains no elements</returns>
         </member>
-        <member name="M:LightweightIocContainer.EnumerableExtension.FirstOrGiven``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+        <member name="M:LightweightIocContainer.EnumerableExtension.FirstOrGiven``2(System.Collections.Generic.IReadOnlyCollection{``0},System.Func{``0,System.Boolean})">
             <summary>
             Returns the first element of a <see cref="T:System.Collections.Generic.IEnumerable`1"/> that satisfies a condition, or a new instance of a given <see cref="T:System.Type"/> if no such element is found
             </summary>
@@ -68,7 +68,7 @@
             <param name="predicate">A function to test each element for a condition</param>
             <returns>The first element of the <see cref="T:System.Collections.Generic.IEnumerable`1"/> that satisfies a condition, or a new instance of the given <see cref="T:System.Type"/> if no such element is found</returns>
         </member>
-        <member name="M:LightweightIocContainer.EnumerableExtension.TryGetFirst``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+        <member name="M:LightweightIocContainer.EnumerableExtension.TryGetFirst``2(System.Collections.Generic.IReadOnlyCollection{``0},System.Func{``0,System.Boolean})">
             <summary>
             Tries to get the first element of the given <see cref="T:System.Collections.Generic.IEnumerable`1"/> or creates a new element of a given <see cref="T:System.Type"/> when no element is found
             </summary>
