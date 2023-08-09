@@ -5,7 +5,7 @@
 using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Exceptions;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Test.LightweightIocContainer;
@@ -148,8 +148,8 @@ public class IocContainerRecursionTest
         _iocContainer.Register(r => r.Add<IFoo, Foo>());
         _iocContainer.Register(r => r.Add<IBar, Bar>());
 
-        Assert.DoesNotThrow(() => _iocContainer.Resolve<IFoo>(new Mock<IBar>().Object));
-        Assert.DoesNotThrow(() => _iocContainer.Resolve<IBar>(new Mock<IFoo>().Object));
+        Assert.DoesNotThrow(() => _iocContainer.Resolve<IFoo>(Substitute.For<IBar>()));
+        Assert.DoesNotThrow(() => _iocContainer.Resolve<IBar>(Substitute.For<IFoo>()));
     }
 
     [Test]

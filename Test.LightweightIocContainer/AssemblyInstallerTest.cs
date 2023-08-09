@@ -9,7 +9,7 @@ using LightweightIocContainer.Installers;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Test.LightweightIocContainer;
@@ -20,7 +20,7 @@ public class AssemblyInstallerTest
     [UsedImplicitly]
     public class TestInstaller : IIocInstaller
     {
-        public void Install(IRegistrationCollector registration) => registration.Add<Mock<IRegistration>>();
+        public void Install(IRegistrationCollector registration) => registration.Add<IRegistration>();
     }
 
     [UsedImplicitly]
@@ -39,15 +39,15 @@ public class AssemblyInstallerTest
             typeof(TestInstaller)
         };
 
-        Mock<AssemblyWrapper> assemblyMock = new();
-        assemblyMock.Setup(a => a.GetTypes()).Returns(types.ToArray);
+        AssemblyWrapper assemblyMock = Substitute.For<AssemblyWrapper>();
+        assemblyMock.GetTypes().Returns(types.ToArray());
 
-        Mock<IRegistrationCollector> registrationCollectorMock = new();
+        IRegistrationCollector registrationCollectorMock = Substitute.For<IRegistrationCollector>();
 
-        AssemblyInstaller assemblyInstaller = new(assemblyMock.Object);
-        assemblyInstaller.Install(registrationCollectorMock.Object);
+        AssemblyInstaller assemblyInstaller = new(assemblyMock);
+        assemblyInstaller.Install(registrationCollectorMock);
 
-        registrationCollectorMock.Verify(r => r.Add<It.IsSubtype<Mock<IRegistration>>>(It.IsAny<Lifestyle>()), Times.Once);
+        registrationCollectorMock.Received(1).Add<IRegistration>(Arg.Any<Lifestyle>());
     }
 
     [Test]
@@ -66,10 +66,10 @@ public class AssemblyInstallerTest
             typeof(TestInstaller)
         };
 
-        Mock<AssemblyWrapper> assemblyMock = new();
-        assemblyMock.Setup(a => a.GetTypes()).Returns(types.ToArray);
+        AssemblyWrapper assemblyMock = Substitute.For<AssemblyWrapper>();
+        assemblyMock.GetTypes().Returns(types.ToArray());
 
         IIocContainer iocContainer = new IocContainer();
-        iocContainer.Install(FromAssembly.Instance(assemblyMock.Object));
+        iocContainer.Install(FromAssembly.Instance(assemblyMock));
     }
 }

@@ -4,7 +4,7 @@ using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Test.LightweightIocContainer;
@@ -119,10 +119,10 @@ public class IocContainerTest
     [Test]
     public void TestInstall()
     {
-        Mock<IIocInstaller> installerMock = new();
-        IIocContainer returnedContainer = _iocContainer.Install(installerMock.Object);
+        IIocInstaller installerMock = Substitute.For<IIocInstaller>();
+        IIocContainer returnedContainer = _iocContainer.Install(installerMock);
 
-        installerMock.Verify(m => m.Install(It.IsAny<IRegistrationCollector>()), Times.Once);
+        installerMock.Received(1).Install(Arg.Any<IRegistrationCollector>());
 
         Assert.AreEqual(_iocContainer, returnedContainer);
     }
@@ -130,15 +130,15 @@ public class IocContainerTest
     [Test]
     public void TestInstallMultiple()
     {
-        Mock<IIocInstaller> installer1Mock = new();
-        Mock<IIocInstaller> installer2Mock = new();
-        Mock<IIocInstaller> installer3Mock = new();
+        IIocInstaller installer1Mock = Substitute.For<IIocInstaller>();
+        IIocInstaller installer2Mock = Substitute.For<IIocInstaller>();
+        IIocInstaller installer3Mock = Substitute.For<IIocInstaller>();
 
-        IIocContainer returnedContainer = _iocContainer.Install(installer1Mock.Object, installer2Mock.Object, installer3Mock.Object);
+        IIocContainer returnedContainer = _iocContainer.Install(installer1Mock, installer2Mock, installer3Mock);
 
-        installer1Mock.Verify(m => m.Install(It.IsAny<IRegistrationCollector>()), Times.Once);
-        installer2Mock.Verify(m => m.Install(It.IsAny<IRegistrationCollector>()), Times.Once);
-        installer3Mock.Verify(m => m.Install(It.IsAny<IRegistrationCollector>()), Times.Once);
+        installer1Mock.Received(1).Install(Arg.Any<IRegistrationCollector>());
+        installer2Mock.Received(1).Install(Arg.Any<IRegistrationCollector>());
+        installer3Mock.Received(1).Install(Arg.Any<IRegistrationCollector>());
 
         Assert.AreEqual(_iocContainer, returnedContainer);
     }

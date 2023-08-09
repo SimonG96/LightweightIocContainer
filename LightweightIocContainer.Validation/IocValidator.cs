@@ -4,7 +4,7 @@
 
 using LightweightIocContainer.Interfaces.Registrations;
 using LightweightIocContainer.Interfaces.Registrations.Fluent;
-using Moq;
+using NSubstitute;
 
 namespace LightweightIocContainer.Validation;
 
@@ -79,7 +79,7 @@ public class IocValidator
             validationExceptions.Add(exception);
     }
 
-    private T GetMock<T>() where T : class => new Mock<T>().Object;
+    private T GetMock<T>() where T : class => Substitute.For<T>();
     private object? GetMockOrDefault(Type type)
     {
         if (type.IsValueType)

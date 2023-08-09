@@ -5,7 +5,7 @@
 using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using LightweightIocContainer;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Test.LightweightIocContainer;
@@ -83,18 +83,18 @@ public class EnumerableExtensionTest
     [Test]
     public void TestForEach()
     {
-        Mock<ITest> test1 = new();
-        Mock<ITest> test2 = new();
-        Mock<ITest> test3 = new();
-        Mock<ITest> test4 = new();
+        ITest test1 = Substitute.For<ITest>();
+        ITest test2 = Substitute.For<ITest>();
+        ITest test3 = Substitute.For<ITest>();
+        ITest test4 = Substitute.For<ITest>();
 
-        IEnumerable<ITest> enumerable = new[] { test1.Object, test2.Object, test3.Object, test4.Object };
+        IEnumerable<ITest> enumerable = new[] { test1, test2, test3, test4 };
             
         enumerable.ForEach(t => t.DoSomething());
             
-        test1.Verify(t => t.DoSomething(), Times.Once);
-        test2.Verify(t => t.DoSomething(), Times.Once);
-        test3.Verify(t => t.DoSomething(), Times.Once);
-        test4.Verify(t => t.DoSomething(), Times.Once);
+        test1.Received(1).DoSomething();
+        test2.Received(1).DoSomething();
+        test3.Received(1).DoSomething();
+        test4.Received(1).DoSomething();
     }
 }

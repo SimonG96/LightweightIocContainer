@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Interfaces.Registrations;
 using LightweightIocContainer.Registrations;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Test.LightweightIocContainer;
@@ -20,7 +20,8 @@ public class SingleTypeRegistrationTest
         IBar Bar { get; }
     }
 
-    private interface IBar
+    [UsedImplicitly]
+    public interface IBar
     {
             
     }
@@ -44,13 +45,13 @@ public class SingleTypeRegistrationTest
     {
         IBar bar = new Bar();
 
-        Mock<IocContainer> iocContainerMock = new();
-        iocContainerMock.Setup(c => c.Resolve<IBar>()).Returns(bar);
+        IocContainer iocContainerMock = Substitute.For<IocContainer>();
+        iocContainerMock.Resolve<IBar>().Returns(bar);
 
-        RegistrationFactory registrationFactory = new(iocContainerMock.Object);
+        RegistrationFactory registrationFactory = new(iocContainerMock);
         ISingleTypeRegistration<IFoo> registration = registrationFactory.Register<IFoo>(Lifestyle.Transient).WithFactoryMethod(c => new Foo(c.Resolve<IBar>()));
 
-        IFoo foo = registration.FactoryMethod!(iocContainerMock.Object);
+        IFoo foo = registration.FactoryMethod!(iocContainerMock);
         Assert.AreEqual(bar, foo.Bar);
     }
 

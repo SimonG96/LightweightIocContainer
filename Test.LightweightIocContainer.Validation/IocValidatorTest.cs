@@ -8,7 +8,7 @@ using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
 using LightweightIocContainer.Validation;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Test.LightweightIocContainer.Validation;
@@ -152,14 +152,14 @@ public class IocValidatorTest
             
         IocValidator validator = new(iocContainer);
 
-        Mock<IParameter> parameterMock = new();
-        parameterMock.Setup(p => p.Method()).Returns(true);
+        IParameter parameterMock = Substitute.For<IParameter>();
+        parameterMock.Method().Returns(true);
 
-        validator.AddParameter<ITest, IParameter>(parameterMock.Object);
+        validator.AddParameter<ITest, IParameter>(parameterMock);
             
         validator.Validate();
             
-        parameterMock.Verify(p => p.Method(), Times.Never);
+        parameterMock.DidNotReceive().Method();
     }
 
     [Test]
@@ -181,8 +181,8 @@ public class IocValidatorTest
             
         IocValidator validator = new(iocContainer);
 
-        Mock<IParameter> parameterMock = new();
-        validator.AddParameter<ITest, IParameter>(parameterMock.Object);
+        IParameter parameterMock = Substitute.For<IParameter>();
+        validator.AddParameter<ITest, IParameter>(parameterMock);
             
         AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
 

@@ -5,7 +5,7 @@
 using LightweightIocContainer;
 using LightweightIocContainer.Interfaces.Registrations;
 using LightweightIocContainer.Registrations;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Test.LightweightIocContainer;
@@ -27,7 +27,7 @@ public class OnCreateTest
     [Test]
     public void TestOnCreate()
     {
-        RegistrationFactory registrationFactory = new(new Mock<IocContainer>().Object);
+        RegistrationFactory registrationFactory = new(Substitute.For<IocContainer>());
         ITypedRegistration<ITest, Test> testRegistration = registrationFactory.Register<ITest, Test>(Lifestyle.Transient).OnCreate(t => t.DoSomething());
 
         Test test = new();
