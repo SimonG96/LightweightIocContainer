@@ -40,6 +40,7 @@ public class OpenGenericRegistrationTest
             
     }
     
+    [UsedImplicitly]
     public interface ITestFactory
     {
         ITest<T> Create<T>() where T : IConstraint, new();
