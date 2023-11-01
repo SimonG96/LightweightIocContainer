@@ -31,6 +31,30 @@ public class IocValidatorTest
     {
         public Test(IParameter parameter) => parameter.Method();
     }
+    
+    [UsedImplicitly]
+    public interface IConstraint
+    {
+        
+    }
+    
+    [UsedImplicitly]
+    public interface IGenericTest<T> where T : IConstraint, new()
+    {
+            
+    }
+        
+    [UsedImplicitly]
+    public class GenericTest<T> : IGenericTest<T> where T : IConstraint, new()
+    {
+            
+    }
+    
+    [UsedImplicitly]
+    public interface IGenericTestFactory
+    {
+        IGenericTest<T> Create<T>() where T : IConstraint, new();
+    }
 
     [UsedImplicitly]
     private class TestViewModelDontIgnoreDesignTimeCtor : ITest
@@ -262,6 +286,16 @@ public class IocValidatorTest
         AggregateException aggregateException = Assert.Throws<AggregateException>(() => validator.Validate());
             
         AssertNoMatchingConstructorFoundForType<Test>(aggregateException);
+    }
+
+    [Test]
+    public void TestValidateFactoryOfOpenGenericType()
+    {
+        IocContainer iocContainer = new();
+        iocContainer.Register(r => r.AddOpenGenerics(typeof(IGenericTest<>), typeof(GenericTest<>)).WithFactory<IGenericTestFactory>());
+
+        IocValidator validator = new(iocContainer);
+        validator.Validate();
     }
 
     private void AssertNoMatchingConstructorFoundForType<T>(AggregateException aggregateException)
