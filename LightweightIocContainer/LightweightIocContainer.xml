@@ -1120,7 +1120,7 @@
             <param name="arguments">The constructor arguments</param>
             <returns>The argument list updated with the <see cref="P:LightweightIocContainer.Interfaces.Registrations.Fluent.IWithParametersInternal.Parameters"/></returns>
         </member>
-        <member name="M:LightweightIocContainer.IocContainer.TryGetTypeResolveStack(System.Type,System.Collections.Generic.IReadOnlyCollection{System.Object},System.Collections.Generic.List{System.Type})">
+        <member name="M:LightweightIocContainer.IocContainer.TryGetTypeResolveStack``1(System.Type,System.Collections.Generic.IReadOnlyCollection{System.Object},System.Collections.Generic.List{System.Type})">
             <summary>
             Try to get the resolve stack for a given <see cref="T:System.Type"/>
             </summary>
@@ -1133,10 +1133,11 @@
             <para>exception: A <see cref="T:LightweightIocContainer.Exceptions.NoMatchingConstructorFoundException"/> if no matching constructor was found</para>
             </returns>
         </member>
-        <member name="M:LightweightIocContainer.IocContainer.TryGetConstructorResolveStack(System.Reflection.ConstructorInfo,System.Collections.Generic.IReadOnlyCollection{System.Object},System.Collections.Generic.List{System.Type})">
+        <member name="M:LightweightIocContainer.IocContainer.TryGetConstructorResolveStack``1(System.Type,System.Reflection.ConstructorInfo,System.Collections.Generic.IReadOnlyCollection{System.Object},System.Collections.Generic.List{System.Type})">
             <summary>
             Try to get the resolve stack for a given constructor
             </summary>
+            <param name="type">The <see cref="T:System.Type"/> that is currently getting resolved</param>
             <param name="constructor">The <see cref="T:System.Reflection.ConstructorInfo"/> for the given constructor</param>
             <param name="arguments">The given arguments</param>
             <param name="resolveStack">The current resolve stack</param>

@@ -189,7 +189,7 @@ public class IocContainer : IIocContainer, IIocResolver
 
         Type registeredType = GetType<T>(registration);
         (bool result, List<object?>? parametersToResolve, NoMatchingConstructorFoundException? exception) = 
-            TryGetTypeResolveStack(registeredType, arguments, internalResolveStack);
+            TryGetTypeResolveStack<T>(registeredType, arguments, internalResolveStack);
 
         if (registration is IMultitonRegistration multitonRegistration)
         {
@@ -483,7 +483,7 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <para>parameters: The parameters needed to resolve the given <see cref="Type"/></para>
     /// <para>exception: A <see cref="NoMatchingConstructorFoundException"/> if no matching constructor was found</para>
     /// </returns>
-    private (bool result, List<object?>? parameters, NoMatchingConstructorFoundException? exception) TryGetTypeResolveStack(Type type, IReadOnlyCollection<object?>? arguments, List<Type> resolveStack)
+    private (bool result, List<object?>? parameters, NoMatchingConstructorFoundException? exception) TryGetTypeResolveStack<T>(Type type, IReadOnlyCollection<object?>? arguments, List<Type> resolveStack)
     {
         NoMatchingConstructorFoundException? noMatchingConstructorFoundException = null;
             
@@ -491,7 +491,7 @@ public class IocContainer : IIocContainer, IIocResolver
         List<ConstructorInfo> sortedConstructors = TryGetSortedConstructors(type);
         foreach (ConstructorInfo constructor in sortedConstructors)
         { 
-            (bool result, List<object?>? parameters, List<ConstructorNotMatchingException>? exceptions) = TryGetConstructorResolveStack(constructor, arguments, resolveStack);
+            (bool result, List<object?>? parameters, List<ConstructorNotMatchingException>? exceptions) = TryGetConstructorResolveStack<T>(type, constructor, arguments, resolveStack);
 
             if (result)
                 return (true, parameters, null);
@@ -506,6 +506,7 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <summary>
     /// Try to get the resolve stack for a given constructor
     /// </summary>
+    /// <param name="type">The <see cref="Type"/> that is currently getting resolved</param>
     /// <param name="constructor">The <see cref="ConstructorInfo"/> for the given constructor</param>
     /// <param name="arguments">The given arguments</param>
     /// <param name="resolveStack">The current resolve stack</param>
@@ -514,7 +515,7 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <para>parameters: The parameters needed to resolve the given <see cref="Type"/></para>
     /// <para>exception: A List of <see cref="ConstructorNotMatchingException"/>s if the constructor is not matching</para>
     /// </returns>
-    private (bool result, List<object?>? parameters, List<ConstructorNotMatchingException>? exceptions) TryGetConstructorResolveStack(ConstructorInfo constructor, IReadOnlyCollection<object?>? arguments, List<Type> resolveStack)
+    private (bool result, List<object?>? parameters, List<ConstructorNotMatchingException>? exceptions) TryGetConstructorResolveStack<T>(Type type, ConstructorInfo constructor, IReadOnlyCollection<object?>? arguments, List<Type> resolveStack)
     {
         List<ParameterInfo> constructorParameters = constructor.GetParameters().ToList();
             
@@ -530,11 +531,26 @@ public class IocContainer : IIocContainer, IIocResolver
             object? fittingArgument = new InternalResolvePlaceholder();
             if (passedArguments != null)
             {
-                fittingArgument = passedArguments.FirstOrGiven<object?, InternalResolvePlaceholder>(a =>
-                    a?.GetType() == parameter.ParameterType ||
-                    parameter.ParameterType.IsInstanceOfType(a) ||
-                    a is NullParameter nullParameter && parameter.ParameterType.IsAssignableFrom(nullParameter.ParameterType));
-
+                if (parameter.ParameterType.IsGenericParameter)
+                {
+                    Type? genericArgument = type.GetGenericArguments().FirstOrDefault(a => a.Name.Equals(parameter.ParameterType.Name));
+                    if (genericArgument is not null)
+                    {
+                        Type genericArgumentType = typeof(T).GetGenericArguments()[genericArgument.GenericParameterPosition];
+                        fittingArgument = passedArguments.FirstOrGiven<object?, InternalResolvePlaceholder>(a =>
+                            a?.GetType() == genericArgumentType ||
+                            genericArgumentType.IsInstanceOfType(a) ||
+                            a is NullParameter nullParameter && genericArgumentType.IsAssignableFrom(nullParameter.ParameterType));
+                    }
+                }
+                else
+                {
+                    fittingArgument = passedArguments.FirstOrGiven<object?, InternalResolvePlaceholder>(a =>
+                        a?.GetType() == parameter.ParameterType ||
+                        parameter.ParameterType.IsInstanceOfType(a) ||
+                        a is NullParameter nullParameter && parameter.ParameterType.IsAssignableFrom(nullParameter.ParameterType));
+                }
+                
                 if (fittingArgument is not InternalResolvePlaceholder)
                     passedArguments.Remove(fittingArgument);
                 
