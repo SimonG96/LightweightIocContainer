@@ -75,6 +75,26 @@ public class TypedFactory<TFactory> : TypedFactoryBase<TFactory>, ITypedFactory<
 
             MethodBuilder methodBuilder = typeBuilder.DefineMethod(createMethod.Name, MethodAttributes.Public | MethodAttributes.Virtual, 
                 createMethod.ReturnType, (from arg in args select arg.ParameterType).ToArray());
+
+            if (createMethod.IsGenericMethod)
+            {
+                Type[] genericArguments = createMethod.GetGenericMethodDefinition().GetGenericArguments();
+                string[] genericArgumentNames = genericArguments.Select(a => a.Name).ToArray();
+                
+                GenericTypeParameterBuilder[] genericParameters = methodBuilder.DefineGenericParameters(genericArgumentNames);
+
+                foreach (GenericTypeParameterBuilder genericParameter in genericParameters)
+                {
+                    Type genericType = genericArguments.First(a => a.Name == genericParameter.Name);
+                    genericParameter.SetGenericParameterAttributes(genericType.GenericParameterAttributes);
+                    
+                    genericParameter.SetInterfaceConstraints(genericType.GetGenericParameterConstraints().Where(c => c.IsInterface).ToArray());
+                    Type? typeConstraint = genericType.GetGenericParameterConstraints().FirstOrDefault(c => !c.IsInterface);
+                    if (typeConstraint is not null)
+                        genericParameter.SetBaseTypeConstraint(typeConstraint);
+                }
+            }
+            
             typeBuilder.DefineMethodOverride(methodBuilder, createMethod);
 
             ILGenerator generator = methodBuilder.GetILGenerator();

@@ -42,7 +42,16 @@ internal class OpenGenericRegistration : RegistrationBase, IOpenGenericRegistrat
             
         base.Validate();
     }
+
+    protected override void ValidateFactory()
+    {
+        if (Factory == null)
+            return;
         
+        if (Factory.CreateMethods.All(c => c.ReturnType.Name != InterfaceType.Name))
+            throw new InvalidFactoryRegistrationException($"No create method that can create {InterfaceType}.");
+    }
+
     public override bool Equals(object? obj) => obj is OpenGenericRegistration openGenericRegistration &&
                                                 base.Equals(obj) &&
                                                 ImplementationType == openGenericRegistration.ImplementationType;

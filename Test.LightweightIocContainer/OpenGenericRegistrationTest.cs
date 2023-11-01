@@ -14,18 +14,35 @@ namespace Test.LightweightIocContainer;
 public class OpenGenericRegistrationTest
 {
     private IocContainer _iocContainer;
+
+    [UsedImplicitly]
+    public interface IConstraint
+    {
+        
+    }
+    
+    [UsedImplicitly]
+    public class Constraint : IConstraint
+    {
+        
+    }
         
     [UsedImplicitly]
     [SuppressMessage("ReSharper", "UnusedTypeParameter")]
-    public interface ITest<T>
+    public interface ITest<T> where T : IConstraint, new()
     {
             
     }
         
     [UsedImplicitly]
-    public class Test<T> : ITest<T>
+    public class Test<T> : ITest<T> where T : IConstraint, new()
     {
             
+    }
+    
+    public interface ITestFactory
+    {
+        ITest<T> Create<T>() where T : IConstraint, new();
     }
 
     [SetUp]
@@ -39,7 +56,7 @@ public class OpenGenericRegistrationTest
     {
         _iocContainer.Register(r => r.AddOpenGenerics(typeof(ITest<>), typeof(Test<>)));
 
-        ITest<int> test = _iocContainer.Resolve<ITest<int>>();
+        ITest<Constraint> test = _iocContainer.Resolve<ITest<Constraint>>();
         Assert.NotNull(test);
     }
 
@@ -48,10 +65,10 @@ public class OpenGenericRegistrationTest
     {
         _iocContainer.Register(r => r.AddOpenGenerics(typeof(ITest<>), typeof(Test<>), Lifestyle.Singleton));
 
-        ITest<int> test = _iocContainer.Resolve<ITest<int>>();
+        ITest<Constraint> test = _iocContainer.Resolve<ITest<Constraint>>();
         Assert.NotNull(test);
 
-        ITest<int> secondTest = _iocContainer.Resolve<ITest<int>>();
+        ITest<Constraint> secondTest = _iocContainer.Resolve<ITest<Constraint>>();
         Assert.NotNull(secondTest);
             
         Assert.AreEqual(test, secondTest);
@@ -65,4 +82,13 @@ public class OpenGenericRegistrationTest
     [Test]
     public void TestRegisterNonOpenGenericTypeWithOpenGenericsFunctionThrowsException() =>
         Assert.Throws<InvalidRegistrationException>(() => _iocContainer.Register(r => r.AddOpenGenerics(typeof(int), typeof(int))));
+
+    [Test]
+    public void TestRegisterFactoryOfOpenGenericType()
+    {
+        _iocContainer.Register(r => r.AddOpenGenerics(typeof(ITest<>), typeof(Test<>)).WithFactory<ITestFactory>());
+        ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
+        ITest<Constraint> test = testFactory.Create<Constraint>();
+        Assert.IsInstanceOf<ITest<Constraint>>(test);
+    }
 }
