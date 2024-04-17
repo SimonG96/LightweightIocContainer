@@ -2,6 +2,7 @@
 // Created: 2019-12-11
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
+using System.Diagnostics.CodeAnalysis;
 using LightweightIocContainer;
 using NUnit.Framework;
 
@@ -27,6 +28,7 @@ public class ActionExtensionTest
         
 
     [Test]
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public void TestConvert()
     {
         Action<IBar> barAction = bar => bar.Throw();
@@ -36,9 +38,10 @@ public class ActionExtensionTest
     }
 
     [Test]
+    [SuppressMessage("ReSharper", "ExpressionIsAlwaysNull")]
     public void TestConvertActionNull()
     {
         Action<IBar> barAction = null;
-        Assert.Null(barAction.Convert<IFoo, IBar>());
+        Assert.That(barAction.Convert<IFoo, IBar>(), Is.Null);
     }
 }

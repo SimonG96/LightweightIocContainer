@@ -124,7 +124,7 @@ public class IocContainerTest
 
         installerMock.Received(1).Install(Arg.Any<IRegistrationCollector>());
 
-        Assert.AreEqual(_iocContainer, returnedContainer);
+        Assert.That(returnedContainer, Is.EqualTo(_iocContainer));
     }
 
     [Test]
@@ -140,7 +140,7 @@ public class IocContainerTest
         installer2Mock.Received(1).Install(Arg.Any<IRegistrationCollector>());
         installer3Mock.Received(1).Install(Arg.Any<IRegistrationCollector>());
 
-        Assert.AreEqual(_iocContainer, returnedContainer);
+        Assert.That(returnedContainer, Is.EqualTo(_iocContainer));
     }
 
     [Test]
@@ -160,7 +160,7 @@ public class IocContainerTest
     {
         _iocContainer.Register(r => r.Add<ITest, Test>());
         MultipleRegistrationException exception = Assert.Throws<MultipleRegistrationException>(() => _iocContainer.Register(r => r.Add<ITest, TestConstructor>()));
-        Assert.AreEqual(typeof(ITest), exception?.Type);
+        Assert.That(exception?.Type, Is.EqualTo(typeof(ITest)));
     }
         
     [Test]
@@ -181,7 +181,7 @@ public class IocContainerTest
     public void TestResolveNotRegistered()
     {
         TypeNotRegisteredException exception = Assert.Throws<TypeNotRegisteredException>(() => _iocContainer.Resolve<ITest>());
-        Assert.AreEqual(typeof(ITest), exception?.Type);
+        Assert.That(exception?.Type, Is.EqualTo(typeof(ITest)));
     }
 
     [Test]
@@ -191,7 +191,7 @@ public class IocContainerTest
 
         ITest resolvedTest = _iocContainer.Resolve<ITest>();
 
-        Assert.IsInstanceOf<Test>(resolvedTest);
+        Assert.That(resolvedTest, Is.InstanceOf<Test>());
     }
 
     [Test]
@@ -201,7 +201,7 @@ public class IocContainerTest
 
         Test resolvedTest = _iocContainer.Resolve<Test>();
 
-        Assert.IsInstanceOf<Test>(resolvedTest);
+        Assert.That(resolvedTest, Is.InstanceOf<Test>());
     }
 
     [Test]
@@ -218,7 +218,7 @@ public class IocContainerTest
 
         Test resolvedTest = _iocContainer.Resolve<Test>();
             
-        Assert.IsInstanceOf<Test>(resolvedTest);
+        Assert.That(resolvedTest, Is.InstanceOf<Test>());
     }
 
     [Test]
@@ -228,7 +228,7 @@ public class IocContainerTest
 
         ITest resolvedTest = _iocContainer.Resolve<ITest>("Test", new Test());
 
-        Assert.IsInstanceOf<TestConstructor>(resolvedTest);
+        Assert.That(resolvedTest, Is.InstanceOf<TestConstructor>());
     }
 
     [Test]
@@ -239,7 +239,7 @@ public class IocContainerTest
 
         ITest resolvedTest = _iocContainer.Resolve<ITest>("Test");
 
-        Assert.IsInstanceOf<TestConstructor>(resolvedTest);
+        Assert.That(resolvedTest, Is.InstanceOf<TestConstructor>());
     }
 
     [Test]
@@ -250,7 +250,7 @@ public class IocContainerTest
         ITest resolvedTest = _iocContainer.Resolve<ITest>();
         ITest secondResolvedTest = _iocContainer.Resolve<ITest>();
 
-        Assert.AreEqual(resolvedTest, secondResolvedTest);
+        Assert.That(secondResolvedTest, Is.EqualTo(resolvedTest));
     }
 
     [Test]
@@ -265,9 +265,9 @@ public class IocContainerTest
         ITest resolvedTest2 = _iocContainer.Resolve<ITest>(scope1);
         ITest resolvedTest3 = _iocContainer.Resolve<ITest>(scope2);
 
-        Assert.AreSame(resolvedTest1, resolvedTest2);
-        Assert.AreNotSame(resolvedTest1, resolvedTest3);
-        Assert.AreNotSame(resolvedTest2, resolvedTest3);
+        Assert.That(resolvedTest2, Is.SameAs(resolvedTest1));
+        Assert.That(resolvedTest3, Is.Not.SameAs(resolvedTest1));
+        Assert.That(resolvedTest3, Is.Not.SameAs(resolvedTest2));
     }
 
     [Test]
@@ -276,7 +276,7 @@ public class IocContainerTest
         _iocContainer.Register(r => r.AddMultiton<ITest, Test, MultitonScope>());
 
         MultitonResolveException exception = Assert.Throws<MultitonResolveException>(() => _iocContainer.Resolve<ITest>());
-        Assert.AreEqual(typeof(ITest), exception?.Type);
+        Assert.That(exception?.Type, Is.EqualTo(typeof(ITest)));
     }
 
     [Test]
@@ -285,7 +285,7 @@ public class IocContainerTest
         _iocContainer.Register(r => r.AddMultiton<ITest, Test, MultitonScope>());
 
         MultitonResolveException exception = Assert.Throws<MultitonResolveException>(() => _iocContainer.Resolve<ITest>(new object()));
-        Assert.AreEqual(typeof(ITest), exception?.Type);
+        Assert.That(exception?.Type, Is.EqualTo(typeof(ITest)));
     }
 
     [Test]
@@ -296,7 +296,7 @@ public class IocContainerTest
         ITest resolvedTest = _iocContainer.Resolve<ITest>();
         ITest secondResolvedTest = _iocContainer.Resolve<ITest>();
 
-        Assert.AreNotEqual(resolvedTest, secondResolvedTest);
+        Assert.That(secondResolvedTest, Is.Not.EqualTo(resolvedTest));
     }
 
     [Test]
@@ -304,7 +304,7 @@ public class IocContainerTest
     {
         _iocContainer.Register(r => r.Add<ITest, TestConstructor>());
         NoMatchingConstructorFoundException exception = Assert.Throws<NoMatchingConstructorFoundException>(() => _iocContainer.Resolve<ITest>());
-        Assert.AreEqual(typeof(TestConstructor), exception?.Type);
+        Assert.That(exception?.Type, Is.EqualTo(typeof(TestConstructor)));
     }
 
     [Test]
@@ -319,7 +319,7 @@ public class IocContainerTest
     {
         _iocContainer.Register(r => r.Add<ITest, TestPrivateConstructor>());
         NoPublicConstructorFoundException exception = Assert.Throws<NoPublicConstructorFoundException>(() => _iocContainer.Resolve<ITest>());
-        Assert.AreEqual(typeof(TestPrivateConstructor), exception?.Type);
+        Assert.That(exception?.Type, Is.EqualTo(typeof(TestPrivateConstructor)));
     }
 
     [Test]
@@ -330,7 +330,7 @@ public class IocContainerTest
 
         ITest test = _iocContainer.Resolve<ITest>();
             
-        Assert.NotNull(test);
+        Assert.That(test, Is.Not.Null);
     }
 
     [Test]
@@ -340,8 +340,8 @@ public class IocContainerTest
         _iocContainer.Register(r => r.Add<IFoo, FooConstructor>().WithParameters("TestString"));
 
         ITest test = _iocContainer.Resolve<ITest>("testName");
-            
-        Assert.IsInstanceOf<TestConstructor>(test);
+        
+        Assert.That(test, Is.InstanceOf<TestConstructor>());
     }
     
     [Test]
@@ -363,12 +363,12 @@ public class IocContainerTest
     [Test]
     public void TestIsTypeRegistered()
     {
-        Assert.False(_iocContainer.IsTypeRegistered<ITest>());
+        Assert.That(_iocContainer.IsTypeRegistered<ITest>(), Is.False);
 
         _iocContainer.Register(r => r.Add<ITest, Test>());
-        Assert.True(_iocContainer.IsTypeRegistered<ITest>());
+        Assert.That(_iocContainer.IsTypeRegistered<ITest>(), Is.True);
 
         _iocContainer.Register(r => r.Add<Test>());
-        Assert.True(_iocContainer.IsTypeRegistered<Test>());
+        Assert.That(_iocContainer.IsTypeRegistered<Test>(), Is.True);
     }
 }

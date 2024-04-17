@@ -52,7 +52,7 @@ public class SingleTypeRegistrationTest
         ISingleTypeRegistration<IFoo> registration = registrationFactory.Register<IFoo>(Lifestyle.Transient).WithFactoryMethod(c => new Foo(c.Resolve<IBar>()));
 
         IFoo foo = registration.FactoryMethod!(iocContainerMock);
-        Assert.AreEqual(bar, foo.Bar);
+        Assert.That(foo.Bar, Is.EqualTo(bar));
     }
 
     [Test]
@@ -65,7 +65,7 @@ public class SingleTypeRegistrationTest
 
         IFoo foo = container.Resolve<IFoo>();
 
-        Assert.IsInstanceOf<Foo>(foo);
-        Assert.AreEqual(bar, foo.Bar);
+        Assert.That(foo, Is.InstanceOf<Foo>());
+        Assert.That(foo.Bar, Is.EqualTo(bar));
     }
 }

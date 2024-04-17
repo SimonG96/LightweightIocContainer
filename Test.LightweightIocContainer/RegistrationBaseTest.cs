@@ -60,8 +60,8 @@ public class RegistrationBaseTest
 
         RegistrationBase testRegistration = (RegistrationBase) registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters(bar, test);
 
-        Assert.AreEqual(bar, testRegistration.Parameters![0]);
-        Assert.AreEqual(test, testRegistration.Parameters[1]);
+        Assert.That(testRegistration.Parameters![0], Is.EqualTo(bar));
+        Assert.That(testRegistration.Parameters[1], Is.EqualTo(test));
     }
 
     [Test]
@@ -74,10 +74,10 @@ public class RegistrationBaseTest
 
         RegistrationBase testRegistration = (RegistrationBase) registrationFactory.Register<IFoo, Foo>(Lifestyle.Transient).WithParameters((0, bar), (3, test), (2, "SomeString"));
 
-        Assert.AreEqual(bar, testRegistration.Parameters![0]);
-        Assert.IsInstanceOf<InternalResolvePlaceholder>(testRegistration.Parameters[1]);
-        Assert.AreEqual("SomeString", testRegistration.Parameters[2]);
-        Assert.AreEqual(test, testRegistration.Parameters[3]);
+        Assert.That(testRegistration.Parameters![0], Is.EqualTo(bar));
+        Assert.That(testRegistration.Parameters[1], Is.InstanceOf<InternalResolvePlaceholder>());
+        Assert.That(testRegistration.Parameters[2], Is.EqualTo("SomeString"));
+        Assert.That(testRegistration.Parameters[3], Is.EqualTo(test));
     }
 
     [Test]

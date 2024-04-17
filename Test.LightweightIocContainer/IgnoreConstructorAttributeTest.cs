@@ -59,7 +59,7 @@ public class IgnoreConstructorAttributeTest
         container.RegisterIgnoreConstructorAttribute<IgnoreAttribute>();
 
         ITest test = container.Resolve<ITest>("name");
-        Assert.IsInstanceOf<TestIgnoreCtor>(test);
+        Assert.That(test, Is.InstanceOf<TestIgnoreCtor>());
     }
 
     [Test]

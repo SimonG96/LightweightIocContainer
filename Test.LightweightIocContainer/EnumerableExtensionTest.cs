@@ -35,7 +35,7 @@ public class EnumerableExtensionTest
     public void TestFirstOrGivenNoPredicateEmpty()
     {
         List<ListObject> list = new();
-        Assert.IsInstanceOf<Given>(list.FirstOrGiven<ListObject, Given>());
+        Assert.That(list.FirstOrGiven<ListObject, Given>(), Is.InstanceOf<Given>());
     }
 
     [Test]
@@ -51,8 +51,8 @@ public class EnumerableExtensionTest
 
         ListObject listObject = list.FirstOrGiven<ListObject, Given>();
             
-        Assert.IsNotInstanceOf<Given>(listObject);
-        Assert.AreEqual(0, listObject.Index);
+        Assert.That(list.FirstOrGiven<ListObject, Given>(), Is.Not.InstanceOf<Given>());
+        Assert.That(listObject.Index, Is.EqualTo(0));
     }
 
     [Test]
@@ -60,7 +60,7 @@ public class EnumerableExtensionTest
     public void TestFirstOrGivenPredicateEmpty()
     {
         List<ListObject> list = new();
-        Assert.IsInstanceOf<Given>(list.FirstOrGiven<ListObject, Given>(o => o.Index == 2));
+        Assert.That(list.FirstOrGiven<ListObject, Given>(o => o.Index == 2), Is.InstanceOf<Given>());
     }
 
     [Test]
@@ -76,8 +76,8 @@ public class EnumerableExtensionTest
 
         ListObject listObject = list.FirstOrGiven<ListObject, Given>(o => o.Index == 2);
 
-        Assert.IsNotInstanceOf<Given>(listObject);
-        Assert.AreEqual(2, listObject.Index);
+        Assert.That(listObject, Is.Not.InstanceOf<Given>());
+        Assert.That(listObject.Index, Is.EqualTo(2));
     }
 
     [Test]

@@ -58,12 +58,11 @@ public class MultipleMultitonRegistrationTest
         MultitonScope scope = new();
             
         ITest test = _iocContainer.Resolve<ITest>(scope);
-        Assert.NotNull(test);
+        Assert.That(test, Is.Not.Null);
 
         IProvider provider = _iocContainer.Resolve<IProvider>(scope);
-        Assert.NotNull(provider);
-        Assert.AreEqual(test, provider);
-        Assert.AreSame(test, provider);
+        Assert.That(provider, Is.Not.Null);
+        Assert.That(provider, Is.SameAs(test));
     }
 
     [Test]
@@ -75,13 +74,13 @@ public class MultipleMultitonRegistrationTest
         MultitonScope differentScope = new();
             
         ITest test = _iocContainer.Resolve<ITest>(scope);
-        Assert.NotNull(test);
+        Assert.That(test, Is.Not.Null);
 
         IProvider provider = _iocContainer.Resolve<IProvider>(differentScope);
-        Assert.NotNull(provider);
-            
-        Assert.AreNotEqual(test, provider);
-        Assert.AreNotSame(test, provider);
+        Assert.That(provider, Is.Not.Null);
+        
+        Assert.That(provider, Is.Not.SameAs(test));
+        Assert.That(provider, Is.Not.EqualTo(test));
     }
 
     [Test]
@@ -92,14 +91,13 @@ public class MultipleMultitonRegistrationTest
         MultitonScope scope = new();
             
         ITest test = _iocContainer.Resolve<ITest>(scope);
-        Assert.NotNull(test);
-        Assert.AreEqual(1, test.Number);
+        Assert.That(test, Is.Not.Null);
+        Assert.That(test.Number, Is.EqualTo(1));
 
         IProvider provider = _iocContainer.Resolve<IProvider>(scope);
-        Assert.NotNull(provider);
-        Assert.AreEqual(1, provider.Number);
+        Assert.That(provider, Is.Not.Null);
+        Assert.That(provider.Number, Is.EqualTo(1));
             
-        Assert.AreEqual(test, provider);
-        Assert.AreSame(test, provider);
+        Assert.That(provider, Is.SameAs(test));
     }
 }

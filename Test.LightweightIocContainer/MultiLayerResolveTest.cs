@@ -79,7 +79,7 @@ public class MultiLayerResolveTest
 
         IAFactory aFactory = container.Resolve<IAFactory>();
         IA a = aFactory.Create();
-        Assert.IsInstanceOf<A>(a);
+        Assert.That(a, Is.InstanceOf<A>());
     }
 
     [Test]
@@ -92,7 +92,7 @@ public class MultiLayerResolveTest
 
         IBFactory bFactory = container.Resolve<IBFactory>();
         IB b = bFactory.Create();
-        Assert.IsInstanceOf<B>(b);
+        Assert.That(b, Is.InstanceOf<B>());
     }
 
     [Test]
@@ -104,6 +104,6 @@ public class MultiLayerResolveTest
         container.Register(r => r.Add<C>(Lifestyle.Singleton).WithParameters("test"));
 
         OtherA a = container.Resolve<OtherA>();
-        Assert.AreEqual(a.BProperty.C, a.SecondB.C);
+        Assert.That(a.SecondB.C, Is.EqualTo(a.BProperty.C));
     }
 }

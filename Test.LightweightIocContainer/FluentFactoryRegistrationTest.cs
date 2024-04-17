@@ -151,8 +151,8 @@ public class FluentFactoryRegistrationTest
         ITestFactory factory = _iocContainer.Resolve<ITestFactory>();
         ITest test = factory.Create();
             
-        Assert.IsInstanceOf<ITestFactory>(factory);
-        Assert.IsInstanceOf<ITest>(test);
+        Assert.That(factory, Is.InstanceOf<ITestFactory>());
+        Assert.That(test, Is.InstanceOf<ITest>());
     }
         
     [Test]
@@ -170,8 +170,8 @@ public class FluentFactoryRegistrationTest
         ITestFactory factory = _iocContainer.Resolve<ITestFactory>();
         ITest test = factory.Create();
             
-        Assert.IsInstanceOf<ITestFactory>(factory);
-        Assert.IsInstanceOf<ITest>(test);
+        Assert.That(factory, Is.InstanceOf<ITestFactory>());
+        Assert.That(test, Is.InstanceOf<ITest>());
     }
         
     [Test]
@@ -196,7 +196,7 @@ public class FluentFactoryRegistrationTest
         ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
         ITest createdTest = testFactory.Create();
         
-        Assert.IsInstanceOf<Test>(createdTest);
+        Assert.That(createdTest, Is.InstanceOf<Test>());
     }
         
     [Test]
@@ -208,7 +208,7 @@ public class FluentFactoryRegistrationTest
         ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
         ITest createdTest = testFactory.Create("Test");
         
-        Assert.IsInstanceOf<TestConstructor>(createdTest);
+        Assert.That(createdTest, Is.InstanceOf<TestConstructor>());
     }
         
     [Test]
@@ -220,7 +220,7 @@ public class FluentFactoryRegistrationTest
         ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
         ITest createdTest = testFactory.CreateTest();
         
-        Assert.IsInstanceOf<TestConstructor>(createdTest);
+        Assert.That(createdTest, Is.InstanceOf<TestConstructor>());
     }
         
     [Test]
@@ -232,7 +232,7 @@ public class FluentFactoryRegistrationTest
         ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
         ITest createdTest = testFactory.Create();
         
-        Assert.IsInstanceOf<TestConstructor>(createdTest);
+        Assert.That(createdTest, Is.InstanceOf<TestConstructor>());
     }
         
     [Test]
@@ -243,7 +243,7 @@ public class FluentFactoryRegistrationTest
         ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
         ITest createdTest = testFactory.Create(1);
         
-        Assert.IsInstanceOf<TestByte>(createdTest);
+        Assert.That(createdTest, Is.InstanceOf<TestByte>());
     }
 
     [Test]
@@ -264,10 +264,10 @@ public class FluentFactoryRegistrationTest
             return;
         }
         
-        Assert.AreSame(obj, testNull.Obj);
-        Assert.AreEqual(content, testNull.Content);
-        Assert.AreEqual(null, testNull.Optional1);
-        Assert.AreEqual(optional2, testNull.Optional2);
+        Assert.That(testNull.Obj, Is.SameAs(obj));
+        Assert.That(testNull.Content, Is.EqualTo(content));
+        Assert.That(testNull.Optional1, Is.Null);
+        Assert.That(testNull.Optional2, Is.EqualTo(optional2));
     }
     
     [Test]
@@ -288,11 +288,11 @@ public class FluentFactoryRegistrationTest
             return;
         }
         
-        Assert.AreSame(obj, testNull.Obj);
-        Assert.AreEqual(content, testNull.Content);
-        Assert.AreEqual(null, testNull.Optional1);
-        Assert.AreEqual(optional2, testNull.Optional2);
-        Assert.AreEqual(null, testNull.TestNullFactory);
+        Assert.That(testNull.Obj, Is.SameAs(obj));
+        Assert.That(testNull.Content, Is.EqualTo(content));
+        Assert.That(testNull.Optional1, Is.Null);
+        Assert.That(testNull.Optional2, Is.EqualTo(optional2));
+        Assert.That(testNull.TestNullFactory, Is.Null);
     }
         
     [Test]
@@ -309,9 +309,9 @@ public class FluentFactoryRegistrationTest
         ITest resolvedTest2 = testFactory.Create(scope1);
         ITest resolvedTest3 = testFactory.Create(scope2);
         
-        Assert.AreSame(resolvedTest1, resolvedTest2);
-        Assert.AreNotSame(resolvedTest1, resolvedTest3);
-        Assert.AreNotSame(resolvedTest2, resolvedTest3);
+        Assert.That(resolvedTest2, Is.SameAs(resolvedTest1));
+        Assert.That(resolvedTest3, Is.Not.SameAs(resolvedTest1));
+        Assert.That(resolvedTest3, Is.Not.SameAs(resolvedTest2));
     }
         
     [Test]
@@ -328,18 +328,18 @@ public class FluentFactoryRegistrationTest
         ITest resolvedTest2 = testFactory.Create(scope1);
         ITest resolvedTest3 = testFactory.Create(scope2);
         
-        Assert.AreSame(resolvedTest1, resolvedTest2);
-        Assert.AreNotSame(resolvedTest1, resolvedTest3);
-        Assert.AreNotSame(resolvedTest2, resolvedTest3);
+        Assert.That(resolvedTest2, Is.SameAs(resolvedTest1));
+        Assert.That(resolvedTest3, Is.Not.SameAs(resolvedTest1));
+        Assert.That(resolvedTest3, Is.Not.SameAs(resolvedTest2));
         
         testFactory.ClearMultitonInstance<ITest>();
         
         ITest resolvedTest4 = testFactory.Create(scope1);
         ITest resolvedTest5 = testFactory.Create(scope2);
         
-        Assert.AreNotSame(resolvedTest1, resolvedTest4);
-        Assert.AreNotSame(resolvedTest2, resolvedTest4);
-        Assert.AreNotSame(resolvedTest3, resolvedTest5);
+        Assert.That(resolvedTest4, Is.Not.SameAs(resolvedTest1));
+        Assert.That(resolvedTest4, Is.Not.SameAs(resolvedTest2));
+        Assert.That(resolvedTest5, Is.Not.SameAs(resolvedTest3));
     }
 
     [Test]
