@@ -33,11 +33,11 @@ public class AssemblyInstallerTest
     [Test]
     public void TestInstall()
     {
-        List<Type> types = new()
-        {
+        List<Type> types =
+        [
             typeof(object),
             typeof(TestInstaller)
-        };
+        ];
 
         AssemblyWrapper assemblyMock = Substitute.For<AssemblyWrapper>();
         assemblyMock.GetTypes().Returns(types.ToArray());
@@ -60,11 +60,11 @@ public class AssemblyInstallerTest
     [Test]
     public void TestFromAssemblyInstance()
     {
-        List<Type> types = new()
-        {
+        List<Type> types =
+        [
             typeof(object),
             typeof(TestInstaller)
-        };
+        ];
 
         AssemblyWrapper assemblyMock = Substitute.For<AssemblyWrapper>();
         assemblyMock.GetTypes().Returns(types.ToArray());
