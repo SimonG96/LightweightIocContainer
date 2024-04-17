@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Authors>SimonG</Authors>
-    <Copyright>Copyright(c) 2019 SimonG. All Rights Reserved.</Copyright>
+    <Copyright>Copyright(c) 2024 SimonG. All Rights Reserved.</Copyright>
     <Description>A lightweight IOC Container that is powerful enough to do all the things you need it to do.</Description>
     <RepositoryUrl>https://github.com/SimonG96/LightweightIocContainer</RepositoryUrl>
-    <LangVersion>default</LangVersion>
+    <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <DocumentationFile>LightweightIocContainer.xml</DocumentationFile>
