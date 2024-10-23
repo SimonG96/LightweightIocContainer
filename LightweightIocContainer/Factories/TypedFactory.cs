@@ -4,6 +4,7 @@
 
 using System.Reflection;
 using System.Reflection.Emit;
+using GProxy;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Factories;
@@ -22,7 +23,11 @@ public class TypedFactory<TFactory> : TypedFactoryBase<TFactory>, ITypedFactory<
     /// The 
     /// </summary>
     /// <param name="container">The current instance of the <see cref="IIocContainer"/></param>
-    public TypedFactory(IocContainer container) => Factory = CreateFactory(container);
+    public TypedFactory(IocContainer container)
+    {
+        //Factory = CreateFactory(container);
+        Factory = Proxy.Of<TFactory>();
+    }
 
     /// <summary>
     /// The implemented abstract typed factory/>

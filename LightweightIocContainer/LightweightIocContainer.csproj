@@ -23,6 +23,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FastExpressionCompiler" Version="4.1.0" />
+    <PackageReference Include="GProxy" Version="0.0.1-alpha" />
+    <PackageReference Include="GProxy.Generators" Version="0.0.1-alpha" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
