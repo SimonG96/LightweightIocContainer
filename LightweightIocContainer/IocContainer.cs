@@ -284,7 +284,7 @@ public class IocContainer : IIocContainer, IIocResolver
         {
             T instance => instance,
             InternalToBeResolvedPlaceholder toBeResolvedPlaceholder => ResolvePlaceholder<T>(toBeResolvedPlaceholder),
-            InternalFactoryMethodPlaceholder<T> factoryMethodPlaceholder => factoryMethodPlaceholder.FactoryMethod(this),
+            InternalFactoryMethodPlaceholder<T> factoryMethodPlaceholder => CreateInstance<T>(factoryMethodPlaceholder.SingleTypeRegistration, null),
             _ => throw new InternalResolveException("Resolve returned wrong type.")
         };
 

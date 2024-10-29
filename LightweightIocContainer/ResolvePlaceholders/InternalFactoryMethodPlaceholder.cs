@@ -2,7 +2,6 @@
 // Created: 2021-12-14
 // Copyright(c) 2021 SimonG. All Rights Reserved.
 
-using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Registrations;
 
 namespace LightweightIocContainer.ResolvePlaceholders;
@@ -15,7 +14,7 @@ internal class InternalFactoryMethodPlaceholder<T> : IInternalToBeResolvedPlaceh
     public InternalFactoryMethodPlaceholder(ISingleTypeRegistration<T> singleTypeRegistration)
     {
         ResolvedType = singleTypeRegistration.InterfaceType;
-        FactoryMethod = singleTypeRegistration.FactoryMethod ?? throw new InvalidOperationException("Factory method can't be null.");
+        SingleTypeRegistration = singleTypeRegistration;
     }
 
     /// <summary>
@@ -24,7 +23,7 @@ internal class InternalFactoryMethodPlaceholder<T> : IInternalToBeResolvedPlaceh
     public Type ResolvedType { get; }
     
     /// <summary>
-    /// The <see cref="ISingleTypeRegistration{T}.FactoryMethod"/>
+    /// The <see cref="ISingleTypeRegistration{T}"/>
     /// </summary>
-    public Func<IIocResolver, T> FactoryMethod { get; }
+    public ISingleTypeRegistration<T> SingleTypeRegistration { get; }
 }
