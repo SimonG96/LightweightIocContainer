@@ -1894,9 +1894,9 @@
             The <see cref="T:System.Type"/> to be resolved
             </summary>
         </member>
-        <member name="P:LightweightIocContainer.ResolvePlaceholders.InternalFactoryMethodPlaceholder`1.FactoryMethod">
+        <member name="P:LightweightIocContainer.ResolvePlaceholders.InternalFactoryMethodPlaceholder`1.SingleTypeRegistration">
             <summary>
-            The <see cref="P:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1.FactoryMethod"/>
+            The <see cref="T:LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration`1"/>
             </summary>
         </member>
         <member name="T:LightweightIocContainer.ResolvePlaceholders.InternalResolvePlaceholder">
