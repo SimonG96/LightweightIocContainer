@@ -15,7 +15,13 @@ namespace Test.LightweightIocContainer;
 // ReSharper disable MemberHidesStaticFromOuterClass
 public class SingleTypeRegistrationTest
 {
-    private interface IFoo
+    [UsedImplicitly]
+    public interface IFooFactory
+    {
+        IFoo Create(IBar bar);
+    }
+    
+    public interface IFoo
     {
         IBar Bar { get; }
     }
@@ -67,5 +73,21 @@ public class SingleTypeRegistrationTest
 
         Assert.IsInstanceOf<Foo>(foo);
         Assert.AreEqual(bar, foo.Bar);
+    }
+
+    [Test]
+    public void TestSingleTypeRegistrationSingletonFactoryMethodOnlyCalledOnce()
+    {
+        IocContainer container = new();
+        
+        IBar bar = new Bar();
+        IFooFactory fooFactory = Substitute.For<IFooFactory>();
+        
+        container.Register(r => r.Add<IFoo>(Lifestyle.Singleton).WithFactoryMethod(_ => fooFactory.Create(bar)));
+        
+        container.Resolve<IFoo>();
+        container.Resolve<IFoo>();
+
+        fooFactory.Received(1).Create(Arg.Any<IBar>());
     }
 }
