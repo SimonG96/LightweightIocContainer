@@ -19,7 +19,7 @@ A lightweight IOC Container that is powerful enough to do all the things you nee
 The easiest way to [install](https://github.com/SimonG96/LightweightIocContainer/wiki/Install-Lightweight-IOC-Container) the Lightweight IOC Container is by using [NuGet](https://www.nuget.org/packages/LightweightIocContainer/) through the [`.NET CLI`](https://github.com/SimonG96/LightweightIocContainer/wiki/Install-Lightweight-IOC-Container#net-cli):
 
 ```.net
-> dotnet add package LightweightIocContainer --version 4.3.1
+> dotnet add package LightweightIocContainer --version 4.4.0-beta
 ```
 
 ### Example usage
@@ -59,7 +59,7 @@ The easiest way to [install](https://github.com/SimonG96/LightweightIocContainer
 There is the option to install the [LightweightIocContainer.Validation](https://www.nuget.org/packages/LightweightIocContainer.Validation/) package:
 
 ```.net
-> dotnet add package LightweightIocContainer.Validaton --version 4.3.1
+> dotnet add package LightweightIocContainer.Validaton --version 4.4.0-beta
 ```
 
 With this you can validate your `IocContainer` setup by using the `IocValidator` in a unit test:

@@ -10,7 +10,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <DocumentationFile>LightweightIocContainer.xml</DocumentationFile>
-    <VersionPrefix>4.3.1</VersionPrefix>
+    <VersionPrefix>4.4.0</VersionPrefix>
+    <VersionSuffix>beta</VersionSuffix>
   </PropertyGroup>
 
   <PropertyGroup>
