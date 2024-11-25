@@ -3,7 +3,6 @@
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Factories;
@@ -23,7 +22,7 @@ public class IocContainer : IIocContainer, IIocResolver
     private readonly RegistrationFactory _registrationFactory;
 
     private readonly List<(Type type, object? instance)> _singletons = new();
-    private readonly List<(Type type, Type scope, ConditionalWeakTable<object, object?> instances)> _multitons = new();
+    private readonly List<(Type type, Type scope, Dictionary<object, object?> instances)> _multitons = new();
 
     private readonly List<Type> _ignoreConstructorAttributes;
 
@@ -421,7 +420,7 @@ public class IocContainer : IIocContainer, IIocResolver
         }
 
         T newInstance = Creator.CreateInstance<T>(registration.ImplementationType, arguments[1..]);
-        _multitons.Add((registration.ImplementationType, registration.Scope, new ConditionalWeakTable<object, object?> { { scopeArgument, newInstance } }));
+        _multitons.Add((registration.ImplementationType, registration.Scope, new Dictionary<object, object?> { { scopeArgument, newInstance } }));
 
         return newInstance;
     }

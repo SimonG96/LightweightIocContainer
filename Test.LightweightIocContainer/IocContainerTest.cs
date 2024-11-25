@@ -34,6 +34,11 @@ public class IocContainerTest
             
         }
     }
+    
+    private class TestMultitonIntScope(int scope) : ITest
+    {
+        
+    }
 
     [UsedImplicitly]
     private class TestConstructor : ITest
@@ -264,6 +269,20 @@ public class IocContainerTest
         ITest resolvedTest1 = _iocContainer.Resolve<ITest>(scope1);
         ITest resolvedTest2 = _iocContainer.Resolve<ITest>(scope1);
         ITest resolvedTest3 = _iocContainer.Resolve<ITest>(scope2);
+
+        Assert.AreSame(resolvedTest1, resolvedTest2);
+        Assert.AreNotSame(resolvedTest1, resolvedTest3);
+        Assert.AreNotSame(resolvedTest2, resolvedTest3);
+    }
+    
+    [Test]
+    public void TestResolveMultitonIntScope()
+    {
+        _iocContainer.Register(r => r.AddMultiton<ITest, TestMultitonIntScope, int>());
+
+        ITest resolvedTest1 = _iocContainer.Resolve<ITest>(1);
+        ITest resolvedTest2 = _iocContainer.Resolve<ITest>(1);
+        ITest resolvedTest3 = _iocContainer.Resolve<ITest>(2);
 
         Assert.AreSame(resolvedTest1, resolvedTest2);
         Assert.AreNotSame(resolvedTest1, resolvedTest3);
