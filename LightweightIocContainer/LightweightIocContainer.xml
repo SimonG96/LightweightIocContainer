@@ -620,6 +620,13 @@
             <param name="action">The <see cref="T:System.Action`1"/></param>
             <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistration`2"/></returns>
         </member>
+        <member name="M:LightweightIocContainer.Interfaces.Registrations.Fluent.IOnCreate`2.OnCreateAsync(System.Func{`1,System.Threading.Tasks.Task})">
+            <summary>
+            Pass an <see cref="T:System.Action`1"/> that will be invoked when an instance of this type is created
+            </summary>
+            <param name="action">The <see cref="T:System.Action`1"/></param>
+            <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.ITypedRegistration`2"/></returns>
+        </member>
         <member name="T:LightweightIocContainer.Interfaces.Registrations.Fluent.IWithDisposeStrategy">
             <summary>
             Provides a <see cref="T:LightweightIocContainer.DisposeStrategy"/> to an <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>

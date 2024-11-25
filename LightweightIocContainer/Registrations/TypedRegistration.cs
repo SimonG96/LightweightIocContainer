@@ -34,40 +34,40 @@ internal class TypedRegistration<TInterface, TImplementation> : RegistrationBase
     /// This <see cref="Action"/> is invoked when an instance of this type is created.
     /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="IOnCreate{TInterface,TImplementation}.OnCreate"/></para>
     /// </summary>
-    private Action<object?>? OnCreateAction { get; set; }
+    private Action<object>? OnCreateAction { get; set; }
 
     /// <summary>
     /// This <see cref="Action"/> is invoked when an instance of this type is created.
     /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="IOnCreate{TInterface,TImplementation}.OnCreate"/></para>
     /// </summary>
-    private Func<object?, Task>? OnCreateActionAsync { get; set; }
+    private Func<object, Task>? OnCreateActionAsync { get; set; }
 
     /// <summary>
     /// This <see cref="Action"/> is invoked when an instance of this type is created.
     /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="IOnCreate{TInterface,TImplementation}.OnCreate"/></para>
     /// </summary>
-    Action<object?>? IOnCreate.OnCreateAction => OnCreateAction;
+    Action<object>? IOnCreate.OnCreateAction => OnCreateAction;
     
     /// <summary>
     /// This <see cref="Action"/> is invoked when an instance of this type is created.
     /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="IOnCreate{TInterface,TImplementation}.OnCreate"/></para>
     /// </summary>
-    Func<object?, Task>? IOnCreate.OnCreateActionAsync => OnCreateActionAsync;
+    Func<object, Task>? IOnCreate.OnCreateActionAsync => OnCreateActionAsync;
 
     /// <summary>
     /// Pass an <see cref="Action{T}"/> that will be invoked when an instance of this type is created
     /// </summary>
     /// <param name="action">The <see cref="Action{T}"/></param>
     /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
-    public virtual ITypedRegistration<TInterface, TImplementation> OnCreate(Action<TImplementation?> action)
+    public virtual ITypedRegistration<TInterface, TImplementation> OnCreate(Action<TImplementation> action)
     {
-        OnCreateAction = a => action((TImplementation?) a);
+        OnCreateAction = a => action((TImplementation) a);
         return this;
     }
 
-    public ITypedRegistration<TInterface, TImplementation> OnCreateAsync(Func<TImplementation?, Task> action)
+    public ITypedRegistration<TInterface, TImplementation> OnCreateAsync(Func<TImplementation, Task> action)
     {
-        OnCreateActionAsync = a => action((TImplementation?) a);
+        OnCreateActionAsync = a => action((TImplementation) a);
         return this;
     }
 

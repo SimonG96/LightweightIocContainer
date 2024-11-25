@@ -15,8 +15,8 @@ public interface IOnCreate
     /// This <see cref="Action"/> is invoked when an instance of this type is created.
     /// <para>Can be set in the <see cref="IIocInstaller"/> by calling <see cref="IOnCreate{TInterface, TImplementation}.OnCreate"/></para>
     /// </summary>
-    internal Action<object?>? OnCreateAction { get; }
-    internal Func<object?, Task>? OnCreateActionAsync { get; }
+    internal Action<object>? OnCreateAction { get; }
+    internal Func<object, Task>? OnCreateActionAsync { get; }
 }
 
 /// <summary>
@@ -31,7 +31,12 @@ public interface IOnCreate<TInterface, TImplementation> : IOnCreate where TImple
     /// </summary>
     /// <param name="action">The <see cref="Action{T}"/></param>
     /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
-    ITypedRegistration<TInterface, TImplementation> OnCreate(Action<TImplementation?> action);
+    ITypedRegistration<TInterface, TImplementation> OnCreate(Action<TImplementation> action);
     
-    ITypedRegistration<TInterface, TImplementation> OnCreateAsync(Func<TImplementation?, Task> action);
+    /// <summary>
+    /// Pass an <see cref="Action{T}"/> that will be invoked when an instance of this type is created
+    /// </summary>
+    /// <param name="action">The <see cref="Action{T}"/></param>
+    /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
+    ITypedRegistration<TInterface, TImplementation> OnCreateAsync(Func<TImplementation, Task> action);
 }

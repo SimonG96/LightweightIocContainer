@@ -398,7 +398,7 @@ public class IocContainer : IIocContainer, IIocResolver
         if (registration is ILifestyleProvider { Lifestyle: Lifestyle.Singleton }) 
             _singletons.Add((GetType<T>(registration), instance));
 
-        if (registration is IOnCreate onCreateRegistration)
+        if (registration is IOnCreate onCreateRegistration && instance is not null)
             onCreateRegistration.OnCreateAction?.Invoke(instance);
 
         return instance;
@@ -407,7 +407,7 @@ public class IocContainer : IIocContainer, IIocResolver
     private async Task<T> CreateInstanceAsync<T>(IRegistration registration, object?[]? arguments)
     {
         T instance = CreateInstance<T>(registration, arguments);
-        if (registration is IOnCreate { OnCreateActionAsync: not null } onCreateRegistration)
+        if (registration is IOnCreate { OnCreateActionAsync: not null } onCreateRegistration && instance is not null)
             await onCreateRegistration.OnCreateActionAsync.Invoke(instance);
 
         return instance;

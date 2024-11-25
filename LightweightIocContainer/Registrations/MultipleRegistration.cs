@@ -62,7 +62,7 @@ internal class MultipleRegistration<TInterface1, TInterface2, TImplementation> :
     /// </summary>
     /// <param name="action">The <see cref="Action{T}"/></param>
     /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
-    public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation?> action)
+    public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
     {
         foreach (IRegistration registration in Registrations)
         {
@@ -110,7 +110,7 @@ internal class MultipleRegistration<TInterface1, TInterface2, TInterface3, TImpl
     /// </summary>
     /// <param name="action">The <see cref="Action{T}"/></param>
     /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
-    public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation?> action)
+    public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
     {
         foreach (IRegistration registration in Registrations)
         {
@@ -163,7 +163,7 @@ internal class MultipleRegistration<TInterface1, TInterface2, TInterface3, TInte
     /// </summary>
     /// <param name="action">The <see cref="Action{T}"/></param>
     /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
-    public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation?> action)
+    public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
     {
         foreach (IRegistration registration in Registrations)
         {
@@ -221,7 +221,7 @@ internal class MultipleRegistration<TInterface1, TInterface2, TInterface3, TInte
     /// </summary>
     /// <param name="action">The <see cref="Action{T}"/></param>
     /// <returns>The current instance of this <see cref="ITypedRegistration{TInterface,TImplementation}"/></returns>
-    public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation?> action)
+    public override ITypedRegistration<TInterface1, TImplementation> OnCreate(Action<TImplementation> action)
     {
         foreach (IRegistration registration in Registrations)
         {
