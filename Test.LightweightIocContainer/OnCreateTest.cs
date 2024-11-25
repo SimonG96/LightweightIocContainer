@@ -21,6 +21,7 @@ public class OnCreateTest
     private class Test : ITest
     {
         public void DoSomething() => throw new Exception();
+        public Task InitializeAsync() => throw new Exception();
     }
 
         
@@ -33,5 +34,16 @@ public class OnCreateTest
         Test test = new();
 
         Assert.Throws<Exception>(() => testRegistration.OnCreateAction!(test));
+    }
+    
+    [Test]
+    public void TestOnCreateAsync()
+    {
+        RegistrationFactory registrationFactory = new(Substitute.For<IocContainer>());
+        ITypedRegistration<ITest, Test> testRegistration = registrationFactory.Register<ITest, Test>(Lifestyle.Transient).OnCreateAsync(t => t.InitializeAsync());
+
+        Test test = new();
+
+        Assert.Throws<Exception>(() => testRegistration.OnCreateActionAsync!(test));
     }
 }

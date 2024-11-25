@@ -12,4 +12,14 @@ internal static class TypeExtension
     /// <param name="type">The given <see cref="Type"/></param>
     /// <returns>The default value for the given <see cref="Type"/></returns>
     public static object? GetDefault(this Type type) => type.IsValueType ? Activator.CreateInstance(type) : null;
+    public static Type? GetAsyncReturnType(this Type type)
+    {
+        if (!type.IsGenericType)
+            return null;
+        
+        if (type.GetGenericTypeDefinition() != typeof(Task<>))
+            return null;
+        
+        return type.GenericTypeArguments[0];
+    }
 }

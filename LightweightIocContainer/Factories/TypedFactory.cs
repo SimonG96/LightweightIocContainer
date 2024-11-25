@@ -51,7 +51,7 @@ public class TypedFactory<TFactory> : TypedFactoryBase<TFactory>, ITypedFactory<
         FieldBuilder helperFieldBuilder = typeBuilder.DefineField("_helper", typeof(FactoryHelper), FieldAttributes.Private | FieldAttributes.InitOnly);
 
         //add ctor
-        ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, new[] {typeof(IocContainer), typeof(FactoryHelper)});
+        ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, [typeof(IocContainer), typeof(FactoryHelper)]);
         ILGenerator constructorGenerator = constructorBuilder.GetILGenerator();
         constructorGenerator.Emit(OpCodes.Ldarg_0);
         constructorGenerator.Emit(OpCodes.Ldarg_1);
@@ -129,13 +129,18 @@ public class TypedFactory<TFactory> : TypedFactoryBase<TFactory>, ITypedFactory<
                 generator.EmitCall(OpCodes.Call, emptyArray, null);
             }
             
-            generator.EmitCall(OpCodes.Call, typeof(FactoryHelper).GetMethod(nameof(FactoryHelper.ConvertPassedNull), new[] { typeof(MethodBase), typeof(object?[]) })!, null);
+            generator.EmitCall(OpCodes.Call, typeof(FactoryHelper).GetMethod(nameof(FactoryHelper.ConvertPassedNull), [typeof(MethodBase), typeof(object?[])])!, null);
             generator.Emit(OpCodes.Stloc_1);
             generator.Emit(OpCodes.Ldarg_0);
             generator.Emit(OpCodes.Ldfld, containerFieldBuilder);
             generator.Emit(OpCodes.Ldloc_1);
 
-            generator.EmitCall(OpCodes.Call, typeof(IocContainer).GetMethod(nameof(IocContainer.FactoryResolve), new[] { typeof(object?[]) })!.MakeGenericMethod(createMethod.ReturnType), null);
+            Type? asyncReturnType = createMethod.ReturnType.GetAsyncReturnType();
+            if (asyncReturnType is not null)
+                generator.EmitCall(OpCodes.Call, typeof(IocContainer).GetMethod(nameof(IocContainer.FactoryResolveAsync), [typeof(object?[])])!.MakeGenericMethod(asyncReturnType), null);
+            else
+                generator.EmitCall(OpCodes.Call, typeof(IocContainer).GetMethod(nameof(IocContainer.FactoryResolve), [typeof(object?[])])!.MakeGenericMethod(createMethod.ReturnType), null);
+            
             generator.Emit(OpCodes.Castclass, createMethod.ReturnType);
             generator.Emit(OpCodes.Ret);
         }

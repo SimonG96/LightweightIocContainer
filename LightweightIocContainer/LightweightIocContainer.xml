@@ -551,7 +551,22 @@
             <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
             <returns>An instance of the given <see cref="T:System.Type"/></returns>
         </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocResolver.ResolveAsync``1">
+            <summary>
+            Gets an instance of the given <see cref="T:System.Type"/>
+            </summary>
+            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
+            <returns>An instance of the given <see cref="T:System.Type"/></returns>
+        </member>
         <member name="M:LightweightIocContainer.Interfaces.IIocResolver.Resolve``1(System.Object[])">
+            <summary>
+            Gets an instance of the given <see cref="T:System.Type"/>
+            </summary>
+            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
+            <param name="arguments">The constructor arguments</param>
+            <returns>An instance of the given <see cref="T:System.Type"/></returns>
+        </member>
+        <member name="M:LightweightIocContainer.Interfaces.IIocResolver.ResolveAsync``1(System.Object[])">
             <summary>
             Gets an instance of the given <see cref="T:System.Type"/>
             </summary>
@@ -975,6 +990,13 @@
             <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
             <returns>An instance of the given <see cref="T:System.Type"/></returns>
         </member>
+        <member name="M:LightweightIocContainer.IocContainer.ResolveAsync``1">
+            <summary>
+            Gets an instance of the given <see cref="T:System.Type"/>
+            </summary>
+            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
+            <returns>An instance of the given <see cref="T:System.Type"/></returns>
+        </member>
         <member name="M:LightweightIocContainer.IocContainer.Resolve``1(System.Object[])">
             <summary>
             Gets an instance of the given <see cref="T:System.Type"/>
@@ -983,7 +1005,23 @@
             <param name="arguments">The constructor arguments</param>
             <returns>An instance of the given <see cref="T:System.Type"/></returns>
         </member>
+        <member name="M:LightweightIocContainer.IocContainer.ResolveAsync``1(System.Object[])">
+            <summary>
+            Gets an instance of the given <see cref="T:System.Type"/>
+            </summary>
+            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
+            <param name="arguments">The constructor arguments</param>
+            <returns>An instance of the given <see cref="T:System.Type"/></returns>
+        </member>
         <member name="M:LightweightIocContainer.IocContainer.FactoryResolve``1(System.Object[])">
+            <summary>
+            Gets an instance of the given <see cref="T:System.Type"/> for a factory
+            </summary>
+            <typeparam name="T">The given <see cref="T:System.Type"/></typeparam>
+            <param name="arguments">The constructor arguments</param>
+            <returns>An instance of the given <see cref="T:System.Type"/></returns>
+        </member>
+        <member name="M:LightweightIocContainer.IocContainer.FactoryResolveAsync``1(System.Object[])">
             <summary>
             Gets an instance of the given <see cref="T:System.Type"/> for a factory
             </summary>
@@ -1856,7 +1894,19 @@
             <para>Can be set in the <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> by calling <see cref="M:LightweightIocContainer.Interfaces.Registrations.Fluent.IOnCreate`2.OnCreate(System.Action{`1})"/></para>
             </summary>
         </member>
+        <member name="P:LightweightIocContainer.Registrations.TypedRegistration`2.OnCreateActionAsync">
+            <summary>
+            This <see cref="T:System.Action"/> is invoked when an instance of this type is created.
+            <para>Can be set in the <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> by calling <see cref="M:LightweightIocContainer.Interfaces.Registrations.Fluent.IOnCreate`2.OnCreate(System.Action{`1})"/></para>
+            </summary>
+        </member>
         <member name="P:LightweightIocContainer.Registrations.TypedRegistration`2.LightweightIocContainer#Interfaces#Registrations#Fluent#IOnCreate#OnCreateAction">
+            <summary>
+            This <see cref="T:System.Action"/> is invoked when an instance of this type is created.
+            <para>Can be set in the <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> by calling <see cref="M:LightweightIocContainer.Interfaces.Registrations.Fluent.IOnCreate`2.OnCreate(System.Action{`1})"/></para>
+            </summary>
+        </member>
+        <member name="P:LightweightIocContainer.Registrations.TypedRegistration`2.LightweightIocContainer#Interfaces#Registrations#Fluent#IOnCreate#OnCreateActionAsync">
             <summary>
             This <see cref="T:System.Action"/> is invoked when an instance of this type is created.
             <para>Can be set in the <see cref="T:LightweightIocContainer.Interfaces.Installers.IIocInstaller"/> by calling <see cref="M:LightweightIocContainer.Interfaces.Registrations.Fluent.IOnCreate`2.OnCreate(System.Action{`1})"/></para>

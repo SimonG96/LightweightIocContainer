@@ -108,9 +108,24 @@ public class IocContainer : IIocContainer, IIocResolver
     /// Gets an instance of the given <see cref="Type"/>
     /// </summary>
     /// <typeparam name="T">The given <see cref="Type"/></typeparam>
+    /// <returns>An instance of the given <see cref="Type"/></returns>
+    public Task<T> ResolveAsync<T>() => ResolveInternalAsync<T>(null);
+
+    /// <summary>
+    /// Gets an instance of the given <see cref="Type"/>
+    /// </summary>
+    /// <typeparam name="T">The given <see cref="Type"/></typeparam>
     /// <param name="arguments">The constructor arguments</param>
     /// <returns>An instance of the given <see cref="Type"/></returns>
     public T Resolve<T>(params object[] arguments) => ResolveInternal<T>(arguments);
+
+    /// <summary>
+    /// Gets an instance of the given <see cref="Type"/>
+    /// </summary>
+    /// <typeparam name="T">The given <see cref="Type"/></typeparam>
+    /// <param name="arguments">The constructor arguments</param>
+    /// <returns>An instance of the given <see cref="Type"/></returns>
+    public Task<T> ResolveAsync<T>(params object[] arguments) => ResolveInstanceAsync<T>(arguments);
 
     /// <summary>
     /// Gets an instance of the given <see cref="Type"/> for a factory
@@ -119,6 +134,14 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <param name="arguments">The constructor arguments</param>
     /// <returns>An instance of the given <see cref="Type"/></returns>
     public T FactoryResolve<T>(params object?[] arguments) => ResolveInternal<T>(arguments, null, true);
+    
+    /// <summary>
+    /// Gets an instance of the given <see cref="Type"/> for a factory
+    /// </summary>
+    /// <typeparam name="T">The given <see cref="Type"/></typeparam>
+    /// <param name="arguments">The constructor arguments</param>
+    /// <returns>An instance of the given <see cref="Type"/></returns>
+    public Task<T> FactoryResolveAsync<T>(params object?[] arguments) => ResolveInternalAsync<T>(arguments, null, true);
 
     /// <summary>
     /// Gets an instance of a given registered <see cref="Type"/>
@@ -133,6 +156,18 @@ public class IocContainer : IIocContainer, IIocResolver
         (bool success, object resolvedObject, Exception? exception) = TryResolve<T>(arguments, resolveStack, isFactoryResolve);
         if (success)
             return ResolveInstance<T>(resolvedObject);
+
+        if (exception is not null)
+            throw exception;
+
+        throw new Exception("Resolve Error");
+    }
+    
+    private async Task<T> ResolveInternalAsync<T>(object?[]? arguments, List<Type>? resolveStack = null, bool isFactoryResolve = false)
+    {
+        (bool success, object resolvedObject, Exception? exception) = TryResolve<T>(arguments, resolveStack, isFactoryResolve);
+        if (success)
+            return await ResolveInstanceAsync<T>(resolvedObject);
 
         if (exception is not null)
             throw exception;
@@ -254,7 +289,7 @@ public class IocContainer : IIocContainer, IIocResolver
         if (toBeResolvedPlaceholder.Parameters == null)
             return CreateInstance<T>(toBeResolvedPlaceholder.ResolvedRegistration, null);
             
-        List<object?> parameters = new();
+        List<object?> parameters = [];
         foreach (object? parameter in toBeResolvedPlaceholder.Parameters)
         {
             if (parameter != null)
@@ -269,6 +304,32 @@ public class IocContainer : IIocContainer, IIocResolver
         }
 
         return CreateInstance<T>(toBeResolvedPlaceholder.ResolvedRegistration, parameters.ToArray());
+    }
+
+    private async Task<T> ResolvePlaceholderAsync<T>(InternalToBeResolvedPlaceholder toBeResolvedPlaceholder)
+    {
+        object? existingInstance = TryGetExistingInstance<T>(toBeResolvedPlaceholder.ResolvedRegistration, toBeResolvedPlaceholder.Parameters);
+        if (existingInstance is T instance)
+            return instance;
+
+        if (toBeResolvedPlaceholder.Parameters == null)
+            return await CreateInstanceAsync<T>(toBeResolvedPlaceholder.ResolvedRegistration, null);
+            
+        List<object?> parameters = [];
+        foreach (object? parameter in toBeResolvedPlaceholder.Parameters)
+        {
+            if (parameter != null)
+            {
+                Type type = parameter is IInternalToBeResolvedPlaceholder internalToBeResolvedPlaceholder ?
+                    internalToBeResolvedPlaceholder.ResolvedType : parameter.GetType();
+                    
+                parameters.Add(await ResolveInstanceNonGenericAsync(type, parameter));
+            }
+            else
+                parameters.Add(parameter);
+        }
+
+        return await CreateInstanceAsync<T>(toBeResolvedPlaceholder.ResolvedRegistration, parameters.ToArray());
     }
 
     /// <summary>
@@ -286,6 +347,15 @@ public class IocContainer : IIocContainer, IIocResolver
             InternalFactoryMethodPlaceholder<T> factoryMethodPlaceholder => CreateInstance<T>(factoryMethodPlaceholder.SingleTypeRegistration, null),
             _ => throw new InternalResolveException("Resolve returned wrong type.")
         };
+    
+    private async Task<T> ResolveInstanceAsync<T>(object resolvedObject) =>
+        resolvedObject switch
+        {
+            T instance => instance,
+            InternalToBeResolvedPlaceholder toBeResolvedPlaceholder => await ResolvePlaceholderAsync<T>(toBeResolvedPlaceholder),
+            InternalFactoryMethodPlaceholder<T> factoryMethodPlaceholder => await CreateInstanceAsync<T>(factoryMethodPlaceholder.SingleTypeRegistration, null),
+            _ => throw new InternalResolveException("Resolve returned wrong type.")
+        };
 
     /// <summary>
     /// Resolve the given object instance without generic arguments
@@ -296,6 +366,9 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <exception cref="InternalResolveException">Resolve returned wrong type</exception>
     private object? ResolveInstanceNonGeneric(Type type, object resolvedObject) => 
         GenericMethodCaller.CallPrivate(this, nameof(ResolveInstance), type, resolvedObject);
+    
+    private Task<object?> ResolveInstanceNonGenericAsync(Type type, object resolvedObject) => 
+        GenericMethodCaller.CallPrivateAsync(this, nameof(ResolveInstance), type, resolvedObject);
 
     /// <summary>
     /// Creates an instance of a given <see cref="Type"/>
@@ -326,7 +399,16 @@ public class IocContainer : IIocContainer, IIocResolver
             _singletons.Add((GetType<T>(registration), instance));
 
         if (registration is IOnCreate onCreateRegistration)
-            onCreateRegistration.OnCreateAction?.Invoke(instance); //TODO: Allow async OnCreateAction?
+            onCreateRegistration.OnCreateAction?.Invoke(instance);
+
+        return instance;
+    }
+
+    private async Task<T> CreateInstanceAsync<T>(IRegistration registration, object?[]? arguments)
+    {
+        T instance = CreateInstance<T>(registration, arguments);
+        if (registration is IOnCreate { OnCreateActionAsync: not null } onCreateRegistration)
+            await onCreateRegistration.OnCreateActionAsync.Invoke(instance);
 
         return instance;
     }

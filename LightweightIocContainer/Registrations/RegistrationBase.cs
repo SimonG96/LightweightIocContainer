@@ -176,7 +176,7 @@ internal abstract class RegistrationBase : IRegistrationBase, IWithFactoryIntern
         if (Factory == null)
             return;
             
-        if (Factory.CreateMethods.All(c => c.ReturnType != InterfaceType))
+        if (Factory.CreateMethods.All(c => c.ReturnType != InterfaceType) && Factory.CreateMethods.All(c => c.ReturnType.GetAsyncReturnType() != InterfaceType))
             throw new InvalidFactoryRegistrationException($"No create method that can create {InterfaceType}.");
     }
         
