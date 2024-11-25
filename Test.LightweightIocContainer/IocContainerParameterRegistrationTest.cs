@@ -106,9 +106,9 @@ public class IocContainerParameterRegistrationTest
             
         _iocContainer.Register(r => r.Add<IA, A>().WithParameters(b, c));
         IA a = _iocContainer.Resolve<IA>();
-            
-        Assert.AreSame(b, a.B);
-        Assert.AreSame(c, a.C);
+        
+        Assert.That(a.B, Is.SameAs(b));
+        Assert.That(a.C, Is.SameAs(c));
     }
 
     [Test]
@@ -120,8 +120,8 @@ public class IocContainerParameterRegistrationTest
         _iocContainer.Register(r => r.Add<IA, A>().WithParameters(b));
         IA a = _iocContainer.Resolve<IA>(c);
 
-        Assert.AreSame(b, a.B);
-        Assert.AreSame(c, a.C);
+        Assert.That(a.B, Is.SameAs(b));
+        Assert.That(a.C, Is.SameAs(c));
     }
 
     [Test]
@@ -136,11 +136,11 @@ public class IocContainerParameterRegistrationTest
         _iocContainer.Register(r => r.Add<ID, D>().WithParameters((0, a), (2, a3), (3, b), (4, c)));
         ID d = _iocContainer.Resolve<ID>(a2);
 
-        Assert.AreSame(a, d.A);
-        Assert.AreSame(a2, d.A2);
-        Assert.AreSame(a3, d.A3);
-        Assert.AreSame(b, d.B);
-        Assert.AreSame(c, d.C);
+        Assert.That(d.A, Is.SameAs(a));
+        Assert.That(d.A2, Is.SameAs(a2));
+        Assert.That(d.A3, Is.SameAs(a3));
+        Assert.That(d.B, Is.SameAs(b));
+        Assert.That(d.C, Is.SameAs(c));
     }
 
     [Test]
@@ -158,9 +158,9 @@ public class IocContainerParameterRegistrationTest
 
         ID d = _iocContainer.Resolve<ID>(a);
 
-        Assert.AreSame(a, d.A2);
-        Assert.AreSame(a2, d.A);
-        Assert.AreNotSame(a, d.A3);
-        Assert.AreNotSame(a2, d.A3);
+        Assert.That(d.A, Is.SameAs(a2));
+        Assert.That(d.A2, Is.SameAs(a));
+        Assert.That(d.A3, Is.Not.SameAs(a));
+        Assert.That(d.A3, Is.Not.SameAs(a2));
     }
 }

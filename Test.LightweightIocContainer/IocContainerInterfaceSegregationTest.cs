@@ -56,10 +56,10 @@ public class IocContainerInterfaceSegregationTest
         _container.Register(r => r.Add<IBar, IFoo, Foo>().OnCreate(foo => foo.ThrowFoo()));
 
         Exception fooException = Assert.Throws<Exception>(() => _container.Resolve<IFoo>());
-        Assert.AreEqual("Foo", fooException?.Message);
+        Assert.That(fooException?.Message, Is.EqualTo("Foo"));
             
         Exception barException = Assert.Throws<Exception>(() => _container.Resolve<IBar>());
-        Assert.AreEqual("Foo", barException?.Message);
+        Assert.That(barException?.Message, Is.EqualTo("Foo"));
     }
 
     [Test]
@@ -68,13 +68,13 @@ public class IocContainerInterfaceSegregationTest
         _container.Register(r => r.Add<IBar, IFoo, IAnotherFoo, Foo>().OnCreate(foo => foo.ThrowFoo()));
 
         Exception fooException = Assert.Throws<Exception>(() => _container.Resolve<IFoo>());
-        Assert.AreEqual("Foo", fooException?.Message);
+        Assert.That(fooException?.Message, Is.EqualTo("Foo"));
 
         Exception barException = Assert.Throws<Exception>(() => _container.Resolve<IBar>());
-        Assert.AreEqual("Foo", barException?.Message);
+        Assert.That(barException?.Message, Is.EqualTo("Foo"));
 
         Exception anotherFooException = Assert.Throws<Exception>(() => _container.Resolve<IAnotherFoo>());
-        Assert.AreEqual("Foo", anotherFooException?.Message);
+        Assert.That(anotherFooException?.Message, Is.EqualTo("Foo"));
     }
 
     [Test]
@@ -83,16 +83,16 @@ public class IocContainerInterfaceSegregationTest
         _container.Register(r => r.Add<IBar, IFoo, IAnotherFoo, IAnotherBar, Foo>().OnCreate(foo => foo.ThrowFoo()));
 
         Exception fooException = Assert.Throws<Exception>(() => _container.Resolve<IFoo>());
-        Assert.AreEqual("Foo", fooException?.Message);
+        Assert.That(fooException?.Message, Is.EqualTo("Foo"));
 
         Exception barException = Assert.Throws<Exception>(() => _container.Resolve<IBar>());
-        Assert.AreEqual("Foo", barException?.Message);
+        Assert.That(barException?.Message, Is.EqualTo("Foo"));
 
         Exception anotherFooException = Assert.Throws<Exception>(() => _container.Resolve<IAnotherFoo>());
-        Assert.AreEqual("Foo", anotherFooException?.Message);
+        Assert.That(anotherFooException?.Message, Is.EqualTo("Foo"));
 
         Exception anotherBarException = Assert.Throws<Exception>(() => _container.Resolve<IAnotherBar>());
-        Assert.AreEqual("Foo", anotherBarException?.Message);
+        Assert.That(anotherBarException?.Message, Is.EqualTo("Foo"));
     }
 
     [Test]
@@ -101,19 +101,19 @@ public class IocContainerInterfaceSegregationTest
         _container.Register(r => r.Add<IBar, IFoo, IAnotherFoo, IAnotherBar, IAnotherOne, Foo>().OnCreate(foo => foo.ThrowFoo()));
 
         Exception fooException = Assert.Throws<Exception>(() => _container.Resolve<IFoo>());
-        Assert.AreEqual("Foo", fooException?.Message);
+        Assert.That(fooException?.Message, Is.EqualTo("Foo"));
 
         Exception barException = Assert.Throws<Exception>(() => _container.Resolve<IBar>());
-        Assert.AreEqual("Foo", barException?.Message);
+        Assert.That(barException?.Message, Is.EqualTo("Foo"));
 
         Exception anotherFooException = Assert.Throws<Exception>(() => _container.Resolve<IAnotherFoo>());
-        Assert.AreEqual("Foo", anotherFooException?.Message);
+        Assert.That(anotherFooException?.Message, Is.EqualTo("Foo"));
 
         Exception anotherBarException = Assert.Throws<Exception>(() => _container.Resolve<IAnotherBar>());
-        Assert.AreEqual("Foo", anotherBarException?.Message);
+        Assert.That(anotherBarException?.Message, Is.EqualTo("Foo"));
 
         Exception anotherOneException = Assert.Throws<Exception>(() => _container.Resolve<IAnotherOne>());
-        Assert.AreEqual("Foo", anotherOneException?.Message);
+        Assert.That(anotherOneException?.Message, Is.EqualTo("Foo"));
     }
 
     [Test]
@@ -126,11 +126,11 @@ public class IocContainerInterfaceSegregationTest
         IAnotherBar anotherBar = _container.Resolve<IAnotherBar>();
         IAnotherOne anotherOne = _container.Resolve<IAnotherOne>();
 
-        Assert.IsInstanceOf<Foo>(foo);
-        Assert.IsInstanceOf<Foo>(bar);
-        Assert.IsInstanceOf<Foo>(anotherFoo);
-        Assert.IsInstanceOf<Foo>(anotherBar);
-        Assert.IsInstanceOf<Foo>(anotherOne);
+        Assert.That(foo, Is.InstanceOf<Foo>());
+        Assert.That(bar, Is.InstanceOf<Foo>());
+        Assert.That(anotherFoo, Is.InstanceOf<Foo>());
+        Assert.That(anotherBar, Is.InstanceOf<Foo>());
+        Assert.That(anotherOne, Is.InstanceOf<Foo>());
     }
 
     [Test]
@@ -143,20 +143,20 @@ public class IocContainerInterfaceSegregationTest
         IAnotherBar anotherBar = _container.Resolve<IAnotherBar>();
         IAnotherOne anotherOne = _container.Resolve<IAnotherOne>();
 
-        Assert.IsInstanceOf<Foo>(foo);
-        Assert.IsInstanceOf<Foo>(bar);
-        Assert.IsInstanceOf<Foo>(anotherFoo);
-        Assert.IsInstanceOf<Foo>(anotherBar);
-        Assert.IsInstanceOf<Foo>(anotherOne);
-            
-        Assert.AreEqual(foo, bar);
-        Assert.AreEqual(foo, anotherFoo);
-        Assert.AreEqual(foo, anotherBar);
-        Assert.AreEqual(foo, anotherOne);
+        Assert.That(foo, Is.InstanceOf<Foo>());
+        Assert.That(bar, Is.InstanceOf<Foo>());
+        Assert.That(anotherFoo, Is.InstanceOf<Foo>());
+        Assert.That(anotherBar, Is.InstanceOf<Foo>());
+        Assert.That(anotherOne, Is.InstanceOf<Foo>());
+        
+        Assert.That(bar, Is.EqualTo(foo));
+        Assert.That(anotherFoo, Is.EqualTo(foo));
+        Assert.That(anotherBar, Is.EqualTo(foo));
+        Assert.That(anotherOne, Is.EqualTo(foo));
 
-        Assert.AreSame(foo, bar);
-        Assert.AreSame(foo, anotherFoo);
-        Assert.AreSame(foo, anotherBar);
-        Assert.AreSame(foo, anotherOne);
+        Assert.That(bar, Is.SameAs(foo));
+        Assert.That(anotherFoo, Is.SameAs(foo));
+        Assert.That(anotherBar, Is.SameAs(foo));
+        Assert.That(anotherOne, Is.SameAs(foo));
     }
 }

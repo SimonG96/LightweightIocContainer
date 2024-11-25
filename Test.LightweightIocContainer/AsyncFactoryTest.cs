@@ -58,7 +58,7 @@ public class AsyncFactoryTest
         ITestFactory testFactory = container.Resolve<ITestFactory>();
         ITest test = await testFactory.Create();
         
-        Assert.IsInstanceOf<Test>(test);
+        Assert.That(test, Is.InstanceOf<Test>());
     }
     
     [Test]
@@ -70,7 +70,7 @@ public class AsyncFactoryTest
         ITestFactory testFactory = container.Resolve<ITestFactory>();
         ITest test = await testFactory.Create();
         
-        Assert.IsInstanceOf<Test>(test);
+        Assert.That(test, Is.InstanceOf<Test>());
         Assert.That(test.IsInitialized, Is.True);
     }
 
@@ -85,12 +85,12 @@ public class AsyncFactoryTest
         ITest test2 = await testFactory.Create(2);
         ITest anotherTest1 = await testFactory.Create(1);
         
-        Assert.IsInstanceOf<Test>(test1);
+        Assert.That(test1, Is.InstanceOf<Test>());
         Assert.That(test1.IsInitialized, Is.True);
         
-        Assert.IsInstanceOf<Test>(test2);
+        Assert.That(test2, Is.InstanceOf<Test>());
         Assert.That(test2.IsInitialized, Is.True);
 
-        Assert.AreSame(test1, anotherTest1);
+        Assert.That(test1, Is.SameAs(anotherTest1));
     }
 }

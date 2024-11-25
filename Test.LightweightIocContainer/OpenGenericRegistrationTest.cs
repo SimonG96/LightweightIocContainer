@@ -73,7 +73,7 @@ public class OpenGenericRegistrationTest
         _iocContainer.Register(r => r.AddOpenGenerics(typeof(ITest<>), typeof(Test<>)));
 
         ITest<Constraint> test = _iocContainer.Resolve<ITest<Constraint>>();
-        Assert.NotNull(test);
+        Assert.That(test, Is.Not.Null);
     }
 
     [Test]
@@ -82,13 +82,13 @@ public class OpenGenericRegistrationTest
         _iocContainer.Register(r => r.AddOpenGenerics(typeof(ITest<>), typeof(Test<>), Lifestyle.Singleton));
 
         ITest<Constraint> test = _iocContainer.Resolve<ITest<Constraint>>();
-        Assert.NotNull(test);
+        Assert.That(test, Is.Not.Null);
 
         ITest<Constraint> secondTest = _iocContainer.Resolve<ITest<Constraint>>();
-        Assert.NotNull(secondTest);
-            
-        Assert.AreEqual(test, secondTest);
-        Assert.AreSame(test, secondTest);
+        Assert.That(secondTest, Is.Not.Null);
+        
+        Assert.That(secondTest, Is.EqualTo(test));
+        Assert.That(secondTest, Is.SameAs(test));
     }
         
     [Test]
@@ -105,7 +105,7 @@ public class OpenGenericRegistrationTest
         _iocContainer.Register(r => r.AddOpenGenerics(typeof(ITest<>), typeof(Test<>)).WithFactory<ITestFactory>());
         ITestFactory testFactory = _iocContainer.Resolve<ITestFactory>();
         ITest<Constraint> test = testFactory.Create<Constraint>();
-        Assert.IsInstanceOf<Test<Constraint>>(test);
+        Assert.That(test, Is.InstanceOf<Test<Constraint>>());
     }
 
     [Test]
@@ -114,6 +114,6 @@ public class OpenGenericRegistrationTest
         _iocContainer.Register(r => r.AddOpenGenerics(typeof(ITest<>), typeof(CtorTest<>)).WithFactory<ICtorTestFactory>());
         ICtorTestFactory testFactory = _iocContainer.Resolve<ICtorTestFactory>();
         ITest<Constraint> test = testFactory.Create(new Constraint());
-        Assert.IsInstanceOf<CtorTest<Constraint>>(test);
+        Assert.That(test, Is.InstanceOf<CtorTest<Constraint>>());
     }
 }

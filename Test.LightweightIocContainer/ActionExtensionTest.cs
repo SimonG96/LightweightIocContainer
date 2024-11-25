@@ -39,6 +39,6 @@ public class ActionExtensionTest
     public void TestConvertActionNull()
     {
         Action<IBar> barAction = null;
-        Assert.Null(barAction.Convert<IFoo, IBar>());
+        Assert.That(barAction.Convert<IFoo, IBar>(), Is.Null);
     }
 }

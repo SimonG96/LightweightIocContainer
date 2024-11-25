@@ -221,8 +221,8 @@ public class IocValidatorTest
             Assert.Fail($"First element of {nameof(noMatchingConstructorFoundException.InnerExceptions)} is not of type {nameof(ConstructorNotMatchingException)}.");
             return;
         }
-            
-        Assert.IsInstanceOf<DirectResolveWithRegisteredFactoryNotAllowed>(iTest2CtorNotMatchingException.InnerExceptions[0]);
+        
+        Assert.That(iTest2CtorNotMatchingException.InnerExceptions[0], Is.InstanceOf<DirectResolveWithRegisteredFactoryNotAllowed>());
     }
     
     [Test]
@@ -246,8 +246,8 @@ public class IocValidatorTest
             Assert.Fail($"First element of {nameof(noMatchingConstructorFoundException.InnerExceptions)} is not of type {nameof(ConstructorNotMatchingException)}.");
             return;
         }
-            
-        Assert.IsInstanceOf<DirectResolveWithRegisteredFactoryNotAllowed>(iTest2CtorNotMatchingException.InnerExceptions[0]);
+        
+        Assert.That(iTest2CtorNotMatchingException.InnerExceptions[0], Is.InstanceOf<DirectResolveWithRegisteredFactoryNotAllowed>());
     }
     
     [Test]
@@ -271,8 +271,8 @@ public class IocValidatorTest
             Assert.Fail($"First element of {nameof(noMatchingConstructorFoundException.InnerExceptions)} is not of type {nameof(ConstructorNotMatchingException)}.");
             return;
         }
-            
-        Assert.IsInstanceOf<DirectResolveWithRegisteredFactoryNotAllowed>(iTest2CtorNotMatchingException.InnerExceptions[0]);
+        
+        Assert.That(iTest2CtorNotMatchingException.InnerExceptions[0], Is.InstanceOf<DirectResolveWithRegisteredFactoryNotAllowed>());
     }
         
     [Test]
@@ -302,7 +302,7 @@ public class IocValidatorTest
     {
         Exception exception = aggregateException?.InnerExceptions[0];
         if (exception is NoMatchingConstructorFoundException noMatchingConstructorFoundException)
-            Assert.AreEqual(typeof(T), noMatchingConstructorFoundException.Type);
+            Assert.That(noMatchingConstructorFoundException.Type, Is.EqualTo(typeof(T)));
         else
             Assert.Fail($"Exception is no {nameof(NoMatchingConstructorFoundException)}, actual type: {exception?.GetType()}");
     }

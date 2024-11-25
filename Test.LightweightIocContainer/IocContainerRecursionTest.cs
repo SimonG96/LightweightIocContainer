@@ -118,9 +118,9 @@ public class IocContainerRecursionTest
         ConstructorNotMatchingException barConstructorNotMatchingException = (ConstructorNotMatchingException) noMatchingBarConstructorFoundException?.InnerExceptions[0];
             
         CircularDependencyException exception = (CircularDependencyException) barConstructorNotMatchingException?.InnerExceptions[0];
-            
-        Assert.AreEqual(typeof(IFoo), exception?.ResolvingType);
-        Assert.AreEqual(2, exception.ResolveStack.Count);
+        
+        Assert.That(exception?.ResolvingType, Is.EqualTo(typeof(IFoo)));
+        Assert.That(exception?.ResolveStack.Count, Is.EqualTo(2));
 
         string message = $"Circular dependency has been detected when trying to resolve `{typeof(IFoo)}`.\n" +
                          "Resolve stack that resulted in the circular dependency:\n" +
@@ -128,7 +128,7 @@ public class IocContainerRecursionTest
                          $"\t`{typeof(IBar)}` resolved as dependency of\n" +
                          $"\t`{typeof(IFoo)}` which is the root type being resolved.";
 
-        Assert.AreEqual(message, exception.Message);
+        Assert.That(exception.Message, Is.EqualTo(message));
     }
 
     [Test]
@@ -139,7 +139,7 @@ public class IocContainerRecursionTest
         _iocContainer.Register(r => r.Add<IC, C>());
 
         IA a = _iocContainer.Resolve<IA>();
-        Assert.IsNotNull(a);
+        Assert.That(a, Is.Not.Null);
     }
 
     [Test]
