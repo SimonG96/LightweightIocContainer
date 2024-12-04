@@ -2,6 +2,7 @@
 // Created: 2019-05-20
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
+using System.Collections.Concurrent;
 using System.Reflection;
 using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
@@ -21,8 +22,8 @@ public class IocContainer : IIocContainer, IIocResolver
 {
     private readonly RegistrationFactory _registrationFactory;
 
-    private readonly List<(Type type, object? instance)> _singletons = [];
-    private readonly List<(Type type, Type scope, Dictionary<object, object?> instances)> _multitons = [];
+    private readonly ConcurrentDictionary<Type, object?> _singletons = [];
+    private readonly ConcurrentDictionary<(Type type, Type scope), ConcurrentDictionary<object, object?>> _multitons = [];
 
     private readonly List<Type> _ignoreConstructorAttributes = [];
 
@@ -390,8 +391,8 @@ public class IocContainer : IIocContainer, IIocResolver
         else
             throw new UnknownRegistrationException($"There is no registration of type {registration.GetType().Name}.");
 
-        if (registration is ILifestyleProvider { Lifestyle: Lifestyle.Singleton }) 
-            _singletons.Add((GetType<T>(registration), instance));
+        if (registration is ILifestyleProvider { Lifestyle: Lifestyle.Singleton })
+            _singletons.TryAdd(GetType<T>(registration), instance);
 
         if (registration is IOnCreate onCreateRegistration && instance is not null)
             onCreateRegistration.OnCreateAction?.Invoke(instance);
@@ -429,8 +430,11 @@ public class IocContainer : IIocContainer, IIocResolver
     /// </summary>
     /// <param name="registration">The <see cref="IRegistration"/></param>
     /// <returns>A singleton instance if existing for the given <see cref="IRegistration"/>, null if not</returns>
-    private object? TryGetSingletonInstance<T>(IRegistration registration) => 
-        _singletons.FirstOrDefault(s => s.type == GetType<T>(registration)).instance; //if a singleton instance exists return it
+    private object? TryGetSingletonInstance<T>(IRegistration registration)
+    {
+        _singletons.TryGetValue(GetType<T>(registration), out object? value); //if a singleton instance exists return it
+        return value;
+    }
 
     /// <summary>
     /// Try to get an existing multiton instance for a given <see cref="IMultitonRegistration"/>
@@ -447,11 +451,11 @@ public class IocContainer : IIocContainer, IIocResolver
         object scopeArgument = TryGetMultitonScopeArgument(registration, arguments);
 
         //if a multiton for the given scope exists return it
-        var matchingMultitons = _multitons.FirstOrDefault(m => m.type == registration.ImplementationType && m.scope == registration.Scope); //get instances for the given type and scope (use implementation type to resolve the correct instance for multiple multiton registrations as well)
-        if (matchingMultitons == default)
+        bool foundMatchingMultitons = _multitons.TryGetValue((registration.ImplementationType, registration.Scope), out var matchingMultitons); //get instances for the given type and scope (use implementation type to resolve the correct instance for multiple multiton registrations as well)
+        if (!foundMatchingMultitons || matchingMultitons is null)
             return null;
 
-        return matchingMultitons.instances.TryGetValue(scopeArgument, out object? instance) && instance != null ? instance : null;
+        return matchingMultitons.TryGetValue(scopeArgument, out object? instance) && instance != null ? instance : null;
     }
 
     /// <summary>
@@ -487,17 +491,21 @@ public class IocContainer : IIocContainer, IIocResolver
         object scopeArgument = TryGetMultitonScopeArgument(registration, arguments);
 
         //if a multiton for the given scope exists return it
-        var matchingMultitons = _multitons.FirstOrDefault(m => m.type == registration.ImplementationType && m.scope == registration.Scope); //get instances for the given type and scope (use implementation type to resolve the correct instance for multiple multiton registrations as well)
-        if (matchingMultitons != default)
+        bool foundMatchingMultitons = _multitons.TryGetValue((registration.ImplementationType, registration.Scope), out var matchingMultitons);
+        if (foundMatchingMultitons && matchingMultitons is not null)
         {
             T createdInstance = Creator.CreateInstance<T>(registration.ImplementationType, arguments[1..]);
-            matchingMultitons.instances.Add(scopeArgument, createdInstance);
+            matchingMultitons.TryAdd(scopeArgument, createdInstance);
 
             return createdInstance;
         }
 
         T newInstance = Creator.CreateInstance<T>(registration.ImplementationType, arguments[1..]);
-        _multitons.Add((registration.ImplementationType, registration.Scope, new Dictionary<object, object?> { { scopeArgument, newInstance } }));
+        
+        ConcurrentDictionary<object,object?> concurrentDictionary = new();
+        concurrentDictionary.TryAdd(scopeArgument, newInstance);
+        
+        _multitons.TryAdd((registration.ImplementationType, registration.Scope), concurrentDictionary);
 
         return newInstance;
     }
@@ -758,14 +766,8 @@ public class IocContainer : IIocContainer, IIocResolver
         IRegistration? registration = FindRegistration<T>();
         if (registration is not IMultitonRegistration multitonRegistration)
             return;
-            
-        var multitonInstance = _multitons.FirstOrDefault(m => m.type == multitonRegistration.ImplementationType);
-
-        //it is allowed to clear a non existing multiton instance (don't throw an exception)
-        if (multitonInstance == default)
-            return;
-
-        _multitons.Remove(multitonInstance);
+        
+        _multitons.Remove((multitonRegistration.ImplementationType, multitonRegistration.Scope), out _);
     }
 
     /// <summary>
@@ -794,13 +796,13 @@ public class IocContainer : IIocContainer, IIocResolver
     /// </summary>
     public void Dispose()
     {
-        _singletons.Where(s => FindRegistration(s.type) is IWithDisposeStrategyInternal {DisposeStrategy: DisposeStrategy.Container})
-            .Select(s => s.instance)
+        _singletons.Where(s => FindRegistration(s.Key) is IWithDisposeStrategyInternal {DisposeStrategy: DisposeStrategy.Container})
+            .Select(s => s.Value)
             .OfType<IDisposable>()
             .ForEach(d => d.Dispose());
 
-        _multitons.Where(m => FindRegistration(m.type) is IWithDisposeStrategyInternal {DisposeStrategy: DisposeStrategy.Container})
-            .SelectMany(m => m.instances)
+        _multitons.Where(m => FindRegistration(m.Key.type) is IWithDisposeStrategyInternal {DisposeStrategy: DisposeStrategy.Container})
+            .SelectMany(m => m.Value)
             .Select(i => i.Value)
             .OfType<IDisposable>()
             .ForEach(d => d.Dispose());

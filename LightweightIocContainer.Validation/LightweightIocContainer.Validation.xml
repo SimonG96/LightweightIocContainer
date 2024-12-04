@@ -13,7 +13,6 @@
             <summary>
             Validator for your <see cref="T:LightweightIocContainer.IocContainer"/> to check if everything can be resolved with your current setup
             </summary>
-            <param name="iocContainer">The <see cref="T:LightweightIocContainer.IocContainer"/></param>
         </member>
         <member name="M:LightweightIocContainer.Validation.IocValidator.AddParameter``2(``1)">
             <summary>

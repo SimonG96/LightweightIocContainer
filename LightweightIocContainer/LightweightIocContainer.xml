@@ -1946,6 +1946,11 @@
             An internal placeholder that is used to hold factory methods for types that need to be resolved during the resolve process
             </summary>
         </member>
+        <member name="M:LightweightIocContainer.ResolvePlaceholders.InternalFactoryMethodPlaceholder`1.#ctor(LightweightIocContainer.Interfaces.Registrations.ISingleTypeRegistration{`0})">
+            <summary>
+            An internal placeholder that is used to hold factory methods for types that need to be resolved during the resolve process
+            </summary>
+        </member>
         <member name="P:LightweightIocContainer.ResolvePlaceholders.InternalFactoryMethodPlaceholder`1.ResolvedType">
             <summary>
             The <see cref="T:System.Type"/> to be resolved
@@ -1962,6 +1967,11 @@
             </summary>
         </member>
         <member name="T:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder">
+            <summary>
+            An internal placeholder that is used to hold types that need to be resolved during the resolving process
+            </summary>
+        </member>
+        <member name="M:LightweightIocContainer.ResolvePlaceholders.InternalToBeResolvedPlaceholder.#ctor(System.Type,LightweightIocContainer.Interfaces.Registrations.IRegistration,System.Collections.Generic.List{System.Object})">
             <summary>
             An internal placeholder that is used to hold types that need to be resolved during the resolving process
             </summary>
