@@ -27,10 +27,7 @@ public class SingleTypeRegistrationTest
     }
 
     [UsedImplicitly]
-    public interface IBar
-    {
-            
-    }
+    public interface IBar;
 
     [UsedImplicitly]
     private class Foo : IFoo
@@ -41,10 +38,7 @@ public class SingleTypeRegistrationTest
     }
 
     [UsedImplicitly]
-    private class Bar : IBar
-    {
-            
-    }
+    private class Bar : IBar;
 
     [Test]
     public void TestSingleTypeRegistrationWithFactoryMethod()

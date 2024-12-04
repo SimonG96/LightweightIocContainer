@@ -16,29 +16,17 @@ public class OpenGenericRegistrationTest
     private IocContainer _iocContainer;
 
     [UsedImplicitly]
-    public interface IConstraint
-    {
-        
-    }
+    public interface IConstraint;
     
     [UsedImplicitly]
-    public class Constraint : IConstraint
-    {
-        
-    }
+    public class Constraint : IConstraint;
         
     [UsedImplicitly]
     [SuppressMessage("ReSharper", "UnusedTypeParameter")]
-    public interface ITest<T> where T : IConstraint, new()
-    {
-            
-    }
+    public interface ITest<T> where T : IConstraint, new();
         
     [UsedImplicitly]
-    public class Test<T> : ITest<T> where T : IConstraint, new()
-    {
-            
-    }
+    public class Test<T> : ITest<T> where T : IConstraint, new();
     
     [UsedImplicitly]
     public class CtorTest<T> : ITest<T> where T : IConstraint, new()

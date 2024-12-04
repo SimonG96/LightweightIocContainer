@@ -20,7 +20,7 @@ public class AssemblyInstaller : IAssemblyInstaller
     /// <param name="assembly">The <see cref="Assembly"/> from where the <see cref="IIocInstaller"/>s will be installed</param>
     public AssemblyInstaller(Assembly assembly)
     {
-        Installers = new List<IIocInstaller>();
+        Installers = [];
 
         Type[] types = assembly.GetTypes();
         foreach (Type type in types)

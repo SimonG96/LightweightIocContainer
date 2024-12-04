@@ -7,7 +7,4 @@ namespace LightweightIocContainer.ResolvePlaceholders;
 /// <summary>
 /// An internal placeholder that is used during the resolving process
 /// </summary>
-internal class InternalResolvePlaceholder
-{
-        
-}
+internal class InternalResolvePlaceholder;

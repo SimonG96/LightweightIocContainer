@@ -14,16 +14,10 @@ namespace Test.LightweightIocContainer;
 public class IocContainerRecursionTest
 {
     [UsedImplicitly]
-    public interface IFoo
-    {
-
-    }
+    public interface IFoo;
 
     [UsedImplicitly]
-    public interface IBar
-    {
-
-    }
+    public interface IBar;
 
     [UsedImplicitly]
     private class Foo : IFoo
@@ -42,22 +36,13 @@ public class IocContainerRecursionTest
     }
 
     [UsedImplicitly]
-    public interface IA
-    {
-            
-    }
+    public interface IA;
 
     [UsedImplicitly]
-    public interface IB
-    {
-            
-    }
+    public interface IB;
 
     [UsedImplicitly]
-    public interface IC
-    {
-            
-    }
+    public interface IC;
 
     [UsedImplicitly]
     private class A : IA
@@ -78,10 +63,7 @@ public class IocContainerRecursionTest
     }
 
     [UsedImplicitly]
-    private class C : IC
-    {
-
-    }
+    private class C : IC;
         
     [UsedImplicitly]
     private class ATwoCtor : IA

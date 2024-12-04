@@ -11,20 +11,9 @@ namespace LightweightIocContainer.Validation;
 /// <summary>
 /// Validator for your <see cref="IocContainer"/> to check if everything can be resolved with your current setup
 /// </summary>
-public class IocValidator
+public class IocValidator(IocContainer iocContainer)
 {
-    private readonly IocContainer _iocContainer;
-    private readonly List<(Type type, object? parameter)> _parameters;
-
-    /// <summary>
-    /// Validator for your <see cref="IocContainer"/> to check if everything can be resolved with your current setup
-    /// </summary>
-    /// <param name="iocContainer">The <see cref="IocContainer"/></param>
-    public IocValidator(IocContainer iocContainer)
-    {
-        _iocContainer = iocContainer;
-        _parameters = new List<(Type, object?)>();
-    }
+    private readonly List<(Type type, object? parameter)> _parameters = [];
 
     /// <summary>
     /// Add parameters that can't be default for your type to be created successfully
@@ -40,13 +29,13 @@ public class IocValidator
     /// </summary>
     public void Validate()
     {
-        List<Exception> validationExceptions = new();
+        List<Exception> validationExceptions = [];
             
-        foreach (IRegistration registration in _iocContainer.Registrations)
+        foreach (IRegistration registration in iocContainer.Registrations)
         {
             var definedParameters = _parameters.Where(p => p.type == registration.InterfaceType);
                 
-            if (registration is IWithFactoryInternal { Factory: { } } withFactoryRegistration)
+            if (registration is IWithFactoryInternal { Factory: not null } withFactoryRegistration)
             {
                 (from createMethod in withFactoryRegistration.Factory.CreateMethods.Where(m => m.ReturnType == registration.InterfaceType)
                         select createMethod.GetParameters().Select(p => p.ParameterType)
@@ -71,7 +60,7 @@ public class IocValidator
 
     private void TryResolve(Type type, object?[]? arguments, List<Exception> validationExceptions, bool isFactoryResolve = false)
     {
-        (bool success, object _, Exception? exception) = _iocContainer.TryResolveNonGeneric(type, arguments, null, isFactoryResolve);
+        (bool success, object _, Exception? exception) = iocContainer.TryResolveNonGeneric(type, arguments, null, isFactoryResolve);
         if (success)
             return;
         

@@ -6,7 +6,6 @@ using System.Reflection;
 using JetBrains.Annotations;
 using LightweightIocContainer;
 using LightweightIocContainer.Installers;
-using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Installers;
 using LightweightIocContainer.Interfaces.Registrations;
 using NSubstitute;
@@ -24,20 +23,16 @@ public class AssemblyInstallerTest
     }
 
     [UsedImplicitly]
-    public class AssemblyWrapper : Assembly
-    {
-
-    }
-
+    public class AssemblyWrapper : Assembly;
         
     [Test]
     public void TestInstall()
     {
-        List<Type> types = new()
-        {
+        List<Type> types =
+        [
             typeof(object),
             typeof(TestInstaller)
-        };
+        ];
 
         AssemblyWrapper assemblyMock = Substitute.For<AssemblyWrapper>();
         assemblyMock.GetTypes().Returns(types.ToArray());
@@ -53,23 +48,23 @@ public class AssemblyInstallerTest
     [Test]
     public void TestFromAssemblyThis()
     {
-        IIocContainer iocContainer = new IocContainer();
+        IocContainer iocContainer = new();
         iocContainer.Install(FromAssembly.This());
     }
 
     [Test]
     public void TestFromAssemblyInstance()
     {
-        List<Type> types = new()
-        {
+        List<Type> types =
+        [
             typeof(object),
             typeof(TestInstaller)
-        };
+        ];
 
         AssemblyWrapper assemblyMock = Substitute.For<AssemblyWrapper>();
         assemblyMock.GetTypes().Returns(types.ToArray());
 
-        IIocContainer iocContainer = new IocContainer();
+        IocContainer iocContainer = new();
         iocContainer.Install(FromAssembly.Instance(assemblyMock));
     }
 }

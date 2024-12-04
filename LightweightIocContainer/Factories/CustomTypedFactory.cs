@@ -9,7 +9,4 @@ namespace LightweightIocContainer.Factories;
 /// <summary>
 /// <see cref="ITypedFactory"/> implementation for custom implemented factories
 /// </summary>
-public class CustomTypedFactory<TFactory> : TypedFactoryBase<TFactory>
-{
-        
-}
+public class CustomTypedFactory<TFactory> : TypedFactoryBase<TFactory>;

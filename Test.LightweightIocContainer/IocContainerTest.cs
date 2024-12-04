@@ -12,20 +12,11 @@ namespace Test.LightweightIocContainer;
 [TestFixture]
 public class IocContainerTest
 {
-    private interface ITest
-    {
+    private interface ITest;
 
-    }
+    private interface IFoo;
 
-    private interface IFoo
-    {
-
-    }
-
-    private class Test : ITest
-    {
-
-    }
+    private class Test : ITest;
     
     private class TestMultiton : ITest
     {
@@ -35,10 +26,7 @@ public class IocContainerTest
         }
     }
     
-    private class TestMultitonIntScope(int scope) : ITest
-    {
-        
-    }
+    private class TestMultitonIntScope(int scope) : ITest;
 
     [UsedImplicitly]
     private class TestConstructor : ITest
@@ -92,10 +80,7 @@ public class IocContainerTest
     }
 
     [UsedImplicitly]
-    private class Foo : IFoo
-    {
-
-    }
+    private class Foo : IFoo;
 
     [UsedImplicitly]
     private class FooConstructor : IFoo
@@ -106,11 +91,7 @@ public class IocContainerTest
         }
     }
 
-    private class MultitonScope
-    {
-
-    }
-
+    private class MultitonScope;
 
     private IocContainer _iocContainer;
 
@@ -119,7 +100,6 @@ public class IocContainerTest
 
     [TearDown]
     public void TearDown() => _iocContainer.Dispose();
-
 
     [Test]
     public void TestInstall()

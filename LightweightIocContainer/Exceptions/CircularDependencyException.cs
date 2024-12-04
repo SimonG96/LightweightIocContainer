@@ -22,7 +22,6 @@ internal class CircularDependencyException : IocContainerException
         ResolveStack = resolveStack;
     }
 
-
     /// <summary>
     /// The currently resolving <see cref="Type"/>
     /// </summary>

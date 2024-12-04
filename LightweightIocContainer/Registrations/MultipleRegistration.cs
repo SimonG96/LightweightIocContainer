@@ -22,13 +22,15 @@ internal abstract class MultipleRegistration<TInterface1, TImplementation> : Typ
     /// <param name="lifestyle">The <see cref="Lifestyle"/> of this <see cref="MultipleRegistration{TInterface1,TInterface2}"/></param>
     /// <param name="container">The current instance of the <see cref="IIocContainer"/></param>
     protected MultipleRegistration(Type interfaceType1, Type implementationType, Lifestyle lifestyle, IocContainer container)
-        : base(interfaceType1, implementationType, lifestyle, container) =>
-        Registrations = new List<IRegistration>();
+        : base(interfaceType1, implementationType, lifestyle, container)
+    {
+        
+    }
 
     /// <summary>
     /// A <see cref="List{T}"/> of <see cref="IRegistration"/>s that are registered within this <see cref="MultipleRegistration{TInterface1,TInterface2}"/>
     /// </summary>
-    public List<IRegistration> Registrations { get; protected init; }
+    public List<IRegistration> Registrations { get; protected init; } = [];
 }
 
 /// <summary>
@@ -50,11 +52,11 @@ internal class MultipleRegistration<TInterface1, TInterface2, TImplementation> :
     public MultipleRegistration(Type interfaceType1, Type interfaceType2, Type implementationType, Lifestyle lifestyle, IocContainer container)
         : base(interfaceType1, implementationType, lifestyle, container)
     {
-        Registrations = new List<IRegistration>
-        { 
+        Registrations =
+        [
             new TypedRegistration<TInterface1, TImplementation>(interfaceType1, implementationType, lifestyle, container),
             new TypedRegistration<TInterface2, TImplementation>(interfaceType2, implementationType, lifestyle, container)
-        };
+        ];
     }
 
     /// <summary>
@@ -97,12 +99,12 @@ internal class MultipleRegistration<TInterface1, TInterface2, TInterface3, TImpl
     public MultipleRegistration(Type interfaceType1, Type interfaceType2, Type interfaceType3, Type implementationType, Lifestyle lifestyle, IocContainer container)
         : base(interfaceType1, implementationType, lifestyle, container)
     {
-        Registrations = new List<IRegistration>
-        {
+        Registrations =
+        [
             new TypedRegistration<TInterface1, TImplementation>(interfaceType1, implementationType, lifestyle, container),
             new TypedRegistration<TInterface2, TImplementation>(interfaceType2, implementationType, lifestyle, container),
             new TypedRegistration<TInterface3, TImplementation>(interfaceType3, implementationType, lifestyle, container)
-        };
+        ];
     }
 
     /// <summary>
@@ -149,13 +151,13 @@ internal class MultipleRegistration<TInterface1, TInterface2, TInterface3, TInte
     public MultipleRegistration(Type interfaceType1, Type interfaceType2, Type interfaceType3, Type interfaceType4, Type implementationType, Lifestyle lifestyle, IocContainer container)
         : base(interfaceType1, implementationType, lifestyle, container)
     {
-        Registrations = new List<IRegistration>
-        {
+        Registrations =
+        [
             new TypedRegistration<TInterface1, TImplementation>(interfaceType1, implementationType, lifestyle, container),
             new TypedRegistration<TInterface2, TImplementation>(interfaceType2, implementationType, lifestyle, container),
             new TypedRegistration<TInterface3, TImplementation>(interfaceType3, implementationType, lifestyle, container),
             new TypedRegistration<TInterface4, TImplementation>(interfaceType4, implementationType, lifestyle, container)
-        };
+        ];
     }
 
     /// <summary>
@@ -206,14 +208,14 @@ internal class MultipleRegistration<TInterface1, TInterface2, TInterface3, TInte
     public MultipleRegistration(Type interfaceType1, Type interfaceType2, Type interfaceType3, Type interfaceType4, Type interfaceType5, Type implementationType, Lifestyle lifestyle, IocContainer container)
         : base(interfaceType1, implementationType, lifestyle, container)
     {
-        Registrations = new List<IRegistration>
-        {
+        Registrations =
+        [
             new TypedRegistration<TInterface1, TImplementation>(interfaceType1, implementationType, lifestyle, container),
             new TypedRegistration<TInterface2, TImplementation>(interfaceType2, implementationType, lifestyle, container),
             new TypedRegistration<TInterface3, TImplementation>(interfaceType3, implementationType, lifestyle, container),
             new TypedRegistration<TInterface4, TImplementation>(interfaceType4, implementationType, lifestyle, container),
             new TypedRegistration<TInterface5, TImplementation>(interfaceType5, implementationType, lifestyle, container)
-        };
+        ];
     }
 
     /// <summary>

@@ -21,23 +21,18 @@ public class IocContainer : IIocContainer, IIocResolver
 {
     private readonly RegistrationFactory _registrationFactory;
 
-    private readonly List<(Type type, object? instance)> _singletons = new();
-    private readonly List<(Type type, Type scope, Dictionary<object, object?> instances)> _multitons = new();
+    private readonly List<(Type type, object? instance)> _singletons = [];
+    private readonly List<(Type type, Type scope, Dictionary<object, object?> instances)> _multitons = [];
 
-    private readonly List<Type> _ignoreConstructorAttributes;
+    private readonly List<Type> _ignoreConstructorAttributes = [];
 
     /// <summary>
     /// The main container that carries all the <see cref="IRegistration"/>s and can resolve all the types you'll ever want
     /// </summary>
-    public IocContainer()
-    {
-        _registrationFactory = new RegistrationFactory(this);
-        _ignoreConstructorAttributes = new List<Type>();
-        Registrations = new List<IRegistration>();
-    }
+    public IocContainer() => _registrationFactory = new RegistrationFactory(this);
 
-    internal List<IRegistration> Registrations { get; }
-    
+    internal List<IRegistration> Registrations { get; } = [];
+
     /// <summary>
     /// Install the given installers for the current <see cref="IocContainer"/>
     /// </summary>
@@ -195,7 +190,7 @@ public class IocContainer : IIocContainer, IIocResolver
         if (registration == null)
             return (false, new object(), new TypeNotRegisteredException(typeof(T)));
 
-        List<Type> internalResolveStack = resolveStack == null ? new List<Type>() : new List<Type>(resolveStack);
+        List<Type> internalResolveStack = resolveStack == null ? [] : [..resolveStack];
         (bool success, internalResolveStack, CircularDependencyException? circularDependencyException) = CheckForCircularDependencies<T>(internalResolveStack);
         
         if (!success && circularDependencyException is not null)
@@ -232,7 +227,7 @@ public class IocContainer : IIocContainer, IIocResolver
 
             object multitonScopeArgument = TryGetMultitonScopeArgument(multitonRegistration, arguments);
 
-            parametersToResolve ??= new List<object?>();
+            parametersToResolve ??= [];
             parametersToResolve.Insert(0, multitonScopeArgument); //insert scope at first place, won't be passed to ctor when creating multiton
         }
             
@@ -267,7 +262,7 @@ public class IocContainer : IIocContainer, IIocResolver
         if (genericMethod == null)
             throw new GenericMethodNotFoundException(nameof(TryResolve));
         
-        object? resolvedValue = genericMethod.Invoke(this, new object?[]{arguments, resolveStack, isFactoryResolve});
+        object? resolvedValue = genericMethod.Invoke(this, [arguments, resolveStack, isFactoryResolve]);
         
         if (resolvedValue is not ValueTuple<bool, object, Exception?> resolvedTuple)
             throw new Exception("Invalid return value!");
@@ -600,12 +595,12 @@ public class IocContainer : IIocContainer, IIocResolver
     {
         List<ParameterInfo> constructorParameters = constructor.GetParameters().ToList();
             
-        List<ConstructorNotMatchingException> exceptions = new();
-        List<object?> parameters = new();
+        List<ConstructorNotMatchingException> exceptions = [];
+        List<object?> parameters = [];
 
         List<object?>? passedArguments = null;
         if (arguments != null)
-            passedArguments = new List<object?>(arguments);
+            passedArguments = [..arguments];
 
         foreach (ParameterInfo parameter in constructorParameters)
         {
@@ -745,9 +740,9 @@ public class IocContainer : IIocContainer, IIocResolver
     private (bool success, List<Type> resolveStack, CircularDependencyException? exception) CheckForCircularDependencies<T>(List<Type>? resolveStack)
     {
         if (resolveStack == null) //first resolve call
-            resolveStack = new List<Type> {typeof(T)}; //create new stack and add the currently resolving type to the stack
+            resolveStack = [typeof(T)]; //create new stack and add the currently resolving type to the stack
         else if (resolveStack.Contains(typeof(T)))
-            return (false, new List<Type>(), new CircularDependencyException(typeof(T), resolveStack)); //currently resolving type is still resolving -> circular dependency
+            return (false, [], new CircularDependencyException(typeof(T), resolveStack)); //currently resolving type is still resolving -> circular dependency
         else //not the first resolve call in chain but no circular dependencies for now
             resolveStack.Add(typeof(T)); //add currently resolving type to the stack
             

@@ -14,10 +14,7 @@ public class MultipleMultitonRegistrationTest
     private IocContainer _iocContainer;
         
     [UsedImplicitly]
-    public interface ITest : IProvider
-    {
-            
-    }
+    public interface ITest : IProvider;
         
     public interface IProvider
     {
@@ -38,11 +35,7 @@ public class MultipleMultitonRegistrationTest
         public void DoSomething(int number) => Number = number;
     }
 
-    private class MultitonScope
-    {
-            
-    }
-        
+    private class MultitonScope;
         
     [SetUp]
     public void SetUp() => _iocContainer = new IocContainer();

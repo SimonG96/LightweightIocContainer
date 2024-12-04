@@ -16,10 +16,7 @@ namespace Test.LightweightIocContainer.Validation;
 [TestFixture]
 public class IocValidatorTest
 {
-    public interface ITest
-    {
-            
-    }
+    public interface ITest;
         
     [UsedImplicitly]
     public interface IParameter
@@ -33,22 +30,13 @@ public class IocValidatorTest
     }
     
     [UsedImplicitly]
-    public interface IConstraint
-    {
-        
-    }
+    public interface IConstraint;
     
     [UsedImplicitly]
-    public interface IGenericTest<T> where T : IConstraint, new()
-    {
-            
-    }
+    public interface IGenericTest<T> where T : IConstraint, new();
         
     [UsedImplicitly]
-    public class GenericTest<T> : IGenericTest<T> where T : IConstraint, new()
-    {
-            
-    }
+    public class GenericTest<T> : IGenericTest<T> where T : IConstraint, new();
     
     [UsedImplicitly]
     public interface IGenericTestFactory

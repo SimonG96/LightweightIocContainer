@@ -20,16 +20,10 @@ public class IocContainerParameterRegistrationTest
     }
 
     [UsedImplicitly]
-    public interface IB
-    {
-
-    }
+    public interface IB;
 
     [UsedImplicitly]
-    public interface IC
-    {
-
-    }
+    public interface IC;
 
     [UsedImplicitly]
     public interface ID
@@ -64,10 +58,7 @@ public class IocContainerParameterRegistrationTest
     }
 
     [UsedImplicitly]
-    private class C : IC
-    {
-
-    }
+    private class C : IC;
 
     [UsedImplicitly]
     private class D : ID
@@ -87,7 +78,6 @@ public class IocContainerParameterRegistrationTest
         public IB B { get; }
         public IC C { get; }
     }
-
         
     private IocContainer _iocContainer;
 
@@ -96,7 +86,6 @@ public class IocContainerParameterRegistrationTest
 
     [TearDown]
     public void TearDown() => _iocContainer.Dispose();
-
 
     [Test]
     public void TestResolveOnlyRegistrationParameters()

@@ -11,29 +11,17 @@ namespace Test.LightweightIocContainer;
 [TestFixture]
 public class IocContainerInterfaceSegregationTest
 {
-    private interface IBar
-    {
-            
-    }
+    private interface IBar;
 
     private interface IFoo
     {
         void ThrowFoo();
     }
-    private interface IAnotherBar
-    {
-            
-    }
+    private interface IAnotherBar;
 
-    private interface IAnotherFoo
-    {
-            
-    }
+    private interface IAnotherFoo;
 
-    private interface IAnotherOne
-    {
-            
-    }
+    private interface IAnotherOne;
 
     [UsedImplicitly]
     private class Foo : IFoo, IBar, IAnotherFoo, IAnotherBar, IAnotherOne

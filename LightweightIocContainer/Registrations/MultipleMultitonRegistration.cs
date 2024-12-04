@@ -26,11 +26,11 @@ internal class MultipleMultitonRegistration<TInterface1, TInterface2, TImplement
     public MultipleMultitonRegistration(Type interfaceType1, Type interfaceType2, Type implementationType, Type scope, IocContainer container)
         : base(interfaceType1, implementationType, scope, container)
     {
-        Registrations = new List<IRegistration>
-        {
+        Registrations =
+        [
             new MultitonRegistration<TInterface1, TImplementation>(interfaceType1, implementationType, scope, container),
             new MultitonRegistration<TInterface2, TImplementation>(interfaceType2, implementationType, scope, container)
-        };
+        ];
     }
 
     /// <summary>

@@ -14,16 +14,12 @@ public class RegistrationCollector : IRegistrationCollector
 {
     private readonly RegistrationFactory _registrationFactory;
 
-    internal RegistrationCollector(RegistrationFactory registrationFactory)
-    {
-        _registrationFactory = registrationFactory;
-        Registrations = new List<IRegistration>();
-    }
+    internal RegistrationCollector(RegistrationFactory registrationFactory) => _registrationFactory = registrationFactory;
 
     /// <summary>
     /// The collected <see cref="IRegistration"/>s
     /// </summary>
-    internal List<IRegistration> Registrations { get; }
+    internal List<IRegistration> Registrations { get; } = [];
 
     /// <summary>
     /// Add an Interface with a Type that implements it

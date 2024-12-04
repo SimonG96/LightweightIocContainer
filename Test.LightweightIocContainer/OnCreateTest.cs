@@ -23,7 +23,6 @@ public class OnCreateTest
         public void DoSomething() => throw new Exception();
         public Task InitializeAsync() => throw new Exception();
     }
-
         
     [Test]
     public void TestOnCreate()

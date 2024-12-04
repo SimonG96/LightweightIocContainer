@@ -12,7 +12,7 @@ public abstract class IocContainerException : Exception
     /// <summary>
     /// A base <see cref="Exception"/> for the <see cref="LightweightIocContainer"/>
     /// </summary>
-    protected IocContainerException() => InnerExceptions = new List<Exception>();
+    protected IocContainerException() => InnerExceptions = [];
 
     /// <summary>
     /// A base <see cref="Exception"/> for the <see cref="LightweightIocContainer"/>
@@ -20,7 +20,7 @@ public abstract class IocContainerException : Exception
     /// <param name="message">The message of the <see cref="Exception"/></param>
     protected IocContainerException(string message)
         : base(message) =>
-        InnerExceptions = new List<Exception>();
+        InnerExceptions = [];
 
     /// <summary>
     /// A base <see cref="Exception"/> for the <see cref="LightweightIocContainer"/>
@@ -29,7 +29,7 @@ public abstract class IocContainerException : Exception
     /// <param name="innerException">The inner <see cref="Exception"/></param>
     protected IocContainerException(string message, Exception innerException)
         : base(message, innerException) =>
-        InnerExceptions = new List<Exception> {innerException};
+        InnerExceptions = [innerException];
 
     /// <summary>
     /// The inner exceptions of the <see cref="IocContainerException"/>

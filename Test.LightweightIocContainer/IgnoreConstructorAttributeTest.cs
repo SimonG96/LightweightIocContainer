@@ -12,22 +12,13 @@ namespace Test.LightweightIocContainer;
 public class IgnoreConstructorAttributeTest
 {
     [AttributeUsage(AttributeTargets.Constructor)]
-    private class IgnoreAttribute : Attribute
-    {
-        
-    }
+    private class IgnoreAttribute : Attribute;
 
     [AttributeUsage(AttributeTargets.Class)]
-    private class InvalidIgnoreAttribute : Attribute
-    {
-        
-    }
+    private class InvalidIgnoreAttribute : Attribute;
     
     [UsedImplicitly]
-    public interface ITest
-    {
-            
-    }
+    public interface ITest;
     
     [UsedImplicitly]
     private class TestIgnoreCtor : ITest

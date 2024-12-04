@@ -17,7 +17,7 @@ internal class NoMatchingConstructorFoundException : IocContainerException
         : base($"No matching constructor for {type} found.")
     {
         Type = type;
-        InnerExceptions = new List<Exception>();
+        InnerExceptions = [];
     }
 
 

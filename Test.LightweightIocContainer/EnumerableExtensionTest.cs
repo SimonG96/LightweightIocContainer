@@ -34,20 +34,20 @@ public class EnumerableExtensionTest
     [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local")]
     public void TestFirstOrGivenNoPredicateEmpty()
     {
-        List<ListObject> list = new();
+        List<ListObject> list = [];
         Assert.That(list.FirstOrGiven<ListObject, Given>(), Is.InstanceOf<Given>());
     }
 
     [Test]
     public void TestFirstOrGivenNoPredicate()
     {
-        List<ListObject> list = new()
-        {
-            new ListObject {Index = 0},
-            new ListObject {Index = 1},
-            new ListObject {Index = 2},
-            new ListObject {Index = 3}
-        };
+        List<ListObject> list =
+        [
+            new() { Index = 0 },
+            new() { Index = 1 },
+            new() { Index = 2 },
+            new() { Index = 3 }
+        ];
 
         ListObject listObject = list.FirstOrGiven<ListObject, Given>();
     
@@ -59,20 +59,20 @@ public class EnumerableExtensionTest
     [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local")]
     public void TestFirstOrGivenPredicateEmpty()
     {
-        List<ListObject> list = new();
+        List<ListObject> list = [];
         Assert.That(list.FirstOrGiven<ListObject, Given>(o => o.Index == 2), Is.InstanceOf<Given>());
     }
 
     [Test]
     public void TestFirstOrGivenPredicate()
     {
-        List<ListObject> list = new()
-        {
-            new ListObject {Index = 0},
-            new ListObject {Index = 1},
-            new ListObject {Index = 2},
-            new ListObject {Index = 3}
-        };
+        List<ListObject> list =
+        [
+            new() { Index = 0 },
+            new() { Index = 1 },
+            new() { Index = 2 },
+            new() { Index = 3 }
+        ];
 
         ListObject listObject = list.FirstOrGiven<ListObject, Given>(o => o.Index == 2);
 
@@ -88,7 +88,7 @@ public class EnumerableExtensionTest
         ITest test3 = Substitute.For<ITest>();
         ITest test4 = Substitute.For<ITest>();
 
-        IEnumerable<ITest> enumerable = new[] { test1, test2, test3, test4 };
+        IEnumerable<ITest> enumerable = [test1, test2, test3, test4];
             
         enumerable.ForEach(t => t.DoSomething());
             

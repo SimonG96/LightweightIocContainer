@@ -15,25 +15,13 @@ namespace Test.LightweightIocContainer;
 [TestFixture]
 public class RegistrationBaseTest
 {
-    private interface ITest
-    {
+    private interface ITest;
 
-    }
+    private interface IFoo;
 
-    private interface IFoo
-    {
+    private interface IBar;
 
-    }
-
-    private interface IBar
-    {
-
-    }
-
-    private class Test : ITest
-    {
-
-    }
+    private class Test : ITest;
 
     [UsedImplicitly]
     private class Foo : IFoo
@@ -44,11 +32,7 @@ public class RegistrationBaseTest
         }
     }
 
-    private class Bar : IBar
-    {
-
-    }
-
+    private class Bar : IBar;
 
     [Test]
     public void TestWithParameters()

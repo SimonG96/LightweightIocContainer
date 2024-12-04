@@ -9,27 +9,20 @@ namespace LightweightIocContainer.ResolvePlaceholders;
 /// <summary>
 /// An internal placeholder that is used to hold types that need to be resolved during the resolving process
 /// </summary>
-internal class InternalToBeResolvedPlaceholder : IInternalToBeResolvedPlaceholder
+internal class InternalToBeResolvedPlaceholder(Type resolvedType, IRegistration resolvedRegistration, List<object?>? parameters) : IInternalToBeResolvedPlaceholder
 {
-    public InternalToBeResolvedPlaceholder(Type resolvedType, IRegistration resolvedRegistration, List<object?>? parameters)
-    {
-        ResolvedType = resolvedType;
-        ResolvedRegistration = resolvedRegistration;
-        Parameters = parameters;
-    }
-
     /// <summary>
     /// The <see cref="Type"/> to be resolved
     /// </summary>
-    public Type ResolvedType { get; }
-        
+    public Type ResolvedType { get; } = resolvedType;
+
     /// <summary>
     /// The <see cref="IRegistration"/> to be resolved
     /// </summary>
-    public IRegistration ResolvedRegistration { get; }
-        
+    public IRegistration ResolvedRegistration { get; } = resolvedRegistration;
+
     /// <summary>
     /// The parameters needed to resolve the <see cref="ResolvedRegistration"/>
     /// </summary>
-    public List<object?>? Parameters { get; }
+    public List<object?>? Parameters { get; } = parameters;
 }

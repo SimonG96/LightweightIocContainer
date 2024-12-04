@@ -12,15 +12,9 @@ namespace Test.LightweightIocContainer;
 [TestFixture]
 public class FluentFactoryRegistrationTest
 {
-    public interface ITest
-    {
-            
-    }
+    public interface ITest;
 
-    private class Test : ITest
-    {
-            
-    }
+    private class Test : ITest;
         
     private class TestByte : ITest
     {
@@ -130,10 +124,7 @@ public class FluentFactoryRegistrationTest
         public MultitonScope Create();
     }
         
-    public class MultitonScope
-    {
-
-    }
+    public class MultitonScope;
         
     private IocContainer _iocContainer;
 
