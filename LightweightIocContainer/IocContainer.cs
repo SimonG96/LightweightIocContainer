@@ -231,10 +231,18 @@ public class IocContainer : IIocContainer, IIocResolver
             parametersToResolve ??= [];
             parametersToResolve.Insert(0, multitonScopeArgument); //insert scope at first place, won't be passed to ctor when creating multiton
         }
-            
-        if (result) 
-            return (true, new InternalToBeResolvedPlaceholder(registeredType, registration, parametersToResolve), null);
-            
+
+        switch (result)
+        {
+            case true when registration is IOpenGenericRegistration openGenericRegistration:
+            {
+                Type genericImplementationType = openGenericRegistration.ImplementationType.MakeGenericType(typeof(T).GenericTypeArguments);
+                return (true, new InternalToBeResolvedPlaceholder(genericImplementationType, registration, parametersToResolve), null);
+            }
+            case true:
+                return (true, new InternalToBeResolvedPlaceholder(registeredType, registration, parametersToResolve), null);
+        }
+
         if (exception != null)
             return (false, new object(), exception);
 

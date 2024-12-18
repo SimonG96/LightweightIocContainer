@@ -49,6 +49,18 @@ public class OpenGenericRegistrationTest
         ITest<T> Create<T>(T item) where T : IConstraint, new();
     }
 
+    [UsedImplicitly]
+    public interface IA;
+    
+    [UsedImplicitly]
+    public class A : IA
+    {
+        public A(ITest<Constraint> test)
+        {
+            
+        }
+    }
+
     [SetUp]
     public void SetUp() => _iocContainer = new IocContainer();
 
@@ -103,5 +115,15 @@ public class OpenGenericRegistrationTest
         ICtorTestFactory testFactory = _iocContainer.Resolve<ICtorTestFactory>();
         ITest<Constraint> test = testFactory.Create(new Constraint());
         Assert.That(test, Is.InstanceOf<CtorTest<Constraint>>());
+    }
+
+    [Test]
+    public void TestOpenGenericTypeAsParameter()
+    {
+        _iocContainer.Register(r => r.Add<IA, A>());
+        _iocContainer.Register(r => r.AddOpenGenerics(typeof(ITest<>), typeof(Test<>), Lifestyle.Singleton));
+        
+        IA a = _iocContainer.Resolve<IA>();
+        Assert.That(a, Is.TypeOf<A>());
     }
 }
