@@ -9,5 +9,5 @@ namespace LightweightIocContainer.Interfaces.Registrations;
 /// </summary>
 public interface IOpenGenericRegistration : ITypedRegistration
 {
-        
+    internal Type CreateGenericImplementationType<T>();
 }

@@ -29,6 +29,8 @@ internal class OpenGenericRegistration : RegistrationBase, IOpenGenericRegistrat
     /// </summary>
     public Type ImplementationType { get; }
 
+    public Type CreateGenericImplementationType<T>() => ImplementationType.MakeGenericType(typeof(T).GenericTypeArguments);
+
     /// <summary>
     /// Validate this <see cref="OpenGenericRegistration"/>
     /// </summary>

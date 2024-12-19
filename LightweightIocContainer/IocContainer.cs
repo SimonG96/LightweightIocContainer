@@ -235,10 +235,7 @@ public class IocContainer : IIocContainer, IIocResolver
         switch (result)
         {
             case true when registration is IOpenGenericRegistration openGenericRegistration:
-            {
-                Type genericImplementationType = openGenericRegistration.ImplementationType.MakeGenericType(typeof(T).GenericTypeArguments);
-                return (true, new InternalToBeResolvedPlaceholder(genericImplementationType, registration, parametersToResolve), null);
-            }
+                return (true, new InternalToBeResolvedPlaceholder(openGenericRegistration.CreateGenericImplementationType<T>(), registration, parametersToResolve), null);
             case true:
                 return (true, new InternalToBeResolvedPlaceholder(registeredType, registration, parametersToResolve), null);
         }
@@ -383,21 +380,16 @@ public class IocContainer : IIocContainer, IIocResolver
     /// <returns>A newly created instance of the given <see cref="Type"/></returns>
     private T CreateInstance<T>(IRegistration registration, object?[]? arguments)
     {
-        T instance;
-        if (registration is IOpenGenericRegistration openGenericRegistration)
+        T instance = registration switch
         {
-            //create generic implementation type from generic arguments of T
-            Type genericImplementationType = openGenericRegistration.ImplementationType.MakeGenericType(typeof(T).GenericTypeArguments);
-            instance = Creator.CreateInstance<T>(genericImplementationType, arguments);
-        }
-        else if (registration is ISingleTypeRegistration<T> singleTypeRegistration)
-            instance = singleTypeRegistration.FactoryMethod == null ? Creator.CreateInstance<T>(singleTypeRegistration.InterfaceType, arguments) : singleTypeRegistration.FactoryMethod(this);
-        else if (registration is ILifestyleProvider { Lifestyle: Lifestyle.Multiton } and IMultitonRegistration multitonRegistration)
-            instance = CreateMultitonInstance<T>(multitonRegistration, arguments);
-        else if (registration is ITypedRegistration defaultRegistration)
-            instance = Creator.CreateInstance<T>(defaultRegistration.ImplementationType, arguments);
-        else
-            throw new UnknownRegistrationException($"There is no registration of type {registration.GetType().Name}.");
+            IOpenGenericRegistration openGenericRegistration => Creator.CreateInstance<T>(openGenericRegistration.CreateGenericImplementationType<T>(), arguments),
+            ISingleTypeRegistration<T> singleTypeRegistration => singleTypeRegistration.FactoryMethod == null
+                ? Creator.CreateInstance<T>(singleTypeRegistration.InterfaceType, arguments)
+                : singleTypeRegistration.FactoryMethod(this),
+            ILifestyleProvider { Lifestyle: Lifestyle.Multiton } and IMultitonRegistration multitonRegistration => CreateMultitonInstance<T>(multitonRegistration, arguments),
+            ITypedRegistration defaultRegistration => Creator.CreateInstance<T>(defaultRegistration.ImplementationType, arguments),
+            _ => throw new UnknownRegistrationException($"There is no registration of type {registration.GetType().Name}.")
+        };
 
         if (registration is ILifestyleProvider { Lifestyle: Lifestyle.Singleton })
             _singletons.TryAdd(GetType<T>(registration), instance);
@@ -741,6 +733,7 @@ public class IocContainer : IIocContainer, IIocResolver
     private Type GetType<T>(IRegistration registration) =>
         registration switch
         {
+            IOpenGenericRegistration openGenericRegistration => openGenericRegistration.CreateGenericImplementationType<T>(),
             ITypedRegistration typedRegistration => typedRegistration.ImplementationType,
             ISingleTypeRegistration<T> singleTypeRegistration => singleTypeRegistration.InterfaceType,
             _ => throw new UnknownRegistrationException($"Unknown registration used: {registration.GetType().Name}.")

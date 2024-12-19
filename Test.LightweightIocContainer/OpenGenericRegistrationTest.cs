@@ -20,6 +20,9 @@ public class OpenGenericRegistrationTest
     
     [UsedImplicitly]
     public class Constraint : IConstraint;
+
+    [UsedImplicitly]
+    public class AnotherConstraint : IConstraint;
         
     [UsedImplicitly]
     [SuppressMessage("ReSharper", "UnusedTypeParameter")]
@@ -50,15 +53,27 @@ public class OpenGenericRegistrationTest
     }
 
     [UsedImplicitly]
-    public interface IA;
+    public interface IA
+    {
+        ITest<Constraint> Test { get; }
+    }
     
     [UsedImplicitly]
-    public class A : IA
+    public class A(ITest<Constraint> test) : IA
     {
-        public A(ITest<Constraint> test)
-        {
-            
-        }
+        public ITest<Constraint> Test { get; } = test;
+    }
+
+    [UsedImplicitly]
+    public interface IB
+    {
+        ITest<AnotherConstraint> Test { get; }
+    }
+    
+    [UsedImplicitly]
+    public class B(ITest<AnotherConstraint> test) : IB
+    {
+        public ITest<AnotherConstraint> Test { get; } = test;
     }
 
     [SetUp]
@@ -125,5 +140,21 @@ public class OpenGenericRegistrationTest
         
         IA a = _iocContainer.Resolve<IA>();
         Assert.That(a, Is.TypeOf<A>());
+    }
+    
+    [Test]
+    public void TestOpenGenericTypeAsParameterDifferentGenericParametersResolveDifferentSingletons()
+    {
+        _iocContainer.Register(r => r.Add<IA, A>());
+        _iocContainer.Register(r => r.Add<IB, B>());
+        _iocContainer.Register(r => r.AddOpenGenerics(typeof(ITest<>), typeof(Test<>), Lifestyle.Singleton));
+        
+        IA a = _iocContainer.Resolve<IA>();
+        Assert.That(a, Is.TypeOf<A>());
+        
+        IB b = _iocContainer.Resolve<IB>();
+        Assert.That(b, Is.TypeOf<B>());
+        
+        Assert.That(b.Test, Is.Not.SameAs(a.Test));
     }
 }
