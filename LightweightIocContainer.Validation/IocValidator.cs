@@ -60,6 +60,21 @@ public class IocValidator(IocContainer iocContainer)
 
     private void TryResolve(Type type, object?[]? arguments, List<Exception> validationExceptions, bool isFactoryResolve = false)
     {
+        if (type.ContainsGenericParameters)
+        {
+            List<Type> genericParameters = [];
+            
+            Type[] genericArguments = type.GetGenericArguments();
+            foreach (Type genericArgument in genericArguments.Where(g => g.IsGenericParameter))
+            {
+                Type[] genericParameterConstraints = genericArgument.GetGenericParameterConstraints();
+                object mock = Substitute.For(genericParameterConstraints, []);
+                genericParameters.Add(mock.GetType());
+            }
+
+            type = type.MakeGenericType(genericParameters.ToArray());
+        }
+        
         (bool success, object _, Exception? exception) = iocContainer.TryResolveNonGeneric(type, arguments, null, isFactoryResolve);
         if (success)
             return;
