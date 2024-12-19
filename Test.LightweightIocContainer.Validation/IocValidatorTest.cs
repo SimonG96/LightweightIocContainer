@@ -31,6 +31,9 @@ public class IocValidatorTest
     
     [UsedImplicitly]
     public interface IConstraint;
+
+    [UsedImplicitly]
+    public class Constraint : IConstraint;
     
     [UsedImplicitly]
     public interface IGenericTest<T> where T : IConstraint, new();
@@ -42,6 +45,18 @@ public class IocValidatorTest
     public interface IGenericTestFactory
     {
         IGenericTest<T> Create<T>() where T : IConstraint, new();
+    }
+
+    [UsedImplicitly]
+    public interface IGenericParameter;
+    
+    [UsedImplicitly]
+    public class GenericParameter : IGenericParameter
+    {
+        public GenericParameter(IGenericTest<Constraint> test)
+        {
+            
+        }
     }
 
     [UsedImplicitly]
@@ -281,6 +296,17 @@ public class IocValidatorTest
     {
         IocContainer iocContainer = new();
         iocContainer.Register(r => r.AddOpenGenerics(typeof(IGenericTest<>), typeof(GenericTest<>)).WithFactory<IGenericTestFactory>());
+
+        IocValidator validator = new(iocContainer);
+        validator.Validate();
+    }
+
+    [Test]
+    public void TestValidateOpenGenericTypeAsParameter()
+    {
+        IocContainer iocContainer = new();
+        iocContainer.Register(r => r.AddOpenGenerics(typeof(IGenericTest<>), typeof(GenericTest<>)));
+        iocContainer.Register(r => r.Add<IGenericParameter, GenericParameter>());
 
         IocValidator validator = new(iocContainer);
         validator.Validate();
