@@ -300,6 +300,16 @@ public class IocValidatorTest
         IocValidator validator = new(iocContainer);
         validator.Validate();
     }
+    
+    [Test]
+    public void TestValidateOpenGenericTypeWithoutFactory()
+    {
+        IocContainer iocContainer = new();
+        iocContainer.Register(r => r.AddOpenGenerics(typeof(IGenericTest<>), typeof(GenericTest<>)));
+
+        IocValidator validator = new(iocContainer);
+        validator.Validate();
+    }
 
     [Test]
     public void TestValidateOpenGenericTypeAsParameter()
