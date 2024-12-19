@@ -68,8 +68,13 @@ public class IocValidator(IocContainer iocContainer)
             foreach (Type genericArgument in genericArguments.Where(g => g.IsGenericParameter))
             {
                 Type[] genericParameterConstraints = genericArgument.GetGenericParameterConstraints();
-                object mock = Substitute.For(genericParameterConstraints, []);
-                genericParameters.Add(mock.GetType());
+                if (genericParameterConstraints.Any())
+                {
+                    object mock = Substitute.For(genericParameterConstraints, []);
+                    genericParameters.Add(mock.GetType());
+                }
+                else
+                    genericParameters.Add(typeof(object));
             }
 
             type = type.MakeGenericType(genericParameters.ToArray());
