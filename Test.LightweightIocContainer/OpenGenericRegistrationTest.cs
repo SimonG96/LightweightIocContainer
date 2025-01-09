@@ -75,6 +75,18 @@ public class OpenGenericRegistrationTest
     {
         public ITest<AnotherConstraint> Test { get; } = test;
     }
+    
+    [UsedImplicitly]
+    public interface IGenericClass<T> where T : IConstraint, new()
+    {
+        ITest<T> Test { get; }
+    }
+    
+    [UsedImplicitly]
+    public class GenericClass<T>(ITest<T> test) : IGenericClass<T> where T : IConstraint, new()
+    {
+        public ITest<T> Test { get; } = test;
+    }
 
     [SetUp]
     public void SetUp() => _iocContainer = new IocContainer();
@@ -156,5 +168,15 @@ public class OpenGenericRegistrationTest
         Assert.That(b, Is.TypeOf<B>());
         
         Assert.That(b.Test, Is.Not.SameAs(a.Test));
+    }
+
+    [Test]
+    public void TestOpenGenericTypeAsGenericParameter()
+    {
+        _iocContainer.Register(r => r.AddOpenGenerics(typeof(IGenericClass<>), typeof(GenericClass<>)));
+        _iocContainer.Register(r => r.AddOpenGenerics(typeof(ITest<>), typeof(Test<>), Lifestyle.Singleton));
+        
+        IGenericClass<Constraint> genericClass = _iocContainer.Resolve<IGenericClass<Constraint>>();
+        Assert.That(genericClass, Is.InstanceOf<GenericClass<Constraint>>());
     }
 }
