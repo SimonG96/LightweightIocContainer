@@ -13,11 +13,7 @@ namespace Test.LightweightIocContainer;
 public class DisposeStrategyTest
 {
     [UsedImplicitly]
-    public interface ITest : IDisposable
-    {
-        
-    }
-    
+    public interface ITest : IDisposable;
     private class Test : ITest
     {
         public void Dispose() => throw new Exception();
@@ -33,14 +29,6 @@ public class DisposeStrategyTest
     
     private class TestNotDisposable;
 
-    [UsedImplicitly]
-    public interface IInterfaceSegregation : ITest;
-    private class TestInterfaceSegregation : IInterfaceSegregation
-    {
-        public void Dispose() => throw new Exception();
-    }
-    
-    
     [Test]
     public void TestValidContainerDisposeStrategySingleton()
     {
@@ -122,16 +110,5 @@ public class DisposeStrategyTest
     {
         IocContainer iocContainer = new();
         Assert.Throws<InvalidDisposeStrategyException>(() => iocContainer.Register(r => r.Add<TestNotDisposable>(Lifestyle.Singleton).WithDisposeStrategy(DisposeStrategy.Container)));
-    }
-
-    [Test]
-    public void TestValidDisposeStrategyForSingletonInterfaceSegregation()
-    {
-        IocContainer iocContainer = new();
-        iocContainer.Register(r => r.Add<ITest, IInterfaceSegregation, TestInterfaceSegregation>(Lifestyle.Singleton).WithDisposeStrategy(DisposeStrategy.Application));
-        
-        iocContainer.Resolve<ITest>();
-        
-        Assert.DoesNotThrow(() => iocContainer.Dispose());
     }
 }

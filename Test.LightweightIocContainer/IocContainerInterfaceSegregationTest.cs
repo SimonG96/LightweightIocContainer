@@ -147,4 +147,15 @@ public class IocContainerInterfaceSegregationTest
         Assert.That(anotherBar, Is.SameAs(foo));
         Assert.That(anotherOne, Is.SameAs(foo));
     }
+    
+    [Test]
+    public void TestValidDisposeStrategyForSingleton()
+    {
+        IocContainer iocContainer = new();
+        iocContainer.Register(r => r.Add<IFoo, IBar, Foo>(Lifestyle.Singleton).WithDisposeStrategy(DisposeStrategy.Application));
+        
+        iocContainer.Resolve<IFoo>();
+        
+        Assert.DoesNotThrow(() => iocContainer.Dispose());
+    }
 }
