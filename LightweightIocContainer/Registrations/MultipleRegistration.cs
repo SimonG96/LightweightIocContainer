@@ -2,8 +2,10 @@
 // Created: 2019-12-07
 // Copyright(c) 2019 SimonG. All Rights Reserved.
 
+using LightweightIocContainer.Exceptions;
 using LightweightIocContainer.Interfaces;
 using LightweightIocContainer.Interfaces.Registrations;
+using LightweightIocContainer.Interfaces.Registrations.Fluent;
 
 namespace LightweightIocContainer.Registrations;
 
@@ -31,6 +33,49 @@ internal abstract class MultipleRegistration<TInterface1, TImplementation> : Typ
     /// A <see cref="List{T}"/> of <see cref="IRegistration"/>s that are registered within this <see cref="MultipleRegistration{TInterface1,TInterface2}"/>
     /// </summary>
     public List<IRegistration> Registrations { get; protected init; } = [];
+
+    /// <summary>
+    /// Pass parameters that will be used to <see cref="IocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
+    /// <para>Parameters set with this method are always inserted at the beginning of the argument list if more parameters are given when resolving</para>
+    /// </summary>
+    /// <param name="parameters">The parameters</param>
+    /// <returns>The current instance of this <see cref="IRegistration"/></returns>
+    /// <exception cref="InvalidRegistrationException"><see cref="RegistrationBase.Parameters"/> are already set or no parameters given</exception>
+    public override IRegistrationBase WithParameters(params object[] parameters)
+    {
+        foreach (IWithParameters registration in Registrations.OfType<IWithParameters>()) 
+            registration.WithParameters(parameters);
+        
+        return this;
+    }
+
+    /// <summary>
+    /// Pass parameters that will be used to<see cref="IocContainer.Resolve{T}()"/> an instance of this <see cref="IRegistration.InterfaceType"/>
+    /// <para>Parameters set with this method are inserted at the position in the argument list that is passed with the parameter if more parameters are given when resolving</para>
+    /// </summary>
+    /// <param name="parameters">The parameters with their position</param>
+    /// <returns>The current instance of this <see cref="IRegistration"/></returns>
+    /// <exception cref="InvalidRegistrationException"><see cref="RegistrationBase.Parameters"/> are already set or no parameters given</exception>
+    public override IRegistrationBase WithParameters(params (int index, object parameter)[] parameters)
+    {
+        foreach (IWithParameters registration in Registrations.OfType<IWithParameters>()) 
+            registration.WithParameters(parameters);
+        
+        return this;
+    }
+
+    /// <summary>
+    /// Add a <see cref="DisposeStrategy"/> for the <see cref="IRegistrationBase"/>
+    /// </summary>
+    /// <param name="disposeStrategy">The <see cref="DisposeStrategy"/></param>
+    /// <returns>The current instance of this <see cref="RegistrationBase"/></returns>
+    public override IRegistrationBase WithDisposeStrategy(DisposeStrategy disposeStrategy)
+    {
+        foreach (IWithDisposeStrategy registration in Registrations.OfType<IWithDisposeStrategy>()) 
+            registration.WithDisposeStrategy(disposeStrategy);
+        
+        return this;
+    }
 }
 
 /// <summary>

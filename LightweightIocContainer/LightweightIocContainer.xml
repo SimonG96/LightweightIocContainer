@@ -1344,6 +1344,31 @@
             A <see cref="T:System.Collections.Generic.List`1"/> of <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/>s that are registered within this <see cref="T:LightweightIocContainer.Registrations.MultipleRegistration`2"/>
             </summary>
         </member>
+        <member name="M:LightweightIocContainer.Registrations.MultipleRegistration`2.WithParameters(System.Object[])">
+            <summary>
+            Pass parameters that will be used to <see cref="M:LightweightIocContainer.IocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
+            <para>Parameters set with this method are always inserted at the beginning of the argument list if more parameters are given when resolving</para>
+            </summary>
+            <param name="parameters">The parameters</param>
+            <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
+            <exception cref="T:LightweightIocContainer.Exceptions.InvalidRegistrationException"><see cref="P:LightweightIocContainer.Registrations.RegistrationBase.Parameters"/> are already set or no parameters given</exception>
+        </member>
+        <member name="M:LightweightIocContainer.Registrations.MultipleRegistration`2.WithParameters(System.ValueTuple{System.Int32,System.Object}[])">
+            <summary>
+            Pass parameters that will be used to<see cref="M:LightweightIocContainer.IocContainer.Resolve``1"/> an instance of this <see cref="P:LightweightIocContainer.Interfaces.Registrations.IRegistration.InterfaceType"/>
+            <para>Parameters set with this method are inserted at the position in the argument list that is passed with the parameter if more parameters are given when resolving</para>
+            </summary>
+            <param name="parameters">The parameters with their position</param>
+            <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/></returns>
+            <exception cref="T:LightweightIocContainer.Exceptions.InvalidRegistrationException"><see cref="P:LightweightIocContainer.Registrations.RegistrationBase.Parameters"/> are already set or no parameters given</exception>
+        </member>
+        <member name="M:LightweightIocContainer.Registrations.MultipleRegistration`2.WithDisposeStrategy(LightweightIocContainer.DisposeStrategy)">
+            <summary>
+            Add a <see cref="T:LightweightIocContainer.DisposeStrategy"/> for the <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/>
+            </summary>
+            <param name="disposeStrategy">The <see cref="T:LightweightIocContainer.DisposeStrategy"/></param>
+            <returns>The current instance of this <see cref="T:LightweightIocContainer.Registrations.RegistrationBase"/></returns>
+        </member>
         <member name="T:LightweightIocContainer.Registrations.MultipleRegistration`3">
             <summary>
             An <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistration"/> to register multiple interfaces for on implementation type

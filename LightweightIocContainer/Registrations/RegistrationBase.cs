@@ -140,7 +140,7 @@ internal abstract class RegistrationBase : IRegistrationBase, IWithFactoryIntern
     /// </summary>
     /// <param name="disposeStrategy">The <see cref="DisposeStrategy"/></param>
     /// <returns>The current instance of this <see cref="RegistrationBase"/></returns>
-    public IRegistrationBase WithDisposeStrategy(DisposeStrategy disposeStrategy)
+    public virtual IRegistrationBase WithDisposeStrategy(DisposeStrategy disposeStrategy)
     {
         DisposeStrategy = disposeStrategy;
         return this;
