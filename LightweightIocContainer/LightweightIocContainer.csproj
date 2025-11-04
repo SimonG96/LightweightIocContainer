@@ -11,7 +11,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <DocumentationFile>LightweightIocContainer.xml</DocumentationFile>
     <VersionPrefix>4.4.0</VersionPrefix>
-    <VersionSuffix>beta7</VersionSuffix>
   </PropertyGroup>
 
   <PropertyGroup>
