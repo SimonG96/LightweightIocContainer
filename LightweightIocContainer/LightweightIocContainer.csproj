@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Authors>SimonG</Authors>
-    <Copyright>Copyright(c) 2024 SimonG. All Rights Reserved.</Copyright>
+    <Copyright>Copyright(c) 2025 SimonG. All Rights Reserved.</Copyright>
     <Description>A lightweight IOC Container that is powerful enough to do all the things you need it to do.</Description>
     <RepositoryUrl>https://github.com/SimonG96/LightweightIocContainer</RepositoryUrl>
     <LangVersion>latest</LangVersion>
