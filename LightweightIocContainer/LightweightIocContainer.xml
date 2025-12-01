@@ -384,9 +384,15 @@
         </member>
         <member name="M:LightweightIocContainer.Factories.TypedFactory`1.#ctor(LightweightIocContainer.IocContainer)">
             <summary>
-            The 
+            Constructor for creating factories dynamically
             </summary>
             <param name="container">The current instance of the <see cref="T:LightweightIocContainer.Interfaces.IIocContainer"/></param>
+        </member>
+        <member name="M:LightweightIocContainer.Factories.TypedFactory`1.#ctor(`0)">
+            <summary>
+            Constructor for generated factories
+            </summary>
+            <param name="factory"></param>
         </member>
         <member name="P:LightweightIocContainer.Factories.TypedFactory`1.Factory">
             <summary>
