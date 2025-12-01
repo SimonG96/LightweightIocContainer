@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Authors>SimonG</Authors>
     <Copyright>Copyright(c) 2025 SimonG. All Rights Reserved.</Copyright>
     <Description>A lightweight IOC Container Validator.</Description>
