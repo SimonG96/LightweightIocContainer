@@ -120,6 +120,14 @@ internal abstract class RegistrationBase : IRegistrationBase, IWithFactoryIntern
             
         return this;
     }
+    
+    internal void AddGeneratedFactory<TFactory>(TFactory generatedFactory)
+    {
+        TypedFactory<TFactory> factory = new(generatedFactory);
+        Factory = factory;
+            
+        _container.RegisterFactory(factory);
+    }
 
     /// <summary>
     /// Register a custom implemented factory for the <see cref="IRegistrationBase"/>
