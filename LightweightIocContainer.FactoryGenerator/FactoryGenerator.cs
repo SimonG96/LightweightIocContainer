@@ -112,7 +112,6 @@ public class FactoryGenerator : IIncrementalGenerator
         stringBuilder.AppendLine();
 
         stringBuilder.AppendLine("using LightweightIocContainer.Interfaces.Factories;");
-        stringBuilder.AppendLine("using LightweightIocContainer.Factories;");
         
         foreach (string typeNamespace in GetNamespacesOfTypes(types)) 
             stringBuilder.AppendLine($"using {typeNamespace};");
@@ -137,7 +136,7 @@ public class FactoryGenerator : IIncrementalGenerator
             
             stringBuilder.AppendLine($"{INDENT}{INDENT}if (typeof(TFactory) == typeof({type.Name}))");
             stringBuilder.AppendLine($"{INDENT}{INDENT}{{");
-            stringBuilder.AppendLine($"{INDENT}{INDENT}{INDENT}return (TFactory) (object) new Generated{type.Name}(container, new FactoryHelper());");
+            stringBuilder.AppendLine($"{INDENT}{INDENT}{INDENT}return (TFactory) (object) new Generated{type.Name}(container);");
             stringBuilder.AppendLine($"{INDENT}{INDENT}}}");
             stringBuilder.AppendLine();
         }
