@@ -121,7 +121,12 @@ internal abstract class RegistrationBase : IRegistrationBase, IWithFactoryIntern
         return this;
     }
     
-    internal void AddGeneratedFactory<TFactory>(TFactory generatedFactory)
+    /// <summary>
+    /// Internal method used by the factory source generator to add the generated factory to the registration
+    /// </summary>
+    /// <param name="generatedFactory">The actual generated factory</param>
+    /// <typeparam name="TFactory">The type of the generated factory</typeparam>
+    public void AddGeneratedFactory<TFactory>(TFactory generatedFactory)
     {
         TypedFactory<TFactory> factory = new(generatedFactory);
         Factory = factory;

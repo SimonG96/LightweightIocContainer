@@ -25,6 +25,13 @@ public interface IWithFactory
     /// <typeparam name="TFactoryImplementation">The type of the implementation for the custom factory</typeparam>
     /// <returns>The current instance of this <see cref="IRegistrationBase"/></returns>
     IRegistrationBase WithFactory<TFactoryInterface, TFactoryImplementation>() where TFactoryImplementation : TFactoryInterface;
+
+    /// <summary>
+    /// Internal method used by the factory source generator to add the generated factory to the registration
+    /// </summary>
+    /// <param name="generatedFactory">The actual generated factory</param>
+    /// <typeparam name="TFactory">The type of the generated factory</typeparam>
+    void AddGeneratedFactory<TFactory>(TFactory generatedFactory);
 }
 
 internal interface IWithFactoryInternal : IWithFactory
