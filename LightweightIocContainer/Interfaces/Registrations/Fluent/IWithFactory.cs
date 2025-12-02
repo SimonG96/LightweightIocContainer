@@ -29,9 +29,9 @@ public interface IWithFactory
     /// <summary>
     /// Internal method used by the factory source generator to add the generated factory to the registration
     /// </summary>
-    /// <param name="generatedFactory">The actual generated factory</param>
+    /// <param name="factoryBuilder">The factory creator</param>
     /// <typeparam name="TFactory">The type of the generated factory</typeparam>
-    void AddGeneratedFactory<TFactory>(TFactory generatedFactory);
+    void AddGeneratedFactory<TFactory>(IFactoryBuilder factoryBuilder);
 }
 
 internal interface IWithFactoryInternal : IWithFactory
