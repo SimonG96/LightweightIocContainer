@@ -37,7 +37,6 @@ public class FactoryGenerator : IIncrementalGenerator
 
         stringBuilder.AppendLine("using LightweightIocContainer.Interfaces.Registrations;");
         stringBuilder.AppendLine("using LightweightIocContainer.Interfaces.Registrations.Fluent;");
-        stringBuilder.AppendLine("using LightweightIocContainer.Registrations;");
         stringBuilder.AppendLine();
         
         if (!string.IsNullOrEmpty(classNamespace))
@@ -52,13 +51,9 @@ public class FactoryGenerator : IIncrementalGenerator
         stringBuilder.AppendLine($"{INDENT}public static IRegistrationBase WithGeneratedFactory<TFactory>(this IRegistrationBase registration)");
         stringBuilder.AppendLine($"{INDENT}{{");
         stringBuilder.AppendLine($"{INDENT}{INDENT}TFactory factory = Builder.Create<TFactory>();");
+        stringBuilder.AppendLine($"{INDENT}{INDENT}registration.AddGeneratedFactory<TFactory>(factory);");
         stringBuilder.AppendLine();
-        stringBuilder.AppendLine($"{INDENT}{INDENT}if (registration is not RegistrationBase registrationBase)");
-        stringBuilder.AppendLine($"{INDENT}{INDENT}{INDENT}throw new InvalidOperationException(\"The registration must be of type RegistrationBase to add a generated factory.\");");
-        stringBuilder.AppendLine();
-        stringBuilder.AppendLine($"{INDENT}{INDENT}registrationBase.AddGeneratedFactory<TFactory>(factory);");
-        stringBuilder.AppendLine();
-        stringBuilder.AppendLine($"{INDENT}{INDENT}return registrationBase;");
+        stringBuilder.AppendLine($"{INDENT}{INDENT}return registration;");
         stringBuilder.AppendLine($"{INDENT}}}");
         
         stringBuilder.AppendLine("}");
