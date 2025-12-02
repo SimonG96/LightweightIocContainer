@@ -670,6 +670,13 @@
             <typeparam name="TFactoryImplementation">The type of the implementation for the custom factory</typeparam>
             <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
         </member>
+        <member name="M:LightweightIocContainer.Interfaces.Registrations.Fluent.IWithFactory.AddGeneratedFactory``1(``0)">
+            <summary>
+            Internal method used by the factory source generator to add the generated factory to the registration
+            </summary>
+            <param name="generatedFactory">The actual generated factory</param>
+            <typeparam name="TFactory">The type of the generated factory</typeparam>
+        </member>
         <member name="P:LightweightIocContainer.Interfaces.Registrations.Fluent.IWithFactoryInternal.Factory">
             <summary>
             The Factory added with the <see cref="M:LightweightIocContainer.Interfaces.Registrations.Fluent.IWithFactory.WithFactory``1"/> method
@@ -1600,6 +1607,13 @@
             </summary>
             <typeparam name="TFactory">The type of the abstract typed factory</typeparam>
             <returns>The current instance of this <see cref="T:LightweightIocContainer.Interfaces.Registrations.IRegistrationBase"/></returns>
+        </member>
+        <member name="M:LightweightIocContainer.Registrations.RegistrationBase.AddGeneratedFactory``1(``0)">
+            <summary>
+            Internal method used by the factory source generator to add the generated factory to the registration
+            </summary>
+            <param name="generatedFactory">The actual generated factory</param>
+            <typeparam name="TFactory">The type of the generated factory</typeparam>
         </member>
         <member name="M:LightweightIocContainer.Registrations.RegistrationBase.WithFactory``2">
             <summary>
