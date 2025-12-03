@@ -180,10 +180,12 @@ public class FactoryGenerator : IIncrementalGenerator
 
             if (!method.ReturnsVoid)
             {
-                if (method.ReturnType.Name == "Task")
+                if (method.ReturnType is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol)
                 {
-                    if (method.ReturnType is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol) 
-                        namespaces.AddRange(namedTypeSymbol.TypeArguments.Select(GetNamespaceOfType));
+                    namespaces.AddRange(namedTypeSymbol.TypeArguments.Select(GetNamespaceOfType));
+                    
+                    if (method.ReturnType.Name != "Task")
+                        namespaces.Add(GetNamespaceOfType(method.ReturnType));
                 }
                 else
                     namespaces.Add(GetNamespaceOfType(method.ReturnType));
@@ -215,11 +217,8 @@ public class FactoryGenerator : IIncrementalGenerator
             {
                 stringBuilder.Append($"{INDENT}public {method.ReturnType.Name}");
                 
-                if (method.ReturnType.Name == "Task")
-                {
-                    if (method.ReturnType is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol) 
-                        stringBuilder.Append($"<{string.Join(", ", namedTypeSymbol.TypeArguments.Select(a => a.Name))}>");
-                }
+                if (method.ReturnType is INamedTypeSymbol { IsGenericType: true } namedReturnType) 
+                    stringBuilder.Append(GetGenericArguments(namedReturnType));
                 
                 stringBuilder.Append($" {method.Name}");
                 
@@ -251,14 +250,12 @@ public class FactoryGenerator : IIncrementalGenerator
                     stringBuilder.AppendLine();
                 }
                 
-                if (method.ReturnType.Name == "Task")
+                if (method.ReturnType is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol) 
                 {
-                    stringBuilder.Append($"{INDENT}{INDENT}return container.ResolveAsync");
-                    
-                    if (method.ReturnType is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol) 
-                        stringBuilder.Append($"<{string.Join(", ", namedTypeSymbol.TypeArguments.Select(a => a.Name))}>");
-
-                    stringBuilder.Append("(");
+                    if (method.ReturnType.Name == "Task") 
+                        stringBuilder.Append($"{INDENT}{INDENT}return container.ResolveAsync{GetGenericArguments(namedTypeSymbol)}(");
+                    else
+                        stringBuilder.Append($"{INDENT}{INDENT}return container.Resolve<{method.ReturnType.Name}{GetGenericArguments(namedTypeSymbol)}>(");
                 }
                 else
                     stringBuilder.Append($"{INDENT}{INDENT}return container.Resolve<{method.ReturnType.Name}>(");
@@ -305,20 +302,34 @@ public class FactoryGenerator : IIncrementalGenerator
         StringBuilder stringBuilder = new();
         stringBuilder.Append(parameter.Type.Name);
         
+        if (parameter.Type is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol)
+            stringBuilder.Append(GetGenericArguments(namedTypeSymbol));
+        
         if (parameter.NullableAnnotation == NullableAnnotation.Annotated)
             stringBuilder.Append("?");
         
         stringBuilder.Append($" {parameter.Name}");
         return stringBuilder.ToString();
     }
-    
+
+    private string GetGenericArguments(INamedTypeSymbol namedTypeSymbol) => $"<{string.Join(", ", namedTypeSymbol.TypeArguments.Select(GetGenericArgument))}>";
+    private string GetGenericArgument(ITypeSymbol argument)
+    {
+        StringBuilder stringBuilder = new();
+        stringBuilder.Append(argument.Name);
+        
+        if (argument is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol)
+            stringBuilder.Append(GetGenericArguments(namedTypeSymbol));
+        
+        if (argument.NullableAnnotation == NullableAnnotation.Annotated)
+            stringBuilder.Append("?");
+
+        return stringBuilder.ToString();
+    }
+
     private List<string> GetParameterConstraints(ITypeParameterSymbol typeParameterSymbol)
     {
         List<string> constraints = [];
-
-        foreach (ITypeSymbol constraintType in typeParameterSymbol.ConstraintTypes)
-            constraints.Add(constraintType.Name);
-        
         if (typeParameterSymbol.HasReferenceTypeConstraint)
             constraints.Add("class");
         
@@ -333,6 +344,14 @@ public class FactoryGenerator : IIncrementalGenerator
         
         if (typeParameterSymbol.HasNotNullConstraint)
             constraints.Add("notnull");
+        
+        foreach (ITypeSymbol constraintType in typeParameterSymbol.ConstraintTypes)
+        {
+            if (constraintType is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol)
+                constraints.Add($"{constraintType.Name}{GetGenericArguments(namedTypeSymbol)}");
+            else
+                constraints.Add(constraintType.Name);
+        }
         
         return constraints;
     }
