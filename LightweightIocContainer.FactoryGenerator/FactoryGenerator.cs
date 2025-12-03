@@ -248,8 +248,6 @@ public class FactoryGenerator : IIncrementalGenerator
             }
         }
 
-        typeSymbol.GetMembers();
-
         stringBuilder.AppendLine("}");
         
         return stringBuilder.ToString();
