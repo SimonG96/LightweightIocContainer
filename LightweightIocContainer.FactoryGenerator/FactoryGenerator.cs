@@ -161,6 +161,9 @@ public class FactoryGenerator : IIncrementalGenerator
 
         stringBuilder.AppendLine(GENERATED_FILE_HEADER);
         stringBuilder.AppendLine();
+        
+        stringBuilder.AppendLine("#nullable enable");
+        stringBuilder.AppendLine();
 
         stringBuilder.AppendLine("using LightweightIocContainer;");
         stringBuilder.AppendLine();
