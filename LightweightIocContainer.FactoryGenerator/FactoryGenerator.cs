@@ -186,8 +186,7 @@ public class FactoryGenerator : IIncrementalGenerator
             
             if (!method.ReturnsVoid) //create method
             {
-                stringBuilder.Append($"{INDENT}public ");
-                stringBuilder.Append(method.ReturnType.Name);
+                stringBuilder.Append($"{INDENT}public {method.ReturnType.Name}");
                 
                 if (method.ReturnType.Name == "Task")
                 {
