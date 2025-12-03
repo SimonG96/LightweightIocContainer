@@ -7,3 +7,17 @@ The easiest way to [install](https://github.com/SimonG96/LghtweightIocContainer/
 ```.net
 > dotnet add package LightweightIocContainer.FactoryGenerator --version 5.0.0
 ```
+
+### Example usage
+
+When registering an interface you can use the `WithGeneratedFactory<>()` method to generate a factory for the registered type:
+
+```c#
+public class SampleInstaller : IIocInstaller
+{
+    public void Install(IRegistrationCollector registration)
+    {
+        registration.Add<ISampleClass, SampleClass>().WithGeneratedFactory<ISampleClassFactory>();
+    }
+}
+```
