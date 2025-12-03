@@ -210,7 +210,7 @@ public class FactoryGenerator : IIncrementalGenerator
 
                 foreach (IParameterSymbol parameter in method.Parameters)
                 {
-                    stringBuilder.AppendLine($"{INDENT}{INDENT}object? {parameter.Name}Value = {parameter.Name}");
+                    stringBuilder.AppendLine($"{INDENT}{INDENT}object? {parameter.Name}Value = {parameter.Name};");
                     stringBuilder.AppendLine($"{INDENT}{INDENT}if ({parameter.Name}Value is null)");
                     stringBuilder.AppendLine($"{INDENT}{INDENT}{INDENT}{parameter.Name}Value = new NullParameter(typeof({parameter.Type.Name}));");
                     stringBuilder.AppendLine();
