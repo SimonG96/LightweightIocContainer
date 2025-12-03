@@ -29,7 +29,7 @@ public class FactoryGenerator : IIncrementalGenerator
         IncrementalValuesProvider<ITypeSymbol?> syntaxProvider = context.SyntaxProvider.CreateSyntaxProvider(IsCallToGenerateFactory, GetTypeArgument);
         
         context.RegisterSourceOutput(syntaxProvider.Collect(), GenerateTypeDependentClasses);
-        context.RegisterSourceOutput(syntaxProvider, GenerateFactory);
+        context.RegisterSourceOutput(syntaxProvider.Collect(), GenerateFactory);
     }
 
     private string GenerateFactoryExtensionsClass(string? classNamespace, string className)
@@ -99,12 +99,15 @@ public class FactoryGenerator : IIncrementalGenerator
         context.AddSource($"{BUILDER_CLASS_NAME}.g.cs", GenerateBuilderClassSourceCode(classNamespace, types));
     }
     
-    private void GenerateFactory(SourceProductionContext context, ITypeSymbol? typeSymbol)
+    private void GenerateFactory(SourceProductionContext context, ImmutableArray<ITypeSymbol?> types)
     {
-        if (typeSymbol is null)
-            return;
+        foreach (ISymbol? symbol in types.Distinct(SymbolEqualityComparer.IncludeNullability))
+        {
+            if (symbol is not ITypeSymbol typeSymbol)
+                continue;
         
-        context.AddSource($"Generated{typeSymbol.Name}.g.cs", GenerateFactorySourceCode(typeSymbol));
+            context.AddSource($"Generated{typeSymbol.Name}.g.cs", GenerateFactorySourceCode(typeSymbol));
+        }
     }
 
     private string GenerateBuilderClassSourceCode(string? classNamespace, ImmutableArray<ITypeSymbol?> types)
@@ -132,9 +135,9 @@ public class FactoryGenerator : IIncrementalGenerator
         stringBuilder.AppendLine($"{INDENT}public TFactory Create<TFactory>(IocContainer container)");
         stringBuilder.AppendLine($"{INDENT}{{");
 
-        foreach (ITypeSymbol? type in types)
+        foreach (ISymbol? symbol in types.Distinct(SymbolEqualityComparer.IncludeNullability))
         {
-            if (type is null)
+            if (symbol is not ITypeSymbol type)
                 continue;
             
             stringBuilder.AppendLine($"{INDENT}{INDENT}if (typeof(TFactory) == typeof({type.Name}))");
