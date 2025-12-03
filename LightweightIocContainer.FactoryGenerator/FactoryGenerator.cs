@@ -177,13 +177,12 @@ public class FactoryGenerator : IIncrementalGenerator
         stringBuilder.AppendLine($"public class Generated{typeName}(IocContainer container) : {typeName}");
         stringBuilder.AppendLine("{");
 
-        foreach (ISymbol? member in typeSymbol.GetMembers())
+        ImmutableArray<ISymbol> members = typeSymbol.GetMembers();
+        foreach (ISymbol? member in members)
         {
             if (member is not IMethodSymbol method)
                 continue;
 
-            stringBuilder.AppendLine();
-            
             if (!method.ReturnsVoid) //create method
             {
                 stringBuilder.Append($"{INDENT}public {method.ReturnType.Name}");
@@ -256,6 +255,9 @@ public class FactoryGenerator : IIncrementalGenerator
                 
                 stringBuilder.AppendLine($" => container.ClearMultitonInstances<{string.Join(", ", method.TypeArguments.Select(a => a.Name))}>();");
             }
+            
+            if (members.IndexOf(member) < members.Length - 1) //only append empty line if not the last member
+                stringBuilder.AppendLine();
         }
 
         stringBuilder.AppendLine("}");
