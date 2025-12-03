@@ -186,7 +186,16 @@ public class FactoryGenerator : IIncrementalGenerator
             
             if (!method.ReturnsVoid) //create method
             {
-                stringBuilder.Append($"{INDENT}public {method.ReturnType.Name} {method.Name}");
+                stringBuilder.Append($"{INDENT}public ");
+                stringBuilder.Append(method.ReturnType.Name);
+                
+                if (method.ReturnType.Name == "Task")
+                {
+                    if (method.ReturnType is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol) 
+                        stringBuilder.Append($"<{string.Join(", ", namedTypeSymbol.TypeArguments.Select(a => a.Name))}>");
+                }
+                
+                stringBuilder.Append($" {method.Name}");
                 
                 if (method.IsGenericMethod) 
                     stringBuilder.Append($"<{string.Join(", ", method.TypeParameters.Select(p => p.Name))}>");
@@ -216,8 +225,15 @@ public class FactoryGenerator : IIncrementalGenerator
                     stringBuilder.AppendLine();
                 }
                 
-                if (method.IsAsync)
-                    stringBuilder.Append($"{INDENT}{INDENT}return await container.ResolveAsync<>("); //TODO: Get return type from Task<>
+                if (method.ReturnType.Name == "Task")
+                {
+                    stringBuilder.Append($"{INDENT}{INDENT}return container.ResolveAsync");
+                    
+                    if (method.ReturnType is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol) 
+                        stringBuilder.Append($"<{string.Join(", ", namedTypeSymbol.TypeArguments.Select(a => a.Name))}>");
+
+                    stringBuilder.Append("(");
+                }
                 else
                     stringBuilder.Append($"{INDENT}{INDENT}return container.Resolve<{method.ReturnType.Name}>(");
                 
