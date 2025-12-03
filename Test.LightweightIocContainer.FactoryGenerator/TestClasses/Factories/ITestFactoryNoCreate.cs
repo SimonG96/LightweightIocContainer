@@ -1,0 +1,3 @@
+﻿namespace Test.LightweightIocContainer.FactoryGenerator.TestClasses.Factories;
+
+public interface ITestFactoryNoCreate;
