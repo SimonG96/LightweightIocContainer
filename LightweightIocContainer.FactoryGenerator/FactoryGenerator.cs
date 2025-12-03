@@ -49,7 +49,7 @@ public class FactoryGenerator : IIncrementalGenerator
             stringBuilder.AppendLine();
         }
         
-        stringBuilder.AppendLine($"public static class {className}");;
+        stringBuilder.AppendLine($"public static class {className}");
         stringBuilder.AppendLine("{");
         
         stringBuilder.AppendLine($"{INDENT}public static IRegistrationBase WithGeneratedFactory<TFactory>(this IRegistrationBase registration)");
