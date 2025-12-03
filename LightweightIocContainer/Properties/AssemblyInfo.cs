@@ -7,4 +7,5 @@ using System.Runtime.CompilerServices;
 [assembly:InternalsVisibleTo("LightweightIocContainer.Validation")]
 
 [assembly:InternalsVisibleTo("Test.LightweightIocContainer")]
+[assembly:InternalsVisibleTo("Test.LightweightIocContainer.FactoryGenerator")]
 [assembly:InternalsVisibleTo("Test.LightweightIocContainer.Validation")]
