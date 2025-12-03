@@ -241,9 +241,20 @@ public class FactoryGenerator : IIncrementalGenerator
                 
                 stringBuilder.AppendLine($"{INDENT}}}");
             }
-            else if (method.Name == CLEAR_MULTITON_INSTANCE_METHOD_NAME)
+            else if (method is { Name: CLEAR_MULTITON_INSTANCE_METHOD_NAME, IsGenericMethod: true })
             {
-                //TODO
+                stringBuilder.Append($"{INDENT}public void {method.Name}<{string.Join(", ", method.TypeParameters.Select(p => p.Name))}>()");
+                
+                foreach (ITypeParameterSymbol typeParameter in method.TypeParameters)
+                {
+                    List<string> parameterConstraints = GetParameterConstraints(typeParameter);
+                    if (parameterConstraints.Count == 0)
+                        continue;
+                        
+                    stringBuilder.Append($" where {typeParameter.Name} : {string.Join(", ", parameterConstraints)}");
+                }
+                
+                stringBuilder.AppendLine($" => container.ClearMultitonInstances<{string.Join(", ", method.TypeArguments.Select(a => a.Name))}>();");
             }
         }
 
