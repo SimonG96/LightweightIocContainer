@@ -253,12 +253,12 @@ public class FactoryGenerator : IIncrementalGenerator
                 if (method.ReturnType is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol) 
                 {
                     if (method.ReturnType.Name == "Task") 
-                        stringBuilder.Append($"{INDENT}{INDENT}return container.ResolveAsync{GetGenericArguments(namedTypeSymbol)}(");
+                        stringBuilder.Append($"{INDENT}{INDENT}return container.FactoryResolveAsync{GetGenericArguments(namedTypeSymbol)}(");
                     else
-                        stringBuilder.Append($"{INDENT}{INDENT}return container.Resolve<{method.ReturnType.Name}{GetGenericArguments(namedTypeSymbol)}>(");
+                        stringBuilder.Append($"{INDENT}{INDENT}return container.FactoryResolve<{method.ReturnType.Name}{GetGenericArguments(namedTypeSymbol)}>(");
                 }
                 else
-                    stringBuilder.Append($"{INDENT}{INDENT}return container.Resolve<{method.ReturnType.Name}>(");
+                    stringBuilder.Append($"{INDENT}{INDENT}return container.FactoryResolve<{method.ReturnType.Name}>(");
                 
                 stringBuilder.Append(string.Join(", ", method.Parameters.Select(p => $"{p.Name}Value")));
                 stringBuilder.AppendLine(");");
