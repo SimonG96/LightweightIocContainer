@@ -29,7 +29,6 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="NSubstitute" Version="5.3.0" />
-        <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
     </ItemGroup>
   
     <ItemGroup>
