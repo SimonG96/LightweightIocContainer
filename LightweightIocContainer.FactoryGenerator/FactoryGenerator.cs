@@ -336,9 +336,6 @@ public class FactoryGenerator : IIncrementalGenerator
         if (typeParameterSymbol.HasValueTypeConstraint)
             constraints.Add("struct");
         
-        if (typeParameterSymbol.HasConstructorConstraint)
-            constraints.Add("new()");
-        
         if (typeParameterSymbol.HasUnmanagedTypeConstraint)
             constraints.Add("unmanaged");
         
@@ -352,6 +349,9 @@ public class FactoryGenerator : IIncrementalGenerator
             else
                 constraints.Add(constraintType.Name);
         }
+        
+        if (typeParameterSymbol.HasConstructorConstraint)
+            constraints.Add("new()");
         
         return constraints;
     }
