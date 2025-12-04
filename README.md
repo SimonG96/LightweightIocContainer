@@ -63,7 +63,7 @@ The easiest way to [install](https://github.com/SimonG96/LightweightIocContainer
 There is the option to install the [LightweightIocContainer.Validation](https://www.nuget.org/packages/LightweightIocContainer.Validation/) package:
 
 ```.net
-> dotnet add package LightweightIocContainer.Validaton --version 5.0.0
+> dotnet add package LightweightIocContainer.Validation --version 5.0.0
 ```
 
 With this you can validate your `IocContainer` setup by using the `IocValidator` in a unit test:
