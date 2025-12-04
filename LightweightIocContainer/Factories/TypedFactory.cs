@@ -27,7 +27,7 @@ public class TypedFactory<TFactory> : TypedFactoryBase<TFactory>, ITypedFactory<
     /// <summary>
     /// Constructor for generated factories
     /// </summary>
-    /// <param name="factory"></param>
+    /// <param name="factory">The generated factory instance</param>
     public TypedFactory(TFactory factory) => Factory = factory;
 
     /// <summary>
