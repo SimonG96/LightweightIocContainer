@@ -215,29 +215,15 @@ public class FactoryGenerator : IIncrementalGenerator
 
             if (!method.ReturnsVoid) //create method
             {
-                stringBuilder.Append($"{INDENT}public {method.ReturnType.Name}");
-                
-                if (method.ReturnType is INamedTypeSymbol { IsGenericType: true } namedReturnType) 
-                    stringBuilder.Append(GetGenericArguments(namedReturnType));
-                
-                stringBuilder.Append($" {method.Name}");
+                stringBuilder.Append($"{INDENT}public {GetTypeText(method.ReturnType)} {method.Name}");
                 
                 if (method.IsGenericMethod) 
-                    stringBuilder.Append($"<{string.Join(", ", method.TypeParameters.Select(p => p.Name))}>");
+                    stringBuilder.Append(GetGenericParameters(method));
                 
                 stringBuilder.Append($"({string.Join(", ", method.Parameters.Select(GetParameterText))})");
 
-                if (method.IsGenericMethod)
-                {
-                    foreach (ITypeParameterSymbol typeParameter in method.TypeParameters)
-                    {
-                        List<string> parameterConstraints = GetParameterConstraints(typeParameter);
-                        if (parameterConstraints.Count == 0)
-                            continue;
-                        
-                        stringBuilder.Append($" where {typeParameter.Name} : {string.Join(", ", parameterConstraints)}");
-                    }
-                }
+                if (method.IsGenericMethod) 
+                    stringBuilder.Append(GetParameterConstraintsText(method));
                 
                 stringBuilder.AppendLine();
                 stringBuilder.AppendLine($"{INDENT}{{");
@@ -246,10 +232,11 @@ public class FactoryGenerator : IIncrementalGenerator
                 {
                     stringBuilder.AppendLine($"{INDENT}{INDENT}object? {parameter.Name}Value = {parameter.Name};");
                     stringBuilder.AppendLine($"{INDENT}{INDENT}if ({parameter.Name}Value is null)");
-                    stringBuilder.AppendLine($"{INDENT}{INDENT}{INDENT}{parameter.Name}Value = new NullParameter(typeof({parameter.Type.Name}));");
+                    stringBuilder.AppendLine($"{INDENT}{INDENT}{INDENT}{parameter.Name}Value = new NullParameter(typeof({GetTypeText(parameter.Type, false)}));");
                     stringBuilder.AppendLine();
                 }
                 
+                //don't use getTypeText here, because we need the raw type name for Task<>
                 if (method.ReturnType is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol) 
                 {
                     if (method.ReturnType.Name == "Task") 
@@ -267,18 +254,10 @@ public class FactoryGenerator : IIncrementalGenerator
             }
             else if (method is { Name: CLEAR_MULTITON_INSTANCE_METHOD_NAME, IsGenericMethod: true })
             {
-                stringBuilder.Append($"{INDENT}public void {method.Name}<{string.Join(", ", method.TypeParameters.Select(p => p.Name))}>()");
+                stringBuilder.Append($"{INDENT}public void {method.Name}{GetGenericParameters(method)}()");
+                stringBuilder.Append(GetParameterConstraintsText(method));
                 
-                foreach (ITypeParameterSymbol typeParameter in method.TypeParameters)
-                {
-                    List<string> parameterConstraints = GetParameterConstraints(typeParameter);
-                    if (parameterConstraints.Count == 0)
-                        continue;
-                        
-                    stringBuilder.Append($" where {typeParameter.Name} : {string.Join(", ", parameterConstraints)}");
-                }
-                
-                stringBuilder.AppendLine($" => container.ClearMultitonInstances<{string.Join(", ", method.TypeArguments.Select(a => a.Name))}>();");
+                stringBuilder.AppendLine($" => container.ClearMultitonInstances{GetGenericArguments(method)}();");
             }
             
             if (members.IndexOf(member) < members.Length - 1) //only append empty line if not the last member
@@ -297,33 +276,42 @@ public class FactoryGenerator : IIncrementalGenerator
             .OfType<string>()
             .Distinct();
 
-    private string GetParameterText(IParameterSymbol parameter)
+    private string GetTypeText(ITypeSymbol typeSymbol) => GetTypeText(typeSymbol, true);
+    private string GetTypeText(ITypeSymbol typeSymbol, bool allowNullable)
     {
         StringBuilder stringBuilder = new();
-        stringBuilder.Append(parameter.Type.Name);
+        stringBuilder.Append(typeSymbol.Name);
         
-        if (parameter.Type is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol)
+        if (typeSymbol is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol)
             stringBuilder.Append(GetGenericArguments(namedTypeSymbol));
         
-        if (parameter.NullableAnnotation == NullableAnnotation.Annotated)
+        if (allowNullable && typeSymbol.NullableAnnotation == NullableAnnotation.Annotated)
             stringBuilder.Append("?");
         
-        stringBuilder.Append($" {parameter.Name}");
         return stringBuilder.ToString();
     }
 
-    private string GetGenericArguments(INamedTypeSymbol namedTypeSymbol) => $"<{string.Join(", ", namedTypeSymbol.TypeArguments.Select(GetGenericArgument))}>";
-    private string GetGenericArgument(ITypeSymbol argument)
+    private string GetParameterText(IParameterSymbol parameter) => $"{GetTypeText(parameter.Type)} {parameter.Name}";
+    private string GetGenericArguments(INamedTypeSymbol namedTypeSymbol) => GetGenericArguments(namedTypeSymbol.TypeArguments);
+    private string GetGenericArguments(IMethodSymbol methodSymbol) => GetGenericArguments(methodSymbol.TypeArguments);
+    private string GetGenericArguments(ImmutableArray<ITypeSymbol> typeArguments) => $"<{string.Join(", ", typeArguments.Select(GetTypeText))}>";
+
+    private string GetGenericParameters(IMethodSymbol methodSymbol) => GetGenericParameters(methodSymbol.TypeParameters);
+    private string GetGenericParameters(ImmutableArray<ITypeParameterSymbol> typeParameters) => $"<{string.Join(", ", typeParameters.Select(GetTypeText))}>";
+    
+    private string GetParameterConstraintsText(IMethodSymbol method)
     {
         StringBuilder stringBuilder = new();
-        stringBuilder.Append(argument.Name);
         
-        if (argument is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol)
-            stringBuilder.Append(GetGenericArguments(namedTypeSymbol));
+        foreach (ITypeParameterSymbol typeParameter in method.TypeParameters)
+        {
+            List<string> parameterConstraints = GetParameterConstraints(typeParameter);
+            if (parameterConstraints.Count == 0)
+                continue;
+                        
+            stringBuilder.Append($" where {typeParameter.Name} : {string.Join(", ", parameterConstraints)}");
+        }
         
-        if (argument.NullableAnnotation == NullableAnnotation.Annotated)
-            stringBuilder.Append("?");
-
         return stringBuilder.ToString();
     }
 
