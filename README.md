@@ -12,6 +12,10 @@ A lightweight IOC Container that is powerful enough to do all the things you nee
 [![Nuget](https://img.shields.io/nuget/v/LightweightIocContainer.Validation.svg?label=Validation%20NuGet%20Version&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.Validation/)
 [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/LightweightIocContainer.Validation.svg?label=Validation%20NuGet%20Pre-Release&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.Validation/)
 
+[![Nuget](https://img.shields.io/nuget/dt/LightweightIocContainer.FactoryGenerator.svg?label=FactoryGenerator%20NuGet%20Downloads&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.FactoryGenerator/)
+[![Nuget](https://img.shields.io/nuget/v/LightweightIocContainer.FactoryGenerator.svg?label=FactoryGenerator%20NuGet%20Version&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.FactoryGenerator/)
+[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/LightweightIocContainer.FactoryGenerator.svg?label=FactoryGenerator%20NuGet%20Pre-Release&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.FactoryGenerator/)
+
 ## Get started with the Lightweight IOC Container
 
 ### How to install
