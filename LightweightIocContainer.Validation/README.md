@@ -5,7 +5,7 @@
 The easiest way to [install](https://github.com/SimonG96/LghtweightIocContainer/wiki/Install-Lightweight-IOC-Container) the Lightweight IOC Container is by using [NuGet](https://www.nuget.org/packages/LightweightIocContainer.Validation/) through the [`.NET CLI`](https://github.com/SimonG96/LightweightIocContainer/wiki/Install-Lightweight-IOC-Container#net-cli):
 
 ```.net
-> dotnet add package LightweightIocContainer.Validaton --version 4.4.0-beta2
+> dotnet add package LightweightIocContainer.Validation --version 5.0.0
 ```
 
 ### Validation

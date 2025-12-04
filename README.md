@@ -12,6 +12,10 @@ A lightweight IOC Container that is powerful enough to do all the things you nee
 [![Nuget](https://img.shields.io/nuget/v/LightweightIocContainer.Validation.svg?label=Validation%20NuGet%20Version&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.Validation/)
 [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/LightweightIocContainer.Validation.svg?label=Validation%20NuGet%20Pre-Release&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.Validation/)
 
+[![Nuget](https://img.shields.io/nuget/dt/LightweightIocContainer.FactoryGenerator.svg?label=FactoryGenerator%20NuGet%20Downloads&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.FactoryGenerator/)
+[![Nuget](https://img.shields.io/nuget/v/LightweightIocContainer.FactoryGenerator.svg?label=FactoryGenerator%20NuGet%20Version&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.FactoryGenerator/)
+[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/LightweightIocContainer.FactoryGenerator.svg?label=FactoryGenerator%20NuGet%20Pre-Release&logo=NuGet)](https://www.nuget.org/packages/LightweightIocContainer.FactoryGenerator/)
+
 ## Get started with the Lightweight IOC Container
 
 ### How to install
@@ -19,7 +23,7 @@ A lightweight IOC Container that is powerful enough to do all the things you nee
 The easiest way to [install](https://github.com/SimonG96/LightweightIocContainer/wiki/Install-Lightweight-IOC-Container) the Lightweight IOC Container is by using [NuGet](https://www.nuget.org/packages/LightweightIocContainer/) through the [`.NET CLI`](https://github.com/SimonG96/LightweightIocContainer/wiki/Install-Lightweight-IOC-Container#net-cli):
 
 ```.net
-> dotnet add package LightweightIocContainer --version 4.4.0
+> dotnet add package LightweightIocContainer --version 5.0.0
 ```
 
 ### Example usage
@@ -59,7 +63,7 @@ The easiest way to [install](https://github.com/SimonG96/LightweightIocContainer
 There is the option to install the [LightweightIocContainer.Validation](https://www.nuget.org/packages/LightweightIocContainer.Validation/) package:
 
 ```.net
-> dotnet add package LightweightIocContainer.Validaton --version 4.4.0
+> dotnet add package LightweightIocContainer.Validation --version 5.0.0
 ```
 
 With this you can validate your `IocContainer` setup by using the `IocValidator` in a unit test:

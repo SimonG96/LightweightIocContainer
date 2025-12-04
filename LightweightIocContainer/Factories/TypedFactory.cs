@@ -19,10 +19,16 @@ public class TypedFactory<TFactory> : TypedFactoryBase<TFactory>, ITypedFactory<
     private const string CLEAR_MULTITON_INSTANCE_METHOD_NAME = "ClearMultitonInstance";
 
     /// <summary>
-    /// The 
+    /// Constructor for creating factories dynamically
     /// </summary>
     /// <param name="container">The current instance of the <see cref="IIocContainer"/></param>
     public TypedFactory(IocContainer container) => Factory = CreateFactory(container);
+    
+    /// <summary>
+    /// Constructor for generated factories
+    /// </summary>
+    /// <param name="factory">The generated factory instance</param>
+    public TypedFactory(TFactory factory) => Factory = factory;
 
     /// <summary>
     /// The implemented abstract typed factory/>
