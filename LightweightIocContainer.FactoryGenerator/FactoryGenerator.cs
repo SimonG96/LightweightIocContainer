@@ -263,7 +263,7 @@ public class FactoryGenerator : IIncrementalGenerator
         return stringBuilder.ToString();
     }
 
-    private string? GetNamespaceOfType(ITypeSymbol s) => s.ContainingNamespace.IsGlobalNamespace ? null : s.ContainingNamespace.ToString();
+    private string? GetNamespaceOfType(ITypeSymbol typeSymbol) => typeSymbol.ContainingNamespace.IsGlobalNamespace ? null : typeSymbol.ContainingNamespace.ToString();
     private List<string?> GetNamespacesOfType(ITypeSymbol typeSymbol)
     {
         List<string?> namespaces = [];
