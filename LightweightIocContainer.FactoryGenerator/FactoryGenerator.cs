@@ -101,13 +101,8 @@ public class FactoryGenerator : IIncrementalGenerator
     
     private void GenerateFactory(SourceProductionContext context, ImmutableArray<ITypeSymbol?> types)
     {
-        foreach (ISymbol? symbol in types.Distinct(SymbolEqualityComparer.IncludeNullability))
-        {
-            if (symbol is not ITypeSymbol typeSymbol)
-                continue;
-        
-            context.AddSource($"Generated{GetGenericFileName(typeSymbol)}.g.cs", GenerateFactorySourceCode(typeSymbol));
-        }
+        foreach (ITypeSymbol typeSymbol in GetDistinctTypes(types)) 
+            context.AddSource($"Generated{typeSymbol.Name}.g.cs", GenerateFactorySourceCode(typeSymbol));
     }
 
     private string GenerateBuilderClassSourceCode(string? classNamespace, ImmutableArray<ITypeSymbol?> types)
@@ -135,11 +130,8 @@ public class FactoryGenerator : IIncrementalGenerator
         stringBuilder.AppendLine($"{INDENT}public TFactory Create<TFactory>(IocContainer container)");
         stringBuilder.AppendLine($"{INDENT}{{");
 
-        foreach (ISymbol? symbol in types.Distinct(SymbolEqualityComparer.IncludeNullability))
+        foreach (ITypeSymbol type in GetDistinctTypes(types))
         {
-            if (symbol is not ITypeSymbol type)
-                continue;
-            
             stringBuilder.AppendLine($"{INDENT}{INDENT}if (typeof(TFactory) == typeof({GetTypeText(type, false)}))");
             stringBuilder.AppendLine($"{INDENT}{INDENT}{{");
             stringBuilder.AppendLine($"{INDENT}{INDENT}{INDENT}return (TFactory) (object) new Generated{GetTypeText(type, false)}(container);");
@@ -263,15 +255,24 @@ public class FactoryGenerator : IIncrementalGenerator
         return stringBuilder.ToString();
     }
     
-    private string GetGenericFileName(ITypeSymbol typeSymbol)
+    private IEnumerable<ITypeSymbol> GetDistinctTypes(ImmutableArray<ITypeSymbol?> types)
     {
-        StringBuilder stringBuilder = new();
-        stringBuilder.Append(typeSymbol.Name);
-        
-        if (typeSymbol is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol)
-            stringBuilder.Append(string.Join("", namedTypeSymbol.TypeArguments.Select(t => CapitalizeFirstLetter(t.Name))));
-        
-        return stringBuilder.ToString();
+        List<ITypeSymbol> distinctTypes = [];
+        foreach (ITypeSymbol? typeSymbol in types)
+        {
+            if (typeSymbol is null)
+                continue;
+
+            if (distinctTypes.Contains(typeSymbol, SymbolEqualityComparer.IncludeNullability))
+                continue;
+            
+            if (distinctTypes.Any(t => t.Name == typeSymbol.Name))
+                continue;
+            
+            distinctTypes.Add(typeSymbol);
+        }
+
+        return distinctTypes;
     }
 
     private string? GetNamespaceOfType(ITypeSymbol typeSymbol) => typeSymbol.ContainingNamespace.IsGlobalNamespace ? null : typeSymbol.ContainingNamespace.ToString();
@@ -377,13 +378,5 @@ public class FactoryGenerator : IIncrementalGenerator
             constraints.Add("new()");
         
         return constraints;
-    }
-    
-    private string CapitalizeFirstLetter(string input)
-    {
-        if (string.IsNullOrEmpty(input))
-            return input;
-        
-        return char.ToUpper(input[0]) + input.Substring(1);
     }
 }
