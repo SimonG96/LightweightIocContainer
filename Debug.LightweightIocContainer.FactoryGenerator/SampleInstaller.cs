@@ -16,5 +16,6 @@ public class SampleInstaller : IIocInstaller
     public void Install(IRegistrationCollector registration)
     {
         registration.Add<ISampleClass, SampleClass>().WithGeneratedFactory<ISampleClassFactory>();
+        registration.Add<IOtherSample, OtherSample>().WithGeneratedFactory<IGenericSampleFactory<IOtherSample>>();
     }
 }
