@@ -9,4 +9,5 @@ namespace Debug.LightweightIocContainer.FactoryGenerator.Samples.Factories;
 public interface IGenericSampleFactory<T> where T : IOtherSample
 {
     T Create();
+    IOtherSample Create<U>(T parameter, U parameter2) where U : T;
 }
