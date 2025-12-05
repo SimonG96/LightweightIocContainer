@@ -106,7 +106,7 @@ public class FactoryGenerator : IIncrementalGenerator
             if (symbol is not ITypeSymbol typeSymbol)
                 continue;
         
-            context.AddSource($"Generated{typeSymbol.Name}.g.cs", GenerateFactorySourceCode(typeSymbol));
+            context.AddSource($"Generated{GetGenericFileName(typeSymbol)}.g.cs", GenerateFactorySourceCode(typeSymbol));
         }
     }
 
@@ -262,6 +262,17 @@ public class FactoryGenerator : IIncrementalGenerator
         
         return stringBuilder.ToString();
     }
+    
+    private string GetGenericFileName(ITypeSymbol typeSymbol)
+    {
+        StringBuilder stringBuilder = new();
+        stringBuilder.Append(typeSymbol.Name);
+        
+        if (typeSymbol is INamedTypeSymbol { IsGenericType: true } namedTypeSymbol)
+            stringBuilder.Append(string.Join("", namedTypeSymbol.TypeArguments.Select(t => CapitalizeFirstLetter(t.Name))));
+        
+        return stringBuilder.ToString();
+    }
 
     private string? GetNamespaceOfType(ITypeSymbol typeSymbol) => typeSymbol.ContainingNamespace.IsGlobalNamespace ? null : typeSymbol.ContainingNamespace.ToString();
     private List<string?> GetNamespacesOfType(ITypeSymbol typeSymbol)
@@ -366,5 +377,13 @@ public class FactoryGenerator : IIncrementalGenerator
             constraints.Add("new()");
         
         return constraints;
+    }
+    
+    private string CapitalizeFirstLetter(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return input;
+        
+        return char.ToUpper(input[0]) + input.Substring(1);
     }
 }
