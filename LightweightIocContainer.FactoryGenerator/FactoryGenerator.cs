@@ -133,9 +133,7 @@ public class FactoryGenerator : IIncrementalGenerator
         foreach (ITypeSymbol type in GetDistinctTypes(types, false))
         {
             stringBuilder.AppendLine($"{INDENT}{INDENT}if (typeof(TFactory) == typeof({GetTypeText(type, false)}))");
-            stringBuilder.AppendLine($"{INDENT}{INDENT}{{");
             stringBuilder.AppendLine($"{INDENT}{INDENT}{INDENT}return (TFactory) (object) new Generated{GetTypeText(type, false)}(container);");
-            stringBuilder.AppendLine($"{INDENT}{INDENT}}}");
             stringBuilder.AppendLine();
         }
         
