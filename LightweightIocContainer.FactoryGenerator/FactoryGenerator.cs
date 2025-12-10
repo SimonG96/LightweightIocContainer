@@ -101,7 +101,7 @@ public class FactoryGenerator : IIncrementalGenerator
     
     private void GenerateFactory(SourceProductionContext context, ImmutableArray<ITypeSymbol?> types)
     {
-        foreach (ITypeSymbol typeSymbol in GetDistinctTypes(types)) 
+        foreach (ITypeSymbol typeSymbol in GetDistinctTypes(types, true)) 
             context.AddSource($"Generated{typeSymbol.Name}.g.cs", GenerateFactorySourceCode(typeSymbol));
     }
 
@@ -130,7 +130,7 @@ public class FactoryGenerator : IIncrementalGenerator
         stringBuilder.AppendLine($"{INDENT}public TFactory Create<TFactory>(IocContainer container)");
         stringBuilder.AppendLine($"{INDENT}{{");
 
-        foreach (ITypeSymbol type in GetDistinctTypes(types))
+        foreach (ITypeSymbol type in GetDistinctTypes(types, false))
         {
             stringBuilder.AppendLine($"{INDENT}{INDENT}if (typeof(TFactory) == typeof({GetTypeText(type, false)}))");
             stringBuilder.AppendLine($"{INDENT}{INDENT}{{");
@@ -255,7 +255,7 @@ public class FactoryGenerator : IIncrementalGenerator
         return stringBuilder.ToString();
     }
     
-    private IEnumerable<ITypeSymbol> GetDistinctTypes(ImmutableArray<ITypeSymbol?> types)
+    private IEnumerable<ITypeSymbol> GetDistinctTypes(ImmutableArray<ITypeSymbol?> types, bool distinctByName)
     {
         List<ITypeSymbol> distinctTypes = [];
         foreach (ITypeSymbol? typeSymbol in types)
@@ -266,7 +266,7 @@ public class FactoryGenerator : IIncrementalGenerator
             if (distinctTypes.Contains(typeSymbol, SymbolEqualityComparer.IncludeNullability))
                 continue;
             
-            if (distinctTypes.Any(t => t.Name == typeSymbol.Name))
+            if (distinctByName && distinctTypes.Any(t => t.Name == typeSymbol.Name))
                 continue;
             
             distinctTypes.Add(typeSymbol);
