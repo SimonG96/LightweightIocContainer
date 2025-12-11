@@ -77,7 +77,7 @@ public class IocContainer : IIocContainer, IIocResolver
     }
 
     /// <summary>
-    /// Add the <see cref="IRegistration"/> to the the <see cref="IocContainer"/>
+    /// Add the <see cref="IRegistration"/> to the <see cref="IocContainer"/>
     /// </summary>
     /// <param name="registration">The given <see cref="IRegistration"/></param>
     /// <exception cref="MultipleRegistrationException">The <see cref="Type"/> is already registered in this <see cref="IocContainer"/></exception>
